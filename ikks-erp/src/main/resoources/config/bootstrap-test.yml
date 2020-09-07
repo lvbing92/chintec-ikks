@@ -1,0 +1,13 @@
+server:
+  port: 7070 #端口号
+spring:
+  application:
+    name: chintec-auth #应用名
+  cloud:
+    nacos:
+      config:
+        server-addr: http://www.xinlitang.cn:8848
+        group: DEFAULT_GROUP
+        file-extension: yaml
+        enabled: true
+        namespace: 5f6ce95b-28dc-4308-870a-32267674d215
