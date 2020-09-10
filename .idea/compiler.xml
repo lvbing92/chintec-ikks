@@ -6,18 +6,24 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="ikks-generator" />
         <module name="ikks-erp" />
         <module name="ikks-common" />
-        <module name="ikks-base" />
+        <module name="ikks-process" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ikks-base" target="11" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="chintec-ikks" options="-parameters" />
       <module name="ikks-base" options="" />
-      <module name="ikks-common" options="" />
+      <module name="ikks-common" options="-parameters" />
       <module name="ikks-erp" options="-parameters" />
+      <module name="ikks-generator" options="-parameters" />
+      <module name="ikks-process" options="-parameters" />
     </option>
   </component>
 </project>
