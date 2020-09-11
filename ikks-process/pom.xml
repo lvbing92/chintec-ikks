@@ -125,11 +125,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>com.chintec.common</groupId>
-            <artifactId>chintec-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <groupId>com.chintec.ikks.common</groupId>
+            <artifactId>ikks-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <!-- Druid 数据连接池依赖 -->
         <dependency>
