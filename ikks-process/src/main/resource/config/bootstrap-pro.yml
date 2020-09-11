@@ -6,8 +6,8 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: http://www.xinlitang.cn:8848
+        server-addr: 182.92.65.228:8848
         group: DEFAULT_GROUP
         file-extension: yaml
         enabled: true
-        namespace: 1e0fc7cc-18ed-4f8d-807d-e8e3946d6d31
+        namespace: 0847e8ca-33e5-4756-bf52-1a70915ae987
