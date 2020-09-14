@@ -8,9 +8,15 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: 182.92.65.228:8848
-        group: DEFAULT_GROUP
-        file-extension: yaml
-        enabled: true
         namespace: 687e9f04-cc02-4d48-8fca-258893915e22
+        server-addr: 182.92.65.228:8848
+        file-extension: yaml
+      discovery:
+        namespace:  687e9f04-cc02-4d48-8fca-258893915e22
+        server-addr: 182.92.65.228:8848
+
+
+
+
+
 
