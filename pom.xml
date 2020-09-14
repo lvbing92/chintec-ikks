@@ -9,15 +9,20 @@
         <module>ikks-common</module>
         <module>ikks-generator</module>
         <module>ikks-process</module>
+        <module>ikks-auth</module>
+        <module>ikks-message</module>
     </modules>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.2.1.RELEASE</version>
     </parent>
+
     <groupId>com.chintec.ikks</groupId>
     <artifactId>chintec-ikks</artifactId>
     <version>1.0-SNAPSHOT</version>
+
     <properties>
         <logback.version>1.2.3</logback.version>
         <slf4j.version>1.7.25</slf4j.version>
