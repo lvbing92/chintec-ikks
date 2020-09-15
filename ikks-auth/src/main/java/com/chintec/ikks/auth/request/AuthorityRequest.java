@@ -1,5 +1,6 @@
-package com.chintec.ikks.erp.request;
+package com.chintec.ikks.auth.request;
 
+import com.chintec.ikks.erp.entity.Authority;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

@@ -1,6 +1,5 @@
 package com.chintec.ikks.erp.response;
 
-import com.chintec.ikks.erp.entity.Credentials;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
