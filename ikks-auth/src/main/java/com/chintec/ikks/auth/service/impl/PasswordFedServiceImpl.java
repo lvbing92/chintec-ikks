@@ -1,10 +1,10 @@
 package com.chintec.ikks.auth.service.impl;
 
+import com.chintec.ikks.auth.entity.OAuth2Token;
+import com.chintec.ikks.auth.service.IOauthClientDetailsService;
+import com.chintec.ikks.auth.service.IPasswordFedService;
 import com.chintec.ikks.common.enums.CommonCodeEnum;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.erp.entity.OAuth2Token;
-import com.chintec.ikks.erp.service.IOauthClientDetailsService;
-import com.chintec.ikks.erp.service.IPasswordFedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;

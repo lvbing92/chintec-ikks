@@ -1,9 +1,9 @@
 package com.chintec.ikks.auth.controller;
 
 
+import com.chintec.ikks.auth.request.CredentialsRequest;
+import com.chintec.ikks.auth.service.ICredentialsService;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.erp.request.CredentialsRequest;
-import com.chintec.ikks.erp.service.ICredentialsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

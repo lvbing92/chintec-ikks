@@ -42,6 +42,15 @@
           <version>${projectlombok.version}</version>
           <scope>provided</scope>
       </dependency>
+      <!--swagger-->
+      <dependency>
+          <groupId>io.springfox</groupId>
+          <artifactId>springfox-swagger2</artifactId>
+      </dependency>
+      <dependency>
+          <groupId>io.springfox</groupId>
+          <artifactId>springfox-swagger-ui</artifactId>
+      </dependency>
       <!--http请求依赖包-->
       <dependency>
           <groupId>org.apache.httpcomponents</groupId>

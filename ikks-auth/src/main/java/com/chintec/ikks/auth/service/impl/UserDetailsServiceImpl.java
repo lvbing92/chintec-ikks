@@ -1,11 +1,12 @@
 package com.chintec.ikks.auth.service.impl;
 
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.chintec.ikks.erp.entity.Credentials;
-import com.chintec.ikks.erp.entity.CredentialsAuthorities;
-import com.chintec.ikks.erp.service.IAuthorityService;
-import com.chintec.ikks.erp.service.ICredentialsAuthoritiesService;
-import com.chintec.ikks.erp.service.ICredentialsService;
+import com.chintec.ikks.auth.entity.Credentials;
+import com.chintec.ikks.auth.entity.CredentialsAuthorities;
+import com.chintec.ikks.auth.service.IAuthorityService;
+import com.chintec.ikks.auth.service.ICredentialsAuthoritiesService;
+import com.chintec.ikks.auth.service.ICredentialsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;

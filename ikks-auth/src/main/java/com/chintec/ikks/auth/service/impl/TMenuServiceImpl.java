@@ -2,9 +2,9 @@ package com.chintec.ikks.auth.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.chintec.ikks.erp.entity.TMenu;
-import com.chintec.ikks.erp.mapper.TMenuMapper;
-import com.chintec.ikks.erp.service.ITMenuService;
+import com.chintec.ikks.auth.entity.TMenu;
+import com.chintec.ikks.auth.mapper.TMenuMapper;
+import com.chintec.ikks.auth.service.ITMenuService;
 import org.springframework.stereotype.Service;
 
 /**

@@ -1,9 +1,9 @@
 package com.chintec.ikks.auth.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.chintec.ikks.erp.entity.OauthClientDetails;
-import com.chintec.ikks.erp.mapper.OauthClientDetailsMapper;
-import com.chintec.ikks.erp.service.IOauthClientDetailsService;
+import com.chintec.ikks.auth.entity.OauthClientDetails;
+import com.chintec.ikks.auth.mapper.OauthClientDetailsMapper;
+import com.chintec.ikks.auth.service.IOauthClientDetailsService;
 import org.springframework.stereotype.Service;
 
 /**

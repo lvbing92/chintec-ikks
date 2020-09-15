@@ -56,7 +56,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      */
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-        security.tokenKeyAccess("permitAll()");  // 获取 token 的策略
+        // 获取 token 的策略
+        security.tokenKeyAccess("permitAll()");
         security.checkTokenAccess("isAuthenticated()");
     }
 
@@ -68,13 +69,16 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.withClientDetails(jdbcClientDetailsService());  //设置客户端的配置从数据库中读取，存储在oauth_client_details表
+        //设置客户端的配置从数据库中读取，存储在oauth_client_details表
+        clients.withClientDetails(jdbcClientDetailsService());
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-        endpoints.authenticationManager(authenticationManager) // 开启密码验证，来源于 WebSecurityConfigurerAdapter
-                .userDetailsService(userDetailsService) // 读取验证用户的信息
+        // 开启密码验证，来源于 WebSecurityConfigurerAdapter
+        endpoints.authenticationManager(authenticationManager)
+                // 读取验证用户的信息
+                .userDetailsService(userDetailsService)
                 .tokenStore(tokenStore());
 
     }

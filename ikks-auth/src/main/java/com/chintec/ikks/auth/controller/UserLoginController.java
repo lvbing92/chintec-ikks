@@ -1,7 +1,7 @@
 package com.chintec.ikks.auth.controller;
 
+import com.chintec.ikks.auth.service.IPasswordFedService;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.erp.service.IPasswordFedService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.chintec.ikks.auth.request;
 
-import com.chintec.ikks.erp.entity.Credentials;
+import com.chintec.ikks.auth.entity.Credentials;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
