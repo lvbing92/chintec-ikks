@@ -11,3 +11,6 @@ spring:
         file-extension: yaml
         enabled: true
         namespace: 449d38e9-31b7-481e-bc46-9723a98acf7c
+      discovery:
+        namespace: 449d38e9-31b7-481e-bc46-9723a98acf7c
+        server-addr: 182.92.65.228:8848

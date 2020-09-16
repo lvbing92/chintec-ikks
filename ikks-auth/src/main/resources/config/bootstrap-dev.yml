@@ -1,5 +1,5 @@
 server:
-  port: 7072 #端口号
+  port: 7071 #端口号
 spring:
   main:
     allow-bean-definition-overriding: true
