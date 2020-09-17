@@ -1,10 +1,10 @@
 server:
-  port: 7072 #端口号
+  port: 7073 #端口号
 spring:
   main:
     allow-bean-definition-overriding: true
   application:
-    name: ikks-process #应用名
+    name: ikks-rabbitmq #应用名
   cloud:
     nacos:
       config:

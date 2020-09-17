@@ -15,7 +15,6 @@ public class SendMessageTest {
     @Test
     public void setMqSendMessage(){
         MessageReq messageReq = new MessageReq();
-        messageReq.setExpiration("5s");
         messageReq.setUuid(UUID.randomUUID().toString());
         messageReq.setMessageMsg("5s letter message");
         mqSendMessage.delaySend(messageReq, "50000");

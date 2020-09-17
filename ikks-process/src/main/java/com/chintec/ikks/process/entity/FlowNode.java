@@ -62,7 +62,7 @@ public class FlowNode extends Model<FlowNode> {
     /**
      * 负责人
      */
-    private Integer ownerId;
+    private Integer ownId;
 
     /**
      * 流程信息表的id

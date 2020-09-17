@@ -4,6 +4,7 @@ import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.rabbitmq.entity.MessageReq;
 import com.chintec.ikks.rabbitmq.mq.MqSendMessage;
 import com.chintec.ikks.rabbitmq.service.ISendMessageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SendMessageServiceImpl implements ISendMessageService {
+    @Autowired
+    private MqSendMessage mqSendMessage;
     /**
      * 发送消息
      *
@@ -22,7 +25,7 @@ public class SendMessageServiceImpl implements ISendMessageService {
      */
     @Override
     public ResultResponse sendMsg(MessageReq msg, String timeMills) {
-        return MqSendMessage.delaySend(msg,timeMills);
+        return mqSendMessage.delaySend(msg,timeMills);
     }
 
     /**
@@ -33,6 +36,6 @@ public class SendMessageServiceImpl implements ISendMessageService {
      */
     @Override
     public ResultResponse sendEmail(MessageReq msg) {
-        return MqSendMessage.sendEmail(msg);
+        return mqSendMessage.sendEmail(msg);
     }
 }

@@ -27,7 +27,7 @@ public class MqSendMessage {
     public static final String DELAY_EXCHANGE_NAME = "delay.exchange";
     public static final String DELAY_ROUTING_KEY = "delay.routing.key";
     @Autowired
-    public static RabbitTemplate rabbitTemplate;
+    public  RabbitTemplate rabbitTemplate;
 
     /**
      * 延迟消息发送
@@ -35,7 +35,7 @@ public class MqSendMessage {
      * @param msg       消息内容
      * @param timeMills
      */
-    public static ResultResponse delaySend(MessageReq msg, String timeMills) {
+    public  ResultResponse delaySend(MessageReq msg, String timeMills) {
 
         MessageProperties messageProperties = new MessageProperties();
         if (!StringUtil.isNullOrEmpty(timeMills)) {
@@ -71,7 +71,7 @@ public class MqSendMessage {
      * @param msg 消息体
      * @return ResultResponse
      */
-    public static ResultResponse sendEmail(MessageReq msg) {
+    public  ResultResponse sendEmail(MessageReq msg) {
         rabbitTemplate.setMandatory(true);
         CorrelationData correlationId = new CorrelationData(String.valueOf(UUID.randomUUID()));
         rabbitTemplate.convertAndSend("topicExchange", "topic.with", JSONObject.toJSONString(msg), correlationId);

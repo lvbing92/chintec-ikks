@@ -1,4 +1,4 @@
-package com.chintec.ikks.rabbitmq.entity;
+package com.chintec.ikks.process.entity.po;
 
 import lombok.Data;
 

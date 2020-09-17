@@ -4,10 +4,7 @@ import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.rabbitmq.entity.MessageReq;
 import com.chintec.ikks.rabbitmq.service.ISendMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author rubin·lv
@@ -21,13 +18,12 @@ public class RabbitMqController {
     private ISendMessageService iSendMessageService;
 
     @PostMapping("/send/msg")
-    public ResultResponse sendMsg(@RequestParam MessageReq msg, @RequestParam String timeMills){
-        iSendMessageService.sendMsg(msg,timeMills);
-        return ResultResponse.successResponse();
+    public ResultResponse sendMsg(@RequestBody MessageReq msg, @RequestParam String timeMills) {
+        return iSendMessageService.sendMsg(msg, timeMills);
     }
 
     @PostMapping("/send/email")
-    public ResultResponse sendMsg(@RequestParam MessageReq msg){
+    public ResultResponse sendMsg(@RequestBody MessageReq msg) {
         return iSendMessageService.sendEmail(msg);
     }
 }
