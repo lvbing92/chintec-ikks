@@ -4,6 +4,11 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * @author rubin·lv
+ * @version 1.0
+ * @date 2020年9月17日14
+ */
 @Data
 public class MessageReq implements Serializable {
     /**
@@ -17,6 +22,6 @@ public class MessageReq implements Serializable {
     /**
      * 消息内容
      */
-    private String messageMsg;
+    private Object messageMsg;
 
 }
