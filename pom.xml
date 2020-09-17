@@ -11,6 +11,7 @@
         <module>ikks-process</module>
         <module>ikks-auth</module>
         <module>ikks-message</module>
+        <module>ikks-rabbitmq</module>
     </modules>
 
     <parent>

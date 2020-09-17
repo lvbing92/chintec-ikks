@@ -1,4 +1,4 @@
-package com.chintec.ikks.process.config;
+package com.chintec.ikks.rabbitmq.config;
 
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -19,34 +19,43 @@ import java.util.Map;
  */
 @Configuration
 public class RabbitMqConfig {
-    //死信交换机名称
+    /**
+     * 延迟交换机名称
+     */
+
     public static final String DELAY_EXCHANGE_NAME = "delay.exchange";
-
+    /**
+     * 延迟队列名称
+     */
     public static final String DELAY_QUEUE_NAME = "delay.queue";
+    /**
+     * 处理消息队列
+     */
     public static final String MESSAGE_QUEUE_NAME = "message.queue";
-    public static final String DELAY_QUEUE_ROUTING_KEY = "delay.queue.routingkey";
+    /**
+     * 延时队列和延时交换机的链接路由key
+     */
+    public static final String DELAY_QUEUE_ROUTING_KEY = "delay.queue.routing.key";
 
-    public static final String DELAY_ROUTING_KEY = "delay_routing_key";
+    /**
+     * 延时队列和延时交换机的链接路由key
+     */
+    public static final String DELAY_ROUTING_KEY = "delay.routing.key";
 
 
-   /* @Autowired
+    /*@Autowired
     RabbitAdmin rabbitAdmin;*/
 
     // 声明延时Exchange
     @Bean("delayExchange")
-    public DirectExchange delayExchange(){
-        return new DirectExchange(DELAY_EXCHANGE_NAME);
+    public TopicExchange delayExchange() {
+        return new TopicExchange(DELAY_EXCHANGE_NAME);
     }
 
-    // 处理消息Exchange
-//    @Bean("messageExchange")
-//    public DirectExchange messageExchange(){
-//        return new DirectExchange(MESSAGE_EXCHANGE);
-//    }
 
     // 声明延时队列并绑定到死信交换机
     @Bean("delayQueue")
-    public Queue delayQueue(){
+    public Queue delayQueue() {
         Map<String, Object> args = new HashMap<>(2);
         // x-dead-letter-exchange    这里声明当前队列绑定的死信交换机
         args.put("x-dead-letter-exchange", DELAY_EXCHANGE_NAME);
@@ -55,18 +64,26 @@ public class RabbitMqConfig {
         return QueueBuilder.durable(DELAY_QUEUE_NAME).withArguments(args).build();
     }
 
-    // 声明消息队列并绑定到死信交换机
+    /**
+     * 声明消息队列并绑定到死信交换机
+     */
+
     @Bean("messageQueue")
-    public Queue messageQueue(){
+    public Queue messageQueue() {
         return QueueBuilder.durable(MESSAGE_QUEUE_NAME).build();
     }
 
 
-
-    // 声明延时队列绑定关系
+    /**
+     * 通过路由key链接Exchange和Queue
+     *
+     * @param exchange 交换机
+     * @param queue    队列
+     * @return
+     */
     @Bean
     public Binding delayBinding(@Qualifier("delayQueue") Queue queue,
-                                 @Qualifier("delayExchange") DirectExchange exchange){
+                                @Qualifier("delayExchange") TopicExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(DELAY_ROUTING_KEY);
     }
 
@@ -74,7 +91,7 @@ public class RabbitMqConfig {
     // 声明消息队列绑定关系
     @Bean
     public Binding deadLetterBindingA(@Qualifier("messageQueue") Queue queue,
-                                      @Qualifier("delayExchange") DirectExchange exchange){
+                                      @Qualifier("delayExchange") TopicExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(DELAY_QUEUE_ROUTING_KEY);
     }
 
@@ -84,44 +101,42 @@ public class RabbitMqConfig {
      *
      * @return
      */
-   /* @Bean
+    /*@Bean
     public Queue queue() {
         return new Queue("message");
     }
-*/
-    /**
+    *//**
      * 申明交换机（主题模式）
      *
      * @return
-     */
-  /*  @Bean
+     *//*
+    @Bean
     public TopicExchange topicExchange() {
         return new TopicExchange("topicExchange");
-    }*/
+    }
 
-    /**
+    *//**
      * 将队列绑定到交换机
      *
      * @return
-     */
-    /*@Bean
+     *//*
+    @Bean
     public Binding binding() {
         return BindingBuilder.bind(queue()).to(topicExchange()).with("topic.with");
-    }*/
+    }
 
-    /*@Bean
+    @Bean
     public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
         RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
         // 只有设置为 true，spring 才会加载 RabbitAdmin 这个类
         rabbitAdmin.setAutoStartup(true);
         return rabbitAdmin;
-    }*/
+    }
 
-   /* @Bean
+    @Bean
     public void createExchangeQueue() {
         rabbitAdmin.declareExchange(delayExchange());
         rabbitAdmin.declareQueue(delayQueue());
         rabbitAdmin.declareQueue(messageQueue());
-    }
-*/
+    }*/
 }

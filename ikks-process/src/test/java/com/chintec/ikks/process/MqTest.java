@@ -1,8 +1,5 @@
 package com.chintec.ikks.process;
 
-import com.chintec.ikks.process.mq.MqSendMessage;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
@@ -12,11 +9,5 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest
 class MqTest {
-    @Autowired
-    private MqSendMessage mqSendMessage;
 
-    @Test
-    void setMqSendUtil() {
-        mqSendMessage.send("18206116926");
-    }
 }

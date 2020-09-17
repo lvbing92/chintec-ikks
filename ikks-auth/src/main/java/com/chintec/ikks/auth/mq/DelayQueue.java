@@ -12,10 +12,8 @@ import org.springframework.context.annotation.Configuration;
 public class DelayQueue {
     /** 消息交换机的名字*/
     public static final String EXCHANGE = "delay.exchange";
-    /** 队列key1*/
-    public static final String DELAY_ROUTING_KEY = "delay_routing_key";
     /** 队列key2*/
-    public static final String DELAY_QUEUE_ROUTING_KEY = "delay.queue.routingkey";
+    public static final String DELAY_QUEUE_ROUTING_KEY = "delay.queue.routing.key";
 
     public static final String MESSAGE_QUEUE_NAME = "message.queue";
     /**
@@ -42,8 +40,8 @@ public class DelayQueue {
      TopicExchange:多关键字匹配
      */
     @Bean
-    public DirectExchange defaultExchange() {
-        return new DirectExchange(EXCHANGE, true, false);
+    public TopicExchange defaultExchange() {
+        return new TopicExchange(EXCHANGE, true, false);
     }
 
     /**
@@ -66,7 +64,7 @@ public class DelayQueue {
     }
 
     /**
-     * 接受消息的监听，这个监听会接受消息队列1的消息
+     * 接受消息的监听，这个监听会接受消息队列的消息
      * 针对消费者配置
      * @return
      */
@@ -84,7 +82,6 @@ public class DelayQueue {
                 byte[] body = message.getBody();
                 System.out.println("delay_queue2 收到消息 : " + new String(body));
                 channel.basicAck(message.getMessageProperties().getDeliveryTag(), false); //确认消息成功消费
-
             }
 
         });
