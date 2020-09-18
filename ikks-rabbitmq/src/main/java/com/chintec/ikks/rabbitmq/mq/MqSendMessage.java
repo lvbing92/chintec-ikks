@@ -2,6 +2,7 @@ package com.chintec.ikks.rabbitmq.mq;
 
 import com.alibaba.fastjson.JSONObject;
 import com.chintec.ikks.common.util.AssertsUtil;
+import com.chintec.ikks.common.util.MqVariableUtil;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.rabbitmq.entity.MessageReq;
 import io.netty.util.internal.StringUtil;
@@ -24,8 +25,7 @@ import java.util.UUID;
 @Slf4j
 @Component
 public class MqSendMessage {
-    public static final String DELAY_EXCHANGE_NAME = "delay.exchange";
-    public static final String DELAY_ROUTING_KEY = "delay.routing.key";
+
     @Autowired
     public  RabbitTemplate rabbitTemplate;
 
@@ -50,18 +50,8 @@ public class MqSendMessage {
             log.info("exchange：{}", exchange);
             log.info("routingKey：{}", routingKey);
         });
-        rabbitTemplate.convertAndSend(DELAY_EXCHANGE_NAME, "delay.queue.routing.key", message);
-        rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {
-            @Override
-            public void confirm(CorrelationData correlationData, boolean ack, String cause) {
-                log.info("Ack status : " + ack);
-                log.info("Cause content : " + cause);
-                AssertsUtil.isTrue(!ack, "消息发送失败" + cause);
-                if (ack) {
-                    log.info("消息成功发送");
-                }
-            }
-        });
+        rabbitTemplate.convertAndSend(MqVariableUtil.DELAY_EXCHANGE_NAME, MqVariableUtil.DELAY_QUEUE_ROUTING_KEY, message);
+        confirmCallback(rabbitTemplate);
         return ResultResponse.successResponse();
     }
 
@@ -74,7 +64,7 @@ public class MqSendMessage {
     public  ResultResponse sendEmail(MessageReq msg) {
         rabbitTemplate.setMandatory(true);
         CorrelationData correlationId = new CorrelationData(String.valueOf(UUID.randomUUID()));
-        rabbitTemplate.convertAndSend("topicExchange", "topic.with", JSONObject.toJSONString(msg), correlationId);
+        rabbitTemplate.convertAndSend(MqVariableUtil.TOPIC_EXCHANGE_NAME, MqVariableUtil.TOPIC_WITH_ROUTING_KEY, JSONObject.toJSONString(msg), correlationId);
         /*
         returnCallBack 当前队列无效或是被解绑的时候执行里面操作
          */
@@ -85,14 +75,45 @@ public class MqSendMessage {
         /*
         确认回调机制当 ack为false的时候会再次向mq发送消息
          */
-        rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
-            log.info("correlationData:" + correlationData);
-            log.info("ack:" + ack);
-            AssertsUtil.isTrue(!ack, "消息发送失败" + cause);
-            if (ack) {
-                log.info("消息成功发送");
+        confirmCallback(rabbitTemplate);
+        return ResultResponse.successResponse();
+    }
+
+    /**
+     * 模块和流程交互信息
+     *
+     * @param msg 消息体
+     * @return ResultResponse
+     */
+    public  ResultResponse modelMsg(MessageReq msg) {
+        rabbitTemplate.setMandatory(true);
+        CorrelationData correlationId = new CorrelationData(String.valueOf(UUID.randomUUID()));
+        rabbitTemplate.convertAndSend(MqVariableUtil.TOPIC_EXCHANGE_NAME, MqVariableUtil.MESSAGE_MODEL_ROUTING_KEY, JSONObject.toJSONString(msg), correlationId);
+        /*
+        returnCallBack 当前队列无效或是被解绑的时候执行里面操作
+         */
+        rabbitTemplate.setReturnCallback((message, replyCode, replyText, exchange, routingKey) -> {
+            log.info(Arrays.toString(message.getBody()));
+        });
+
+        /*
+        确认回调机制当 ack为false的时候会再次向mq发送消息
+         */
+        confirmCallback(rabbitTemplate);
+        return ResultResponse.successResponse();
+    }
+
+    private void confirmCallback(RabbitTemplate rabbitTemplate){
+        rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {
+            @Override
+            public void confirm(CorrelationData correlationData, boolean ack, String cause) {
+                log.info("Ack status : " + ack);
+                log.info("Cause content : " + cause);
+                AssertsUtil.isTrue(!ack, "消息发送失败" + cause);
+                if (ack) {
+                    log.info("消息成功发送");
+                }
             }
         });
-        return ResultResponse.successResponse();
     }
 }

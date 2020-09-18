@@ -38,4 +38,14 @@ public class SendMessageServiceImpl implements ISendMessageService {
     public ResultResponse sendEmail(MessageReq msg) {
         return mqSendMessage.sendEmail(msg);
     }
+    /**
+     *模块和流程信息交互
+     *
+     * @param msg 消息体
+     * @return ResultResponse
+     */
+    @Override
+    public ResultResponse modelMsg(MessageReq msg) {
+        return mqSendMessage.modelMsg(msg);
+    }
 }

@@ -25,4 +25,12 @@ public interface ISendMessageService {
      * @return ResultResponse
      */
     ResultResponse sendEmail(MessageReq msg);
+
+    /**
+     *模块和流程信息交互
+     *
+     * @param msg 消息体
+     * @return ResultResponse
+     */
+    ResultResponse modelMsg(MessageReq msg);
 }

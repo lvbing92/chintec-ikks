@@ -23,7 +23,12 @@ public class RabbitMqController {
     }
 
     @PostMapping("/send/email")
-    public ResultResponse sendMsg(@RequestBody MessageReq msg) {
+    public ResultResponse sendEmail(@RequestBody MessageReq msg) {
         return iSendMessageService.sendEmail(msg);
+    }
+
+    @PostMapping("/model/msg")
+    public ResultResponse modelMsg(@RequestBody MessageReq messageReq){
+        return iSendMessageService.modelMsg(messageReq);
     }
 }

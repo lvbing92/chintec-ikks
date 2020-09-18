@@ -1,5 +1,6 @@
 package com.chintec.ikks.rabbitmq.config;
 
+import com.chintec.ikks.common.util.MqVariableUtil;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -19,26 +20,6 @@ import java.util.Map;
  */
 @Configuration
 public class RabbitMqConfig {
-    /**
-     * 延迟交换机名称
-     */
-    private static final String DELAY_EXCHANGE_NAME = "delay.exchange";
-    /**
-     * 延迟队列名称
-     */
-    private static final String DELAY_QUEUE_NAME = "delay.queue";
-    /**
-     * 处理消息队列
-     */
-    private static final String MESSAGE_QUEUE_NAME = "message.model.queue";
-    /**
-     * 延时队列和延时交换机的链接路由key
-     */
-    private static final String DELAY_QUEUE_ROUTING_KEY = "delay.queue.routing.key";
-    /**
-     * 延时队列和延时交换机的链接路由key
-     */
-    private static final String DELAY_ROUTING_KEY = "delay.routing.key";
 
     @Autowired
     RabbitAdmin rabbitAdmin;
@@ -46,7 +27,7 @@ public class RabbitMqConfig {
     // 声明延时Exchange
     @Bean("delayExchange")
     public TopicExchange delayExchange() {
-        return new TopicExchange(DELAY_EXCHANGE_NAME);
+        return new TopicExchange(MqVariableUtil.DELAY_EXCHANGE_NAME);
     }
 
 
@@ -55,10 +36,10 @@ public class RabbitMqConfig {
     public Queue delayQueue() {
         Map<String, Object> args = new HashMap<>(2);
         // x-dead-letter-exchange    这里声明当前队列绑定的死信交换机
-        args.put("x-dead-letter-exchange", DELAY_EXCHANGE_NAME);
+        args.put("x-dead-letter-exchange", MqVariableUtil.DELAY_EXCHANGE_NAME);
         // x-dead-letter-routing-key  这里声明当前队列的死信路由key
-        args.put("x-dead-letter-routing-key", DELAY_QUEUE_ROUTING_KEY);
-        return QueueBuilder.durable(DELAY_QUEUE_NAME).withArguments(args).build();
+        args.put("x-dead-letter-routing-key", MqVariableUtil.DELAY_QUEUE_ROUTING_KEY);
+        return QueueBuilder.durable(MqVariableUtil.DELAY_QUEUE_NAME).withArguments(args).build();
     }
 
     /**
@@ -67,7 +48,7 @@ public class RabbitMqConfig {
 
     @Bean("messageQueue")
     public Queue messageQueue() {
-        return QueueBuilder.durable(MESSAGE_QUEUE_NAME).build();
+        return QueueBuilder.durable(MqVariableUtil.MESSAGE_QUEUE_NAME).build();
     }
 
 
@@ -81,7 +62,7 @@ public class RabbitMqConfig {
     @Bean
     public Binding delayBinding(@Qualifier("delayQueue") Queue queue,
                                 @Qualifier("delayExchange") TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(DELAY_ROUTING_KEY);
+        return BindingBuilder.bind(queue).to(exchange).with(MqVariableUtil.DELAY_ROUTING_KEY);
     }
 
 
@@ -89,7 +70,7 @@ public class RabbitMqConfig {
     @Bean
     public Binding deadLetterBindingA(@Qualifier("messageQueue") Queue queue,
                                       @Qualifier("delayExchange") TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(DELAY_QUEUE_ROUTING_KEY);
+        return BindingBuilder.bind(queue).to(exchange).with(MqVariableUtil.DELAY_QUEUE_ROUTING_KEY);
     }
 
 
@@ -100,7 +81,17 @@ public class RabbitMqConfig {
      */
     @Bean
     public Queue queue() {
-        return new Queue("message");
+        return new Queue(MqVariableUtil.MESSAGE);
+    }
+
+    /**
+     * 申明队列
+     *
+     * @return Queue
+     */
+    @Bean
+    public Queue messageModelQueue() {
+        return new Queue(MqVariableUtil.MESSAGE_MODEL_QUEUE);
     }
 
     /**
@@ -110,7 +101,7 @@ public class RabbitMqConfig {
      */
     @Bean
     public TopicExchange topicExchange() {
-        return new TopicExchange("topicExchange");
+        return new TopicExchange(MqVariableUtil.TOPIC_EXCHANGE_NAME);
     }
 
     /**
@@ -120,7 +111,17 @@ public class RabbitMqConfig {
      */
     @Bean
     public Binding binding() {
-        return BindingBuilder.bind(queue()).to(topicExchange()).with("topic.with");
+        return BindingBuilder.bind(queue()).to(topicExchange()).with(MqVariableUtil.TOPIC_EXCHANGE_NAME);
+    }
+
+    /**
+     * 将队列绑定到交换机
+     *
+     * @return Binding
+     */
+    @Bean
+    public Binding bindingModelQueue() {
+        return BindingBuilder.bind(messageModelQueue()).to(topicExchange()).with(MqVariableUtil.MESSAGE_MODEL_ROUTING_KEY);
     }
 
     @Bean
@@ -135,6 +136,5 @@ public class RabbitMqConfig {
     public void createExchangeQueue() {
         rabbitAdmin.declareExchange(delayExchange());
         rabbitAdmin.declareQueue(delayQueue());
-        rabbitAdmin.declareQueue(messageQueue());
     }
 }
