@@ -4,10 +4,13 @@ import com.chintec.ikks.common.util.MqVariableUtil;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.SerializerMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -136,5 +139,13 @@ public class RabbitMqConfig {
     public void createExchangeQueue() {
         rabbitAdmin.declareExchange(delayExchange());
         rabbitAdmin.declareQueue(delayQueue());
+    }
+    @Bean
+    @Scope("prototype")
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+        RabbitTemplate template = new RabbitTemplate(connectionFactory);
+        template.setMandatory(true);
+        template.setMessageConverter(new SerializerMessageConverter());
+        return template;
     }
 }
