@@ -46,6 +46,7 @@
         <!-- druid 连接池依赖 -->
         <druid.version>1.1.21</druid.version>
         <xstream.version>1.4.9</xstream.version>
+        <statemachine.version>2.1.1.RELEASE</statemachine.version>
         <nacos.version>1.2.0</nacos.version>
     </properties>
     <dependencyManagement>
@@ -182,7 +183,13 @@
                 <artifactId>xstream</artifactId>
                 <version>${xstream.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.statemachine</groupId>
+                <artifactId>spring-statemachine-core</artifactId>
+                <version>${statemachine.version}</version>
+            </dependency>
         </dependencies>
+
     </dependencyManagement>
     <!--动态打包-->
     <profiles>

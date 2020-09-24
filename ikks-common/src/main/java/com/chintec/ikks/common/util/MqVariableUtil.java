@@ -1,7 +1,5 @@
 package com.chintec.ikks.common.util;
 
-import javax.servlet.http.PushBuilder;
-
 /**
  * MQ变量值
  *

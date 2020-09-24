@@ -1,11 +1,19 @@
 package com.chintec.ikks.process.mq;
 
+import com.alibaba.fastjson.JSONObject;
+import com.chintec.ikks.common.enums.NodeStateChangeEnum;
+import com.chintec.ikks.common.util.AssertsUtil;
+import com.chintec.ikks.process.entity.po.FlowTaskStatus;
+import com.chintec.ikks.process.entity.po.MessageReq;
+import com.chintec.ikks.process.event.SendEvent;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Headers;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -18,11 +26,23 @@ import java.util.Map;
 @Slf4j
 @Component
 public class ModelStatusListener {
+    @Autowired
+    private SendEvent sendEvent;
 
     @RabbitListener(queues = "message.model.queue")
     @RabbitHandler
-    public void processListener(Message message, @Headers Map<String, Object> headers, Channel channel) {
+    private void processListener(Message message, @Headers Map<String, Object> headers, Channel channel) {
         log.info(new String(message.getBody()));
-        //TODO 监听业务流程状态，驱动流程进行，以及判断流程是否完成
+        MessageReq messageReq = JSONObject.parseObject(new String(message.getBody()), MessageReq.class);
+        FlowTaskStatus flowTaskStatus = JSONObject.parseObject(JSONObject.toJSONString(messageReq.getMessageMsg()), FlowTaskStatus.class);
+        if (true) {
+            org.springframework.messaging.Message<NodeStateChangeEnum> flowTaskStatusM = MessageBuilder.withPayload(NodeStateChangeEnum.PASS).setHeader("flowTaskStatus", flowTaskStatus).build();
+           AssertsUtil.isTrue(sendEvent.sendEvents(flowTaskStatusM, flowTaskStatus), "任务通过失败");
+        } else if (false) {
+            org.springframework.messaging.Message<NodeStateChangeEnum> flowTaskStatusM = MessageBuilder.withPayload(NodeStateChangeEnum.REFUSE).setHeader("flowTaskStatus", flowTaskStatus).build();
+            AssertsUtil.isTrue(sendEvent.sendEvents(flowTaskStatusM, flowTaskStatus), "任务驳回失败");
+        } else {
+            AssertsUtil.isTrue(true, "任务操作类型不存在");
+        }
     }
 }

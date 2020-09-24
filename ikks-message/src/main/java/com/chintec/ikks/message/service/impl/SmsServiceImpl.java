@@ -10,7 +10,6 @@ import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.PhoneUtils;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.message.service.ISmsServices;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;

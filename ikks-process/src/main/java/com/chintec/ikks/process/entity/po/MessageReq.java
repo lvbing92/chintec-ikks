@@ -20,4 +20,8 @@ public class MessageReq implements Serializable {
      */
     private Object messageMsg;
 
+    /**
+     * 是否成功
+     */
+    private boolean isSuccess;
 }

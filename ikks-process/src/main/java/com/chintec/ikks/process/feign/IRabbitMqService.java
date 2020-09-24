@@ -19,4 +19,7 @@ public interface IRabbitMqService {
 
     @PostMapping("/send/email")
     ResultResponse sendMsg(@RequestBody MessageReq msg);
+
+    @PostMapping("/model/msg")
+    ResultResponse modelMsg(@RequestBody MessageReq messageReq);
 }
