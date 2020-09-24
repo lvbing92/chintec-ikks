@@ -24,6 +24,7 @@ import javax.sql.DataSource;
 
 /**
  * 资源服务器配置
+ *
  * @author rubin
  */
 
@@ -63,6 +64,8 @@ public class ResourcesServerConfig extends ResourceServerConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/v1/hello").permitAll()
+                .antMatchers("/v1/login").permitAll()
+                .antMatchers("/v1/logout").permitAll()
                 .antMatchers("/v1/**").authenticated();
     }
 }

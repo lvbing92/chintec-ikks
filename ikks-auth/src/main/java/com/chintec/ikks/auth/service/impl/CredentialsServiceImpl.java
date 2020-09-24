@@ -31,8 +31,8 @@ import java.io.Serializable;
 @Service
 public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Credentials> implements ICredentialsService,Serializable {
 
-    public static final String SORT_A = "A";
-    public static final String SORT_D = "D";
+    private static final String SORT_A = "A";
+    private static final String SORT_D = "D";
     @Autowired
     private ICredentialsAuthoritiesService iCredentialsAuthoritiesService;
 

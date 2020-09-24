@@ -1,8 +1,10 @@
 package com.chintec.ikks.auth.service;
 
 import com.chintec.ikks.common.util.ResultResponse;
+import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author rubin
@@ -12,23 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 public interface IPasswordFedService {
 
     /**
-     * 获取access_token
-     *
-     * @param userName
-     * @param password
-     * @return
-     * @throws Exception
-     */
-//    String getFedAccessToken(String userName, String password) throws Exception;
-
-    /**
      * logout
      *
-     * @param revokeToken
+     * @param httpServletRequest
      * @return
      * @throws Exception
      */
-    ResultResponse logout(String revokeToken) throws Exception;
+    ResultResponse logout(HttpServletRequest httpServletRequest,
+                          HttpServletResponse httpServletResponse,
+                          Authentication authentication) throws Exception;
 
     /**
      * 登入
