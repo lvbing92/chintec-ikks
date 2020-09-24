@@ -27,14 +27,18 @@ public class RabbitMqConfig {
     @Autowired
     RabbitAdmin rabbitAdmin;
 
-    // 声明延时Exchange
+    /**
+     * 声明延时Exchange
+     */
     @Bean("delayExchange")
     public TopicExchange delayExchange() {
         return new TopicExchange(MqVariableUtil.DELAY_EXCHANGE_NAME);
     }
 
 
-    // 声明延时队列并绑定到死信交换机
+    /**
+     * 声明延时队列并绑定到死信交换机
+     */
     @Bean("delayQueue")
     public Queue delayQueue() {
         Map<String, Object> args = new HashMap<>(2);
@@ -69,7 +73,9 @@ public class RabbitMqConfig {
     }
 
 
-    // 声明消息队列绑定关系
+    /**
+     * 声明消息队列绑定关系
+     */
     @Bean
     public Binding deadLetterBindingA(@Qualifier("messageQueue") Queue queue,
                                       @Qualifier("delayExchange") TopicExchange exchange) {
@@ -140,6 +146,7 @@ public class RabbitMqConfig {
         rabbitAdmin.declareExchange(delayExchange());
         rabbitAdmin.declareQueue(delayQueue());
     }
+
     @Bean
     @Scope("prototype")
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {

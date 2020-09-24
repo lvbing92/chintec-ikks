@@ -5,14 +5,17 @@ import com.chintec.ikks.auth.service.IOauthClientDetailsService;
 import com.chintec.ikks.auth.service.IPasswordFedService;
 import com.chintec.ikks.common.enums.CommonCodeEnum;
 import com.chintec.ikks.common.util.ResultResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.util.Arrays;
 
@@ -21,18 +24,22 @@ import java.util.Arrays;
  * @version 1.0
  * @date 2020/8/27 10:49
  */
+@Slf4j
 @Service
 public class PasswordFedServiceImpl implements IPasswordFedService {
 
     private static final String URL = "http://localhost:7070/oauth/token";
-    private static final String APP_KEY = "user_client";
-    private static final String SECRET_KEY = "123456";
     @Autowired
     private IOauthClientDetailsService iOauthClientDetailsService;
+    @Autowired
+    private LogoutSuccessHandlerImpl logoutSuccessHandler;
 
     @Override
-    public ResultResponse logout(String revokeToken) throws Exception {
-        return null;
+    public ResultResponse logout(HttpServletRequest httpServletRequest,
+                                 HttpServletResponse httpServletResponse,
+                                 Authentication authentication) throws Exception {
+        logoutSuccessHandler.onLogoutSuccess(httpServletRequest, httpServletResponse, authentication);
+        return ResultResponse.successResponse();
     }
 
     @Override
@@ -41,12 +48,14 @@ public class PasswordFedServiceImpl implements IPasswordFedService {
         OAuth2Token tokenMsg = null;
         try {
             tokenMsg = getToken(request);
+            log.info("tokenMsg=" + tokenMsg);
+
         } catch (Exception e) {
             return ResultResponse.failResponse(CommonCodeEnum.PARAMS_ERROR_CODE.getCode(), "用户名或密码错误");
         }
         //查询用户角色，菜单
 
-        return ResultResponse.successResponse("登录成功！",tokenMsg);
+        return ResultResponse.successResponse("登录成功！", tokenMsg);
     }
 
     /**
@@ -75,10 +84,11 @@ public class PasswordFedServiceImpl implements IPasswordFedService {
      */
     private MultiValueMap<String, String> getBody(HttpServletRequest request) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        String userName = request.getParameter("userName");
+        String passWord = request.getParameter("passWord");
         formData.add("grant_type", "password");
-        //TODO 页面上输入的用户名和密码
-        formData.add("username", "rubin");
-        formData.add("password", "123456");
+        formData.add("username", userName);
+        formData.add("password", passWord);
         //重定向地址
         formData.add("redirect_uri", "http://www.baidu.com");
         return formData;
@@ -97,5 +107,4 @@ public class PasswordFedServiceImpl implements IPasswordFedService {
         httpHeaders.add("Authorization", "Basic " + "dXNlcl9jbGllbnQ6MTIzNDU2");
         return httpHeaders;
     }
-
 }
