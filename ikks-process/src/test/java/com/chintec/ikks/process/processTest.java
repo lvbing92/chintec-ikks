@@ -42,7 +42,7 @@ class processTest {
         flowTask1.setName("流程开始测试");
         flowTask1.setStatus(NodeStateEnum.PENDING);
 //        iFlowTaskService.init(flowTask);
-        iFlowTaskService.startTask(flowTask1);
+//        iFlowTaskService.createTask(flowTask1);
     }
 
     @Test
