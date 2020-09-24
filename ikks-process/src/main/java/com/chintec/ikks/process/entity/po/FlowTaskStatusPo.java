@@ -1,6 +1,5 @@
 package com.chintec.ikks.process.entity.po;
 
-import com.chintec.ikks.common.enums.NodeStateChangeEnum;
 import com.chintec.ikks.common.enums.NodeStateEnum;
 import lombok.Data;
 
@@ -10,7 +9,7 @@ import lombok.Data;
  * @date 2020/9/24 9:50
  */
 @Data
-public class FlowTaskStatus {
+public class FlowTaskStatusPo {
     /**
      * 状态任务id
      */

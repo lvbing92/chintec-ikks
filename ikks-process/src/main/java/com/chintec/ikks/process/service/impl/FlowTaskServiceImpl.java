@@ -1,16 +1,30 @@
 package com.chintec.ikks.process.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;
+import com.chintec.ikks.common.enums.NodeStateEnum;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.process.entity.po.FlowTaskStatus;
+import com.chintec.ikks.process.entity.FlowNode;
+import com.chintec.ikks.process.entity.FlowTask;
+import com.chintec.ikks.process.entity.FlowTaskStatus;
+import com.chintec.ikks.process.entity.po.FlowTaskStatusPo;
+import com.chintec.ikks.process.entity.vo.FlowTaskVo;
 import com.chintec.ikks.process.event.SendEvent;
+import com.chintec.ikks.process.mapper.FlowTaskMapper;
+import com.chintec.ikks.process.service.IFlowNodeService;
 import com.chintec.ikks.process.service.IFlowTaskService;
-import lombok.extern.slf4j.Slf4j;
+import com.chintec.ikks.process.service.IFlowTaskStatusService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -18,18 +32,70 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author jeff·Tang
- * @since 2020-09-17
+ * @since 2020-09-24
  */
 @Service
-@Slf4j
-public class FlowTaskServiceImpl implements IFlowTaskService {
+public class FlowTaskServiceImpl extends ServiceImpl<FlowTaskMapper, FlowTask> implements IFlowTaskService {
+    @Autowired
+    private IFlowNodeService iFlowNodeService;
+
+    @Autowired
+    private IFlowTaskStatusService iFlowTaskStatusService;
+
     @Autowired
     private SendEvent sendEvent;
 
     @Override
-    public ResultResponse startTask(FlowTaskStatus flowTaskStatus) {
-        Message<NodeStateChangeEnum> message = MessageBuilder.withPayload(NodeStateChangeEnum.GOING).setHeader("flowTaskStatus", flowTaskStatus).build();
-        AssertsUtil.isTrue(sendEvent.sendEvents(message, flowTaskStatus), "状态事件执行失败");
-        return ResultResponse.successResponse();
+    public ResultResponse createTask(FlowTaskVo flowTaskVo) {
+        FlowTask flowTask = new FlowTask();
+        BeanUtils.copyProperties(flowTaskVo, flowTask);
+        flowTask.setCreateTime(LocalDateTime.now());
+        flowTask.setStatus(NodeStateEnum.PENDING.getCode().toString());
+        flowTask.setUpdataBy("");
+        flowTask.setUpdateTime(LocalDateTime.now());
+        AssertsUtil.isTrue(!this.saveOrUpdate(flowTask), "创建任务失败");
+        return saveTaskNodeStatus(flowTask.getFollowId(), flowTask.getId());
+    }
+
+    private ResultResponse saveTaskNodeStatus(Integer flowId, Integer flowTaskId) {
+        AssertsUtil.isTrue(!iFlowTaskStatusService.saveBatch(iFlowNodeService
+                .list(new QueryWrapper<FlowNode>()
+                        .lambda()
+                        .eq(FlowNode::getFlowInformationId, flowId))
+                .stream()
+                .map(flowNode -> {
+                    FlowTaskStatus flowTaskStatus = new FlowTaskStatus();
+                    flowTaskStatus.setTaskId(flowTaskId);
+                    flowTaskStatus.setTaskFunction(flowNode.getNextNodeCondition());
+                    flowTaskStatus.setName(flowNode.getNodeName());
+                    flowTaskStatus.setAssignee(flowNode.getOwnerId());
+                    flowTaskStatus.setNodeId(flowNode.getId());
+                    flowTaskStatus.setUpdataBy("");
+                    flowTaskStatus.setHandleStatus(NodeStateEnum.PENDING.getCode().toString());
+                    flowTaskStatus.setUpdateTime(LocalDateTime.now());
+                    flowTaskStatus.setCreateTime(LocalDateTime.now());
+                    return flowTaskStatus;
+                }).collect(Collectors.toList())), "创建任务失败");
+        AssertsUtil.isTrue(!startEvent(flowTaskId), "任务初始化失败");
+        return ResultResponse.successResponse("创建任务成功");
+    }
+
+    private boolean startEvent(Integer flowTaskId) {
+        FlowTask byId = this.getById(flowTaskId);
+        FlowNode one = iFlowNodeService.getOne(new QueryWrapper<FlowNode>()
+                .lambda()
+                .eq(FlowNode::getFlowInformationId, byId.getFollowId())
+                .eq(FlowNode::getNodeType, "1"));
+        FlowTaskStatus flowTaskStatus = iFlowTaskStatusService.getOne(new QueryWrapper<FlowTaskStatus>()
+                .lambda()
+                .eq(FlowTaskStatus::getNodeId, one.getId()));
+        FlowTaskStatusPo flowTaskStatusPo = new FlowTaskStatusPo();
+        flowTaskStatusPo.setData(flowTaskStatus);
+        flowTaskStatusPo.setName(flowTaskStatus.getName());
+        flowTaskStatusPo.setId(UUID.randomUUID().toString());
+        flowTaskStatusPo.setStatus(NodeStateEnum.PENDING);
+        flowTaskStatusPo.setTime(one.getDelayTime() * 3600 * 1000 + "");
+        Message<NodeStateChangeEnum> flowTaskStatus1 = MessageBuilder.withPayload(NodeStateChangeEnum.GOING).setHeader("flowTaskStatusPo", flowTaskStatusPo).build();
+        return sendEvent.sendEvents(flowTaskStatus1, flowTaskStatusPo);
     }
 }

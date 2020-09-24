@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
  * </p>
  *
  * @author jeff·Tang
- * @since 2020-09-17
+ * @since 2020-09-24
  */
 @RestController
-@RequestMapping("/process/v1")
+@RequestMapping("/process/flow-task")
 public class FlowTaskController {
 
 }

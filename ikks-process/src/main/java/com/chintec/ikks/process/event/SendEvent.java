@@ -2,7 +2,7 @@ package com.chintec.ikks.process.event;
 
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;
 import com.chintec.ikks.common.enums.NodeStateEnum;
-import com.chintec.ikks.process.entity.po.FlowTaskStatus;
+import com.chintec.ikks.process.entity.po.FlowTaskStatusPo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
@@ -27,9 +27,16 @@ public class SendEvent {
     private StateMachineFactory<NodeStateEnum, NodeStateChangeEnum> nodeStateMachineFactory;
 
     @Autowired
-    private StateMachinePersister<NodeStateEnum, NodeStateChangeEnum, FlowTaskStatus> persister;
+    private StateMachinePersister<NodeStateEnum, NodeStateChangeEnum, FlowTaskStatusPo> persister;
 
-    public boolean sendEvents(Message<NodeStateChangeEnum> message, FlowTaskStatus flowTaskStatus) {
+    /**
+     * 一个状态机触发事件的方法
+     * 线程安全的
+     * @param message 消息体
+     * @param flowTaskStatus 内容信息
+     * @return boolean true 成功  false 失败
+     */
+    public boolean sendEvents(Message<NodeStateChangeEnum> message, FlowTaskStatusPo flowTaskStatus) {
         String s = UUID.randomUUID().toString();
         synchronized (s.intern()) {
             boolean result = false;

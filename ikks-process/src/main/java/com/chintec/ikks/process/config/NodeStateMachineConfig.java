@@ -2,7 +2,7 @@ package com.chintec.ikks.process.config;
 
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;
 import com.chintec.ikks.common.enums.NodeStateEnum;
-import com.chintec.ikks.process.entity.po.FlowTaskStatus;
+import com.chintec.ikks.process.entity.po.FlowTaskStatusPo;
 import com.chintec.ikks.process.event.NodeMachinePersister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +28,7 @@ public class NodeStateMachineConfig extends StateMachineConfigurerAdapter<NodeSt
     private NodeMachinePersister nodeMachinePersister;
 
     @Bean
-    public StateMachinePersister<NodeStateEnum, NodeStateChangeEnum, FlowTaskStatus> stateMachinePersist() {
+    public StateMachinePersister<NodeStateEnum, NodeStateChangeEnum, FlowTaskStatusPo> stateMachinePersist() {
         return new DefaultStateMachinePersister<>(nodeMachinePersister);
     }
 

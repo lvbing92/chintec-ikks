@@ -2,7 +2,7 @@ package com.chintec.ikks.process;
 
 import com.chintec.ikks.common.enums.NodeStateEnum;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.process.entity.po.FlowTaskStatus;
+import com.chintec.ikks.process.entity.po.FlowTaskStatusPo;
 import com.chintec.ikks.process.entity.po.MessageReq;
 import com.chintec.ikks.process.feign.IRabbitMqService;
 import com.chintec.ikks.process.service.IFlowTaskService;
@@ -37,7 +37,7 @@ class processTest {
 //        flowTask.setName("流程开始测试");
 //        flowTask.setStatus("0");
 //        flowTask.setTaskStatus(NodeStateEnum.PENDING);
-        FlowTaskStatus flowTask1 = new FlowTaskStatus();
+        FlowTaskStatusPo flowTask1 = new FlowTaskStatusPo();
         flowTask1.setId(UUID.randomUUID().toString());
         flowTask1.setName("流程开始测试");
         flowTask1.setStatus(NodeStateEnum.PENDING);
@@ -47,7 +47,7 @@ class processTest {
 
     @Test
     void redis() {
-        FlowTaskStatus flowTaskStatus = new FlowTaskStatus();
+        FlowTaskStatusPo flowTaskStatus = new FlowTaskStatusPo();
         flowTaskStatus.setId("1795fec1-b343-42a1-95ea-7d2400b6ad4e");
         flowTaskStatus.setName("这是个测试");
         flowTaskStatus.setTime("6000");
