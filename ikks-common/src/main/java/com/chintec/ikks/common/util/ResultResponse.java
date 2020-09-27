@@ -69,6 +69,16 @@ public class ResultResponse<T> {
     }
 
     /**
+     * 默认失败
+     *
+     * @param message 错误信息
+     * @return resultResponse
+     */
+    public static ResultResponse failResponse(String message) {
+        return getFailResultResponse(null, message, null);
+    }
+
+    /**
      * 自定义失败
      *
      * @param message 信息
