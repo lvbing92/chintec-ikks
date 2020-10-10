@@ -14,6 +14,8 @@ import com.chintec.ikks.process.service.IFlowNodeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,22 +35,27 @@ public class FlowInfoServiceImpl extends ServiceImpl<FlowInfoMapper, FlowInfo> i
     private IFlowNodeService iFlowNodeService;
 
     @Override
-    public ResultResponse createFlowNode(FlowInfoVo flowInfoVo)  {
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
+    public ResultResponse createFlowNode(FlowInfoVo flowInfoVo) {
         FlowInfo flowInfo = new FlowInfo();
         BeanUtils.copyProperties(flowInfoVo, flowInfo);
+        flowInfo.setFlowStatus("1");
         flowInfo.setUpdateTime(LocalDateTime.now());
         flowInfo.setCreateTime(LocalDateTime.now());
         flowInfo.setUpdataBy("");
         AssertsUtil.isTrue(!this.saveOrUpdate(flowInfo), "创建流程信息失败");
-        return saveFlowNodes(flowInfoVo.getFlowNodes());
+        return saveFlowNodes(flowInfoVo.getFlowNodes(), flowInfo.getId());
     }
 
-    private ResultResponse saveFlowNodes(List<FlowNodeVo> flowNodeVos) {
+    private ResultResponse saveFlowNodes(List<FlowNodeVo> flowNodeVos, Integer flowId) {
         AssertsUtil.isTrue(!iFlowNodeService.saveBatch(flowNodeVos.stream().map(flowNodeVo -> {
             FlowNode flowNode = new FlowNode();
             BeanUtils.copyProperties(flowNodeVo, flowNode);
             flowNode.setCreateTime(LocalDateTime.now());
             flowNode.setUpdataBy("");
+            flowNode.setFlowInformationId(flowId);
+            flowNode.setNextNodes(JSONObject.toJSONString(flowNodeVo.getNextNodes()));
+            flowNode.setProveNodes(JSONObject.toJSONString(flowNodeVo.getProveNodes()));
             flowNode.setUpdateTime(LocalDateTime.now());
             flowNode.setNextNodeCondition(JSONObject.toJSONString(flowNodeVo.getNodeFunctionVos()));
             return flowNode;

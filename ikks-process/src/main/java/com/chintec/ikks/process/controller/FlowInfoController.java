@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2020-09-24
  */
 @RestController
-@RequestMapping("/process/v1")
+@RequestMapping("/v1")
 public class FlowInfoController {
     @Autowired
     private IFlowInfoService iFlowInfoService;

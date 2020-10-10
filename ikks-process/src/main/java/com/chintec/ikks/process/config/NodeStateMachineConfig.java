@@ -43,14 +43,20 @@ public class NodeStateMachineConfig extends StateMachineConfigurerAdapter<NodeSt
     @Override
     public void configure(StateMachineTransitionConfigurer<NodeStateEnum, NodeStateChangeEnum> transitions) throws Exception {
         transitions
+                //pending to going  事件:going事件
                 .withExternal()
-                .source(NodeStateEnum.PENDING).target(NodeStateEnum.GOING).event(NodeStateChangeEnum.GOING)
+                .source(NodeStateEnum.PENDING).target(NodeStateEnum.GOING)
+                .event(NodeStateChangeEnum.GOING)
                 .and()
+                //going to pass  事件:pass事件
                 .withExternal()
-                .source(NodeStateEnum.GOING).target(NodeStateEnum.PASS).event(NodeStateChangeEnum.PASS)
+                .source(NodeStateEnum.GOING).target(NodeStateEnum.PASS)
+                .event(NodeStateChangeEnum.PASS)
                 .and()
+                //going to refuse  事件:refuse事件
                 .withExternal()
-                .source(NodeStateEnum.GOING).target(NodeStateEnum.REFUSE).event(NodeStateChangeEnum.REFUSE);
+                .source(NodeStateEnum.GOING).target(NodeStateEnum.REFUSE)
+                .event(NodeStateChangeEnum.REFUSE);
     }
 
 

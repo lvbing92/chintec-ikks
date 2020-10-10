@@ -1,7 +1,12 @@
 package com.chintec.ikks.process.entity.po;
 
+import com.alibaba.fastjson.JSONObject;
 import com.chintec.ikks.common.enums.NodeStateEnum;
+import com.chintec.ikks.process.entity.FlowTaskStatus;
+import com.chintec.ikks.process.entity.vo.NodeFunctionVo;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author Jeff·Tang
@@ -29,5 +34,24 @@ public class FlowTaskStatusPo {
     /**
      * 任务内容
      */
-    private Object data;
+    private FlowTaskStatus data;
+    /**
+     * 每个任务返回的状态码
+     */
+    private String taskStatus;
+
+    private Integer isFinish;
+
+    private Integer rejectNode;
+
+    private List<NodeFunctionVo> nodeIds;
+
+    public List<NodeFunctionVo> getNodeIds() {
+        if (isFinish != null && isFinish == 3) {
+            return null;
+        } else if (data == null) {
+            return this.nodeIds;
+        }
+        return JSONObject.parseArray(data.getTaskFunction(), NodeFunctionVo.class);
+    }
 }

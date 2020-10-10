@@ -21,6 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -46,6 +49,7 @@ public class FlowTaskServiceImpl extends ServiceImpl<FlowTaskMapper, FlowTask> i
     private SendEvent sendEvent;
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = {Exception.class})
     public ResultResponse createTask(FlowTaskVo flowTaskVo) {
         FlowTask flowTask = new FlowTask();
         BeanUtils.copyProperties(flowTaskVo, flowTask);
@@ -54,7 +58,7 @@ public class FlowTaskServiceImpl extends ServiceImpl<FlowTaskMapper, FlowTask> i
         flowTask.setUpdataBy("");
         flowTask.setUpdateTime(LocalDateTime.now());
         AssertsUtil.isTrue(!this.saveOrUpdate(flowTask), "创建任务失败");
-        return saveTaskNodeStatus(flowTask.getFollowId(), flowTask.getId());
+        return saveTaskNodeStatus(flowTask.getFollowInfoId(), flowTask.getId());
     }
 
     private ResultResponse saveTaskNodeStatus(Integer flowId, Integer flowTaskId) {
@@ -69,32 +73,44 @@ public class FlowTaskServiceImpl extends ServiceImpl<FlowTaskMapper, FlowTask> i
                     flowTaskStatus.setTaskFunction(flowNode.getNextNodeCondition());
                     flowTaskStatus.setName(flowNode.getNodeName());
                     flowTaskStatus.setAssignee(flowNode.getOwnerId());
-                    flowTaskStatus.setNodeId(flowNode.getId());
+                    flowTaskStatus.setNodeId(flowNode.getNodeId());
                     flowTaskStatus.setUpdataBy("");
-                    flowTaskStatus.setHandleStatus(NodeStateEnum.PENDING.getCode().toString());
+                    flowTaskStatus.setStatusId(UUID.randomUUID().toString());
+                    flowTaskStatus.setHandleStatus(NodeStateEnum.GOING.getCode().toString());
+                    flowTaskStatus.setStatus(NodeStateEnum.PENDING.getCode().toString());
                     flowTaskStatus.setUpdateTime(LocalDateTime.now());
                     flowTaskStatus.setCreateTime(LocalDateTime.now());
                     return flowTaskStatus;
                 }).collect(Collectors.toList())), "创建任务失败");
+        //初始化任务,开始第一个节点任务
         AssertsUtil.isTrue(!startEvent(flowTaskId), "任务初始化失败");
         return ResultResponse.successResponse("创建任务成功");
     }
 
+    /**
+     * 开启第一个节点初始化节点信息
+     *
+     * @param flowTaskId taskId
+     * @return boolean
+     */
     private boolean startEvent(Integer flowTaskId) {
         FlowTask byId = this.getById(flowTaskId);
         FlowNode one = iFlowNodeService.getOne(new QueryWrapper<FlowNode>()
                 .lambda()
-                .eq(FlowNode::getFlowInformationId, byId.getFollowId())
+                .eq(FlowNode::getFlowInformationId, byId.getFollowInfoId())
                 .eq(FlowNode::getNodeType, "1"));
         FlowTaskStatus flowTaskStatus = iFlowTaskStatusService.getOne(new QueryWrapper<FlowTaskStatus>()
                 .lambda()
-                .eq(FlowTaskStatus::getNodeId, one.getId()));
+                .eq(FlowTaskStatus::getNodeId, one.getNodeId())
+                .eq(FlowTaskStatus::getTaskId, flowTaskId));
         FlowTaskStatusPo flowTaskStatusPo = new FlowTaskStatusPo();
         flowTaskStatusPo.setData(flowTaskStatus);
         flowTaskStatusPo.setName(flowTaskStatus.getName());
-        flowTaskStatusPo.setId(UUID.randomUUID().toString());
+        flowTaskStatusPo.setId(flowTaskStatus.getStatusId());
         flowTaskStatusPo.setStatus(NodeStateEnum.PENDING);
-        flowTaskStatusPo.setTime(one.getDelayTime() * 3600 * 1000 + "");
+        flowTaskStatusPo.setIsFinish(StringUtils.isEmpty(one.getNodeType()) ? 2 : Integer.parseInt(one.getNodeType()));
+        flowTaskStatusPo.setRejectNode(one.getRejectNode());
+        flowTaskStatusPo.setTime(one.getDelayTime() == null ? "" : one.getDelayTime() * 3600 * 1000 + "");
         Message<NodeStateChangeEnum> flowTaskStatus1 = MessageBuilder.withPayload(NodeStateChangeEnum.GOING).setHeader("flowTaskStatusPo", flowTaskStatusPo).build();
         return sendEvent.sendEvents(flowTaskStatus1, flowTaskStatusPo);
     }

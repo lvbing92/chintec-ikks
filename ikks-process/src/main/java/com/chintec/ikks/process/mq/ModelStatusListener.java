@@ -17,6 +17,7 @@ import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -36,15 +37,30 @@ public class ModelStatusListener {
         log.info(new String(message.getBody()));
         MessageReq messageReq = JSONObject.parseObject(new String(message.getBody()), MessageReq.class);
         FlowTaskStatusPo flowTaskStatusPo = JSONObject.parseObject(JSONObject.toJSONString(messageReq.getMessageMsg()), FlowTaskStatusPo.class);
-        FlowTaskStatus flowTaskStatus = JSONObject.parseObject(JSONObject.toJSONString(flowTaskStatusPo.getData()), FlowTaskStatus.class);
-        if ("1".equals(flowTaskStatus.getHandleStatus())) {
-            org.springframework.messaging.Message<NodeStateChangeEnum> flowTaskStatusM = MessageBuilder.withPayload(NodeStateChangeEnum.PASS).setHeader("flowTaskStatusPo", flowTaskStatusPo).build();
-            AssertsUtil.isTrue(sendEvent.sendEvents(flowTaskStatusM, flowTaskStatusPo), "任务通过失败");
-        } else if ("0".equals(flowTaskStatus.getHandleStatus())) {
-            org.springframework.messaging.Message<NodeStateChangeEnum> flowTaskStatusM = MessageBuilder.withPayload(NodeStateChangeEnum.REFUSE).setHeader("flowTaskStatusPo", flowTaskStatusPo).build();
-            AssertsUtil.isTrue(sendEvent.sendEvents(flowTaskStatusM, flowTaskStatusPo), "任务驳回失败");
-        } else {
-            AssertsUtil.isTrue(true, "任务操作类型不存在");
+        FlowTaskStatus flowTaskStatus = flowTaskStatusPo.getData();
+        try {
+            if ("1".equals(flowTaskStatus.getHandleStatus())) {
+                org.springframework.messaging.Message<NodeStateChangeEnum> flowTaskStatusM = MessageBuilder.withPayload(NodeStateChangeEnum.PASS).setHeader("flowTaskStatusPo", flowTaskStatusPo).build();
+                log.info("进入通过::{}", flowTaskStatus);
+                sendEvent.sendEvents(flowTaskStatusM, flowTaskStatusPo);
+            } else if ("0".equals(flowTaskStatus.getHandleStatus())) {
+                log.info("进入驳回::{}", flowTaskStatus);
+                org.springframework.messaging.Message<NodeStateChangeEnum> flowTaskStatusM = MessageBuilder.withPayload(NodeStateChangeEnum.REFUSE).setHeader("flowTaskStatusPo", flowTaskStatusPo).build();
+                AssertsUtil.isTrue(sendEvent.sendEvents(flowTaskStatusM, flowTaskStatusPo), "任务驳回失败");
+            } else {
+                AssertsUtil.isTrue(true, "任务操作类型不存在");
+            }
+            // 手动签收消息,通知mq服务器端删除该消息
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+        } catch (IOException e) {
+            log.info(e.getMessage());
+            try {
+                long deliveryTag = message.getMessageProperties().getDeliveryTag();
+                channel.basicNack(deliveryTag, false, false);
+            } catch (IOException ex) {
+                log.info("取消消息失败::{}", ex.getMessage());
+            }
         }
     }
+
 }

@@ -32,7 +32,8 @@ public class SendEvent {
     /**
      * 一个状态机触发事件的方法
      * 线程安全的
-     * @param message 消息体
+     *
+     * @param message        消息体
      * @param flowTaskStatus 内容信息
      * @return boolean true 成功  false 失败
      */
@@ -41,17 +42,16 @@ public class SendEvent {
         synchronized (s.intern()) {
             boolean result = false;
             StateMachine<NodeStateEnum, NodeStateChangeEnum> nodeStateMachine = nodeStateMachineFactory.getStateMachine(STATE_MACHINE_ID);
-            log.info("id=" + s + " 状态机 nodeStateMachine" + nodeStateMachine);
+            log.info("id={},状态机 nodeStateMachine={}", s, nodeStateMachine);
             try {
                 nodeStateMachine.start();
                 //尝试恢复状态机状态
                 persister.restore(nodeStateMachine, flowTaskStatus);
-                log.info("消息id=" + flowTaskStatus.getId() + "id" + s + " 状态机 nodeStateMachine id=" + nodeStateMachine.getId());
-                //添加延迟用于线程安全测试
-                Thread.sleep(1000);
+                log.info("消息id={},id={},状态机 nodeStateMachine id={}", flowTaskStatus.getId(), s, nodeStateMachine.getId());
                 result = nodeStateMachine.sendEvent(message);
                 //持久化状态机状态
                 persister.persist(nodeStateMachine, flowTaskStatus);
+                return result;
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

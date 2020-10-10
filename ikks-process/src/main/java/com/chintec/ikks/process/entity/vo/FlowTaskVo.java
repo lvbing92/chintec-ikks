@@ -17,7 +17,7 @@ public class FlowTaskVo {
     /**
      * 实例id
      */
-    private Integer followId;
+    private Integer followInfoId;
 
     /**
      * 任务名称

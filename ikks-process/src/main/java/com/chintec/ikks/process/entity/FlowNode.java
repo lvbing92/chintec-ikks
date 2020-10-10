@@ -115,7 +115,7 @@ public class FlowNode extends Model<FlowNode> {
     private Integer rejectNode;
 
     /**
-     * 下节点走向：1，单一走向 2，多条并行 3，多选一
+     * 下节点走向：0，单一走向 1，多条并行 2，多选一
      */
     private String nextNodeTrend;
 

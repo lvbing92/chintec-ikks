@@ -66,8 +66,10 @@ public class FlowTaskStatus extends Model<FlowTaskStatus> {
     private LocalDateTime updateTime;
 
     private String updataBy;
-
-
+    /**
+     * 状态机的Id
+     */
+    private String statusId;
     @Override
     protected Serializable pkVal() {
         return this.id;

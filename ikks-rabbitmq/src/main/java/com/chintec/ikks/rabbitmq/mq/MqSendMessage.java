@@ -41,7 +41,7 @@ public class MqSendMessage {
         if (!StringUtil.isNullOrEmpty(timeMills)) {
             messageProperties.setExpiration(timeMills);
         }
-        messageProperties.setCorrelationId(String.valueOf(UUID.randomUUID().toString().getBytes()));
+        messageProperties.setCorrelationId(Arrays.toString(UUID.randomUUID().toString().getBytes()));
         Message message = new Message(JSONObject.toJSONBytes(msg), messageProperties);
         rabbitTemplate.setReturnCallback((backMessage, replyCode, replyText, exchange, routingKey) -> {
             log.info("被退回的消息为：{}", backMessage);
@@ -51,7 +51,7 @@ public class MqSendMessage {
             log.info("routingKey：{}", routingKey);
         });
         rabbitTemplate.convertAndSend(MqVariableUtil.DELAY_EXCHANGE_NAME, MqVariableUtil.DELAY_QUEUE_ROUTING_KEY, message);
-        confirmCallback(rabbitTemplate);
+        confirmCallback();
         return ResultResponse.successResponse();
     }
 
@@ -75,7 +75,7 @@ public class MqSendMessage {
         /*
         确认回调机制当 ack为false的时候会再次向mq发送消息
          */
-        confirmCallback(rabbitTemplate);
+        confirmCallback();
         return ResultResponse.successResponse();
     }
 
@@ -99,11 +99,11 @@ public class MqSendMessage {
         /*
         确认回调机制当 ack为false的时候会再次向mq发送消息
          */
-        confirmCallback(rabbitTemplate);
+        confirmCallback();
         return ResultResponse.successResponse();
     }
 
-    private void confirmCallback(RabbitTemplate rabbitTemplate){
+    private void confirmCallback(){
         rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {
             @Override
             public void confirm(CorrelationData correlationData, boolean ack, String cause) {

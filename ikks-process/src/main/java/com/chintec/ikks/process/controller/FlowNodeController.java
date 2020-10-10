@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2020-09-24
  */
 @RestController
-@RequestMapping("/process/flow-node")
+@RequestMapping("/v1")
 public class FlowNodeController {
 
 }

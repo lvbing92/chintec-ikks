@@ -1,6 +1,8 @@
 package com.chintec.ikks.process.entity.vo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author Jeff·Tang
@@ -8,6 +10,8 @@ import lombok.Data;
  * @date 2020/9/24 15:15
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class NodeFunctionVo {
     /**
      * 方法类型

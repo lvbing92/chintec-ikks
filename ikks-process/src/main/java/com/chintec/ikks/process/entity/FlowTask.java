@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author jeff·Tang
@@ -34,7 +34,7 @@ public class FlowTask extends Model<FlowTask> {
     /**
      * 实例id
      */
-    private Integer followId;
+    private Integer followInfoId;
 
     /**
      * 任务名称
@@ -65,6 +65,7 @@ public class FlowTask extends Model<FlowTask> {
      * 更新人
      */
     private String updataBy;
+
 
 
     @Override

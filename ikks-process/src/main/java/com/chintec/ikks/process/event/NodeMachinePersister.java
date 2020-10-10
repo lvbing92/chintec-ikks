@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;
 import com.chintec.ikks.common.enums.NodeStateEnum;
 import com.chintec.ikks.process.entity.po.FlowTaskStatusPo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.statemachine.StateMachineContext;
 import org.springframework.statemachine.StateMachinePersist;
@@ -17,6 +18,7 @@ import javax.annotation.Resource;
  * @version 1.0
  * @date 2020/9/23 16:14
  */
+@Slf4j
 @Component
 public class NodeMachinePersister implements StateMachinePersist<NodeStateEnum, NodeStateChangeEnum, FlowTaskStatusPo> {
     @Resource
@@ -30,12 +32,14 @@ public class NodeMachinePersister implements StateMachinePersist<NodeStateEnum, 
     @Override
     public void write(StateMachineContext<NodeStateEnum, NodeStateChangeEnum> context, FlowTaskStatusPo contextObj) {
         //状态持久化到redis缓存中去
+        log.info("开启持久化::{}", contextObj.getId());
         redisTemplate.opsForValue().set(contextObj.getId(), context.getState());
     }
 
     @Override
     public StateMachineContext<NodeStateEnum, NodeStateChangeEnum> read(FlowTaskStatusPo contextObj) {
         //读取redis内的记录 有就返回redis内的任务状态,没有就返回一个新的任务状态
+        log.info("查询redis记录::{}", contextObj.getId());
         Boolean aBoolean = redisTemplate.hasKey(contextObj.getId());
         return (aBoolean == null
                 ? false
