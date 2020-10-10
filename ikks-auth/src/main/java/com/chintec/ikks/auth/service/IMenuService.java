@@ -1,8 +1,7 @@
 package com.chintec.ikks.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.chintec.ikks.auth.entity.Authority;
-import com.chintec.ikks.auth.request.AuthorityRequest;
+import com.chintec.ikks.auth.entity.Menu;
 import com.chintec.ikks.common.util.ResultResponse;
 
 /**
@@ -10,10 +9,10 @@ import com.chintec.ikks.common.util.ResultResponse;
  * 服务类
  * </p>
  *
- * @author ruBIn·lv
- * @since 2020-08-26
+ * @author rubIn·lv
+ * @since 2020-09-01
  */
-public interface IAuthorityService extends IService<Authority> {
+public interface IMenuService extends IService<Menu> {
     /**
      * 角色列表查询
      *
@@ -24,30 +23,31 @@ public interface IAuthorityService extends IService<Authority> {
      * @param sorted      排序
      * @return ResultResponse
      */
-    ResultResponse getRoleList(Integer pageSize, Integer currentPage, String role,
+    ResultResponse getMenuList(Integer pageSize, Integer currentPage,
                                String status, String searchValue, String sorted);
 
     /**
-     * 新增角色
+     * 新增菜单
      *
-     * @param authorityRequest 角色对象
+     * @param menu 菜单
      * @return ResultResponse
      */
-    ResultResponse addRole(AuthorityRequest authorityRequest);
+    ResultResponse addMenu(Menu menu);
 
     /**
-     * 通过Id查询角色
+     * 通过Id查询菜单
      *
-     * @param id 角色Id
+     * @param id 菜单Id
      * @return ResultResponse
      */
-    ResultResponse queryRole(String id);
+    ResultResponse queryMenu(String id);
 
     /**
-     * 删除角色
+     * 删除菜单
      *
-     * @param id 角色Id
+     * @param id 菜单Id
      * @return ResultResponse
      */
-    ResultResponse deleteRole(String id);
+    ResultResponse deleteMenu(String id);
+
 }

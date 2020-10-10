@@ -5,12 +5,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chintec.ikks.auth.entity.Authority;
+import com.chintec.ikks.auth.entity.Credentials;
 import com.chintec.ikks.auth.mapper.AuthorityMapper;
 import com.chintec.ikks.auth.request.AuthorityRequest;
 import com.chintec.ikks.auth.service.IAuthorityService;
+import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.PageResultResponse;
 import com.chintec.ikks.common.util.ResultResponse;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
@@ -58,14 +62,22 @@ public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority
 
     @Override
     public ResultResponse addRole(AuthorityRequest authorityRequest) {
-        //查询角色名称是否存在
-
-        return null;
+        //查询角色是否存在
+        Authority authority =getById(new QueryWrapper<Authority>()
+                .lambda().eq(Authority::getAuthority,authorityRequest.getAuthority()));
+        AssertsUtil.isTrue(!ObjectUtils.isEmpty(authority),"添加角色已存在！");
+        BeanUtils.copyProperties(authorityRequest, authority);
+        //保存角色
+        this.save(authority);
+        return ResultResponse.successResponse("添加角色成功！",authority);
     }
 
     @Override
     public ResultResponse queryRole(String id) {
-        return null;
+        //查寻角色
+        Authority authority =this.getById(new QueryWrapper<Authority>().lambda().eq(Authority::getId,id));
+        //查询当前用户角色
+        return ResultResponse.successResponse("查询用户详情成功",authority);
     }
 
     @Override

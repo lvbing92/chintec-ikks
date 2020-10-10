@@ -18,13 +18,13 @@ public interface ICredentialsService extends IService<Credentials> {
     /**
      * 用户列表查询
      *
-     * @param pageSize
-     * @param currentPage
-     * @param role
-     * @param status
-     * @param searchValue
-     * @param sorted
-     * @return
+     * @param pageSize    页数
+     * @param currentPage 当前页
+     * @param role        角色
+     * @param status      状态
+     * @param searchValue 查询条件
+     * @param sorted      排序
+     * @return ResultResponse
      */
     ResultResponse getUserList(Integer pageSize, Integer currentPage, String role,
                                String status, String searchValue, String sorted);
@@ -32,23 +32,24 @@ public interface ICredentialsService extends IService<Credentials> {
     /**
      * 新增用户
      *
-     * @return
+     * @param credentialsRequest 用户对象
+     * @return ResultResponse
      */
     ResultResponse addUser(CredentialsRequest credentialsRequest);
 
     /**
      * 通过Id查询用户
      *
-     * @param id
-     * @return
+     * @param id 用户Id
+     * @return ResultResponse
      */
-    public ResultResponse queryUser(String id);
+    ResultResponse queryUser(String id);
 
     /**
      * 删除用户
      *
-     * @param id
-     * @return
+     * @param id 用户Id
+     * @return ResultResponse
      */
-    public ResultResponse deleteUser(String id);
+    ResultResponse deleteUser(String id);
 }

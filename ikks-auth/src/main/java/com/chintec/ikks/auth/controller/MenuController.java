@@ -1,7 +1,9 @@
 package com.chintec.ikks.auth.controller;
 
+import com.chintec.ikks.auth.entity.Menu;
 import com.chintec.ikks.auth.request.DepartmentRequest;
 import com.chintec.ikks.auth.service.IDepartmentService;
+import com.chintec.ikks.auth.service.IMenuService;
 import com.chintec.ikks.common.util.ResultResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -9,19 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @author rubin
+ * @author rubin·lv
  * @version 1.0
- * @date 2020/9/2 9:50
+ * @date 2020/9/25 11:05
  */
 @RestController
 @RequestMapping(value = "v1")
-@Api(value = "auth", tags = "部门管理")
-public class DepartmentController {
+@Api(value = "auth", tags = "菜单管理")
+public class MenuController {
     @Autowired
-    private IDepartmentService iDepartmentService;
+    private IMenuService iMenuService;
 
     /**
-     * 部门列表查询
+     * 菜单列表查询
      *
      * @param pageSize    页数
      * @param currentPage 当前页
@@ -31,49 +33,49 @@ public class DepartmentController {
      * @return ResultResponse
      */
     @ApiOperation(value = "查询部门列表")
-    @GetMapping("/departments")
+    @GetMapping("/menus")
     public ResultResponse getUserList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                       @RequestParam(value = "currentPage") Integer currentPage,
                                       @RequestParam(value = "status", required = false) String status,
                                       @RequestParam(value = "searchValue", required = false) String searchValue,
                                       @RequestParam(value = "sorted", required = false) String sorted) {
-        return iDepartmentService.getDepartmentList(pageSize, currentPage, status, searchValue, sorted);
+        return iMenuService.getMenuList(pageSize, currentPage, status, searchValue, sorted);
     }
 
     /**
-     * 新增部门
+     * 新增菜单
      *
-     * @param departmentRequest 部门信息
+     * @param departmentRequest 菜单信息
      * @return ResultResponse
      */
-    @ApiOperation(value = "部门新增")
-    @GetMapping("/department/add")
-    public ResultResponse addUser(@RequestBody DepartmentRequest departmentRequest) {
+    @ApiOperation(value = "新增菜单")
+    @GetMapping("/menu/add")
+    public ResultResponse addUser(@RequestBody Menu departmentRequest) {
 
-        return iDepartmentService.addDepartment(departmentRequest);
+        return iMenuService.addMenu(departmentRequest);
     }
 
     /**
-     * 通过Id查询部门
+     * 通过Id查询菜单
      *
      * @param id 部门Id
      * @return ResultResponse
      */
-    @ApiOperation(value = "部门详情")
-    @GetMapping("/department/{id}")
+    @ApiOperation(value = "菜单详情")
+    @GetMapping("/menu/{id}")
     public ResultResponse queryUser(@PathVariable String id) {
-        return iDepartmentService.queryDepartment(id);
+        return iMenuService.queryMenu(id);
     }
 
     /**
-     * 删除部门
+     * 删除菜单
      *
      * @param id 部门Id
      * @return ResultResponse
      */
-    @ApiOperation(value = "删除部门")
-    @DeleteMapping("/department/{id}")
+    @ApiOperation(value = "删除菜单")
+    @DeleteMapping("/menu/{id}")
     public ResultResponse deleteUser(@PathVariable String id) {
-        return iDepartmentService.deleteDepartment(id);
+        return iMenuService.deleteMenu(id);
     }
 }

@@ -74,7 +74,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
         credentialsAuthorities.setAuthoritiesId(credentialsRequest.getRoleId());
         credentialsAuthorities.setCredentialsId(credentialsRequest.getId());
         boolean creAuthFlag = iCredentialsAuthoritiesService.save(credentialsAuthorities);
-        AssertsUtil.isTrue(creAuthFlag,"添加用户失败！");
+        AssertsUtil.isTrue(creAuthFlag,"添加用户角色失败！");
         return ResultResponse.successResponse("添加用户成功！");
     }
 
@@ -82,7 +82,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
     public ResultResponse queryUser(String id) {
         //查询用户
         Credentials credentials =getById(new QueryWrapper<Credentials>().lambda().eq(Credentials::getId,id));
-        //查询当前用户角色
+        //查询当前用户
         return ResultResponse.successResponse("查询用户详情成功",credentials);
     }
 

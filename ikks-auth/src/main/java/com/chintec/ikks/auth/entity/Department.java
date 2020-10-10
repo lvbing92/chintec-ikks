@@ -16,30 +16,30 @@ import java.time.LocalDateTime;
  * </p>
  *
  * @author rubIn·lv
- * @since 2020-09-01
+ * @since 2020-09-02
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "TMenu", description = "菜单信息")
-public class TMenu extends Model<TMenu> {
+@ApiModel(value = "TDepartment", description = "部门信息")
+public class Department extends Model<Department> {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * id
+     * 部门Id
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    private Integer id;
 
     /**
-     * 名称
+     * 部门名称
      */
-    private String menuName;
+    private String name;
 
     /**
-     * 父Id
+     * 是否可用
      */
-    private String parentId;
+    private Boolean enabled;
 
     /**
      * 创建时间

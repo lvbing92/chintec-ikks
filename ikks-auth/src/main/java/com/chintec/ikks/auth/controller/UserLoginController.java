@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 @Data
 @Validated
 @RequestMapping("/v1")
-@Api(value = "Back Office User Login", tags = {"后台用户登入登出"})
+@Api(value = "User Login", tags = {"后台用户登入登出"})
 public class UserLoginController {
 
     @Autowired
@@ -36,9 +36,10 @@ public class UserLoginController {
     private static final Logger logger = LogManager.getLogger(UserLoginController.class);
 
     /**
-     * @param httpServletRequest
-     * @return
-     * @throws Exception
+     * 登出
+     *
+     * @param httpServletRequest 请求数据
+     * @return ResultResponse
      */
     @ApiOperation(value = "BackOffice登出")
     @GetMapping(value = "/logout", produces = "application/json;charset=utf-8")
@@ -50,9 +51,10 @@ public class UserLoginController {
 
 
     /**
-     * @param request
-     * @return
-     * @throws Exception
+     * 登录
+     *
+     * @param request 请求数据
+     * @return ResultResponse
      */
     @ApiOperation(value = "BackOffice登录")
     @GetMapping(value = "/login", produces = "application/json;charset=utf-8")

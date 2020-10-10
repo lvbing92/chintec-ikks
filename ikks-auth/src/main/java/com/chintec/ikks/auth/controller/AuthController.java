@@ -18,16 +18,22 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/v1")
-@Api(value = "Back Office", tags = {"后台用户管理"})
+@Api(value = "User", tags = {"后台用户管理"})
 public class AuthController {
     @Autowired
     private ICredentialsService iCredentialsService;
 
     /**
-     * 查询用户列表
+     * 用户列表查询
      *
-     * @return
-     */
+     * @param pageSize    页数
+     * @param currentPage 当前页
+     * @param role        角色
+     * @param status      状态
+     * @param searchValue 查询条件
+     * @param sorted      排序
+     * @return ResultResponse
+     * */
     @ApiOperation(value = "查询用户列表")
     @GetMapping("/users")
     public ResultResponse getUserList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
