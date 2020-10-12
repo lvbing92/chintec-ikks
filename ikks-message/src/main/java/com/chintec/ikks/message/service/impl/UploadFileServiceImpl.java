@@ -97,7 +97,7 @@ public class UploadFileServiceImpl implements IUploadFileService {
 
             BlobUpload upload=new BlobUpload();
             upload.setFileUrl(url.toString());
-            return ResultResponse.successResponse("上传图片成功",upload);
+            return ResultResponse.successResponse("上传文件成功",upload);
 
         } catch (OSSException oe) {
             oe.printStackTrace();

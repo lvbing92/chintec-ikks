@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping(value = "v1")
-@Api(value = "Back office" ,tags = "角色管理")
+@Api(value = "auth" ,tags = "角色管理")
 public class RoleController {
 
     @Autowired
     private IAuthorityService iAuthorityService;
     /**
-     * 查询用户列表
+     * 查询角色列表
      *
      * @return
      */
@@ -37,7 +37,7 @@ public class RoleController {
     }
 
     /**
-     * 新增用户
+     * 新增角色
      *
      * @return
      */
@@ -49,23 +49,24 @@ public class RoleController {
     }
 
     /**
-     * 通过Id查询用户
+     * 通过Id查询角色
      *
-     * @param id
-     * @return
+     * @param id 角色Id
+     * @return ResultResponse
      */
     @ApiOperation(value = "角色详情")
     @GetMapping("/role/{id}")
     public ResultResponse queryUser(@PathVariable String id) {
+        iAuthorityService.queryRole(id);
         return ResultResponse.successResponse("获取角色详情成功");
     }
 
     /**
-     * 删除用户
-     *
+     * 删除角色
+     * @param id 角色Id
      * @return
      */
-    @ApiOperation(value = "删除用户")
+    @ApiOperation(value = "删除角色")
     @DeleteMapping("/role/{id}")
     public ResultResponse deleteUser(@PathVariable String id) {
         return ResultResponse.successResponse("删除角色成功");
