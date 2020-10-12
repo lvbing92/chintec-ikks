@@ -10,7 +10,8 @@ public enum NodeStateEnum {
     PENDING(0, "待执行"),
     GOING(1, "进行中"),
     PASS(2, "通过"),
-    REFUSE(3, "拒绝");
+    REFUSE(3, "拒绝"),
+    REFUSE_FINISH(4, "结束");
 
     private Integer code;
     private String message;

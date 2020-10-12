@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author jeff·Tang
@@ -66,10 +66,16 @@ public class FlowTaskStatus extends Model<FlowTaskStatus> {
     private LocalDateTime updateTime;
 
     private String updataBy;
+
+    /**
+     * 节点执行条件
+     */
+    private String nodeExc;
     /**
      * 状态机的Id
      */
     private String statusId;
+
     @Override
     protected Serializable pkVal() {
         return this.id;

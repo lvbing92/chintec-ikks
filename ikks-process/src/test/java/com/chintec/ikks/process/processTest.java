@@ -60,6 +60,7 @@ class processTest {
             flowNodeVo.setNodeType(i == 0 ? "1" : (i == 4 ? "3" : "2"));
             flowNodeVo.setIsReject(i % 2 == 1 ? "1" : "0");
             flowNodeVo.setRejectButtonName("驳回按钮" + i);
+            flowNodeVo.setNodeExc("1");
             flowNodeVo.setNextNodeTrend("0");
             flowNodeVo.setNodeFunctionVos(Arrays.asList(new NodeFunctionVo("1", "1", i %2==0 &&i<4? i + 2 : null), new NodeFunctionVo("1", "2", i % 2 == 1 ? i+2 : null)));
             flowNodeVo.setRejectNode(i % 2 == 1 ? i - 1 : null);

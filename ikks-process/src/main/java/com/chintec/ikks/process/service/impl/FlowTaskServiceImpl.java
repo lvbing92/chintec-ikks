@@ -80,6 +80,7 @@ public class FlowTaskServiceImpl extends ServiceImpl<FlowTaskMapper, FlowTask> i
                     flowTaskStatus.setStatus(NodeStateEnum.PENDING.getCode().toString());
                     flowTaskStatus.setUpdateTime(LocalDateTime.now());
                     flowTaskStatus.setCreateTime(LocalDateTime.now());
+                    flowTaskStatus.setNodeExc(flowNode.getNodeExc());
                     return flowTaskStatus;
                 }).collect(Collectors.toList())), "创建任务失败");
         //初始化任务,开始第一个节点任务

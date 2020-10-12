@@ -27,7 +27,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -163,7 +162,7 @@ public class NodeEvent {
         List<Integer> integers = JSONObject.parseArray(node.getProveNodes(), Integer.class);
         List<FlowTaskStatus> collect = null;
         //查看该节点的前置节点完成情况,过滤出进行中的
-        if ("1".equals(node.getNextNodeTrend())) {
+        if ("1".equals(node.getNodeExc())) {
             collect = iFlowTaskStatusService.list(new QueryWrapper<FlowTaskStatus>()
                     .lambda()
                     .in(FlowTaskStatus::getNodeId, integers)

@@ -1,4 +1,4 @@
-package com.chintec.ikks.process.event;
+package com.chintec.ikks.process.event.persister;
 
 import com.alibaba.fastjson.JSONObject;
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;

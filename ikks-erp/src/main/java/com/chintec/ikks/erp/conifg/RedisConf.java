@@ -20,6 +20,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.lang.reflect.Method;
 
+/**
+ * @author tangxinli
+ */
 @Configuration
 @EnableCaching
 public class RedisConf extends CachingConfigurerSupport {
@@ -66,9 +69,8 @@ public class RedisConf extends CachingConfigurerSupport {
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig();
         RedisCacheConfiguration redisCacheConfiguration1 = config.serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(redisSerializer))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(jackson2JsonRedisSerializer));
-        RedisCacheManager redisCacheManager = RedisCacheManager.builder(redisConnectionFactory)
+        return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(redisCacheConfiguration1)
                 .build();
-        return redisCacheManager;
     }
 }

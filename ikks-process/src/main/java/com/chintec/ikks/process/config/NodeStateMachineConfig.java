@@ -3,7 +3,10 @@ package com.chintec.ikks.process.config;
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;
 import com.chintec.ikks.common.enums.NodeStateEnum;
 import com.chintec.ikks.process.entity.po.FlowTaskStatusPo;
-import com.chintec.ikks.process.event.NodeMachinePersister;
+import com.chintec.ikks.process.event.action.NodeRefuseFinishAction;
+import com.chintec.ikks.process.event.action.NodeReturnChoiceAction;
+import com.chintec.ikks.process.event.guard.NodeReturnChoiceGuard;
+import com.chintec.ikks.process.event.persister.NodeMachinePersister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,6 +40,7 @@ public class NodeStateMachineConfig extends StateMachineConfigurerAdapter<NodeSt
         states
                 .withStates()
                 .initial(NodeStateEnum.PENDING)
+                .choice(NodeStateEnum.REFUSE)
                 .states(EnumSet.allOf(NodeStateEnum.class));
     }
 
@@ -56,8 +60,10 @@ public class NodeStateMachineConfig extends StateMachineConfigurerAdapter<NodeSt
                 //going to refuse  事件:refuse事件
                 .withExternal()
                 .source(NodeStateEnum.GOING).target(NodeStateEnum.REFUSE)
-                .event(NodeStateChangeEnum.REFUSE);
+                .event(NodeStateChangeEnum.REFUSE)
+                .and()
+                .withChoice().source(NodeStateEnum.REFUSE)
+                .first(NodeStateEnum.PENDING, new NodeReturnChoiceGuard(), new NodeReturnChoiceAction())
+                .last(NodeStateEnum.REFUSE_FINISH, new NodeRefuseFinishAction());
     }
-
-
 }

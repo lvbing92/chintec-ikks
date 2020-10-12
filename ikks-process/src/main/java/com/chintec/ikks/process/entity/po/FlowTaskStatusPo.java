@@ -41,7 +41,9 @@ public class FlowTaskStatusPo {
     private String taskStatus;
 
     private Integer isFinish;
-
+    /**
+     * 驳回节点
+     */
     private Integer rejectNode;
 
     private List<NodeFunctionVo> nodeIds;
