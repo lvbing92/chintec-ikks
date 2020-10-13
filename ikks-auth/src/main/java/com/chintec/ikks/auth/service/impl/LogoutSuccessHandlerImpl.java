@@ -18,7 +18,7 @@ import java.io.IOException;
  * @date 2020/8/26 13:59
  */
 @Component
-public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
+public class LogoutSuccessHandlerImpl {
     private static String BEARER_AUTHENTICATION = "Bearer";
 
     private static String HEADER_AUTHENTICATION = "authorization";
@@ -26,21 +26,22 @@ public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
     @Autowired
     private TokenStore tokenStore;
 
-    @Override
-    public void onLogoutSuccess(HttpServletRequest httpServletRequest,
-                                HttpServletResponse httpServletResponse,
-                                Authentication authentication) throws IOException, ServletException {
-        String auth = httpServletRequest.getHeader(HEADER_AUTHENTICATION);
-        String token = httpServletRequest.getParameter("access_token");
-        if (auth != null && auth.startsWith(BEARER_AUTHENTICATION)) {
-            token = token.split(" ")[0];
-        }
+    boolean onLogoutSuccess(String token) {
+//        String auth = httpServletRequest.getHeader(HEADER_AUTHENTICATION);
+//        String token = httpServletRequest.getParameter("access_token");
+        System.out.println("access_token:"+token);
+//        if (auth != null && auth.startsWith(BEARER_AUTHENTICATION)) {
+//            token = token.split(" ")[0];
+//        }
 
         if (token != null) {
             OAuth2AccessToken accessToken = tokenStore.readAccessToken(token);
             if (accessToken != null) {
                 tokenStore.removeAccessToken(accessToken);
             }
+            return true;
+        }else{
+            return false;
         }
     }
 }

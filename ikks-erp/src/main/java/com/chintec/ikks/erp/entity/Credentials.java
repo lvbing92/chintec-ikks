@@ -1,14 +1,9 @@
-package com.chintec.ikks.auth.entity;
+package com.chintec.ikks.erp.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.io.Serializable;
 
 /**
  * <p>
@@ -20,11 +15,9 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "Credentials", description = "用户信息")
-public class Credentials extends Model<Credentials> {
+public class Credentials {
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     @ApiModelProperty(value = "是否可用")
@@ -33,14 +26,8 @@ public class Credentials extends Model<Credentials> {
     @ApiModelProperty(value = "用户名")
     private String name;
 
-    @ApiModelProperty(value = "公司名")
-    private String companyName;
-
     @ApiModelProperty(value = "密码")
     private String password;
-
-    @ApiModelProperty(value = "邮箱")
-    private String email;
 
     @ApiModelProperty(value = "手机号")
     private String phone;
@@ -60,9 +47,5 @@ public class Credentials extends Model<Credentials> {
     @ApiModelProperty(value = "版本号")
     private Integer version;
 
-    @Override
-    protected Serializable pkVal() {
-        return this.id;
-    }
 
 }

@@ -1,10 +1,6 @@
 package com.chintec.ikks.auth.service;
 
 import com.chintec.ikks.common.util.ResultResponse;
-import org.springframework.security.core.Authentication;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author rubin
@@ -16,19 +12,17 @@ public interface IPasswordFedService {
     /**
      * logout
      *
-     * @param httpServletRequest
-     * @return
-     * @throws Exception
+     * @param token
+     * @return ResultResponse
      */
-    ResultResponse logout(HttpServletRequest httpServletRequest,
-                          HttpServletResponse httpServletResponse,
-                          Authentication authentication) throws Exception;
+    ResultResponse logout(String token);
 
     /**
      * 登入
      *
-     * @param request
-     * @return
+     * @param userName 用户名
+     * @param passWord 密码
+     * @return ResultResponse
      */
-    ResultResponse userLogin(HttpServletRequest request);
+    ResultResponse userLogin(String userName, String passWord);
 }

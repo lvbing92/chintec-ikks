@@ -4,6 +4,7 @@ import com.chintec.ikks.auth.entity.OAuth2Token;
 import com.chintec.ikks.auth.service.IOauthClientDetailsService;
 import com.chintec.ikks.auth.service.IPasswordFedService;
 import com.chintec.ikks.common.enums.CommonCodeEnum;
+import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.ResultResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,19 +36,18 @@ public class PasswordFedServiceImpl implements IPasswordFedService {
     private LogoutSuccessHandlerImpl logoutSuccessHandler;
 
     @Override
-    public ResultResponse logout(HttpServletRequest httpServletRequest,
-                                 HttpServletResponse httpServletResponse,
-                                 Authentication authentication) throws Exception {
-        logoutSuccessHandler.onLogoutSuccess(httpServletRequest, httpServletResponse, authentication);
-        return ResultResponse.successResponse();
+    public ResultResponse logout(String token){
+        boolean flag =logoutSuccessHandler.onLogoutSuccess(token);
+        AssertsUtil.isTrue(!flag,"退出失败!");
+        return ResultResponse.successResponse("退出成功！");
     }
 
     @Override
-    public ResultResponse userLogin(HttpServletRequest request) {
+    public ResultResponse userLogin(String userName,String passWord) {
 
         OAuth2Token tokenMsg = null;
         try {
-            tokenMsg = getToken(request);
+            tokenMsg = getToken(userName,passWord);
             log.info("tokenMsg=" + tokenMsg);
 
         } catch (Exception e) {
@@ -63,10 +63,10 @@ public class PasswordFedServiceImpl implements IPasswordFedService {
      *
      * @return
      */
-    public OAuth2Token getToken(HttpServletRequest request) {
+    public OAuth2Token getToken(String userName,String passWord) {
         RestTemplate rest = new RestTemplate();
         RequestEntity<MultiValueMap<String, String>> requestEntity = new RequestEntity<>(
-                getBody(request), getHeader(), HttpMethod.POST, URI.create(URL));
+                getBody(userName,passWord), getHeader(), HttpMethod.POST, URI.create(URL));
 
         ResponseEntity<OAuth2Token> responseEntity = rest.exchange(
                 requestEntity, OAuth2Token.class);
@@ -82,10 +82,8 @@ public class PasswordFedServiceImpl implements IPasswordFedService {
      *
      * @return
      */
-    private MultiValueMap<String, String> getBody(HttpServletRequest request) {
+    private MultiValueMap<String, String> getBody(String userName,String passWord) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        String userName = request.getParameter("userName");
-        String passWord = request.getParameter("passWord");
         formData.add("grant_type", "password");
         formData.add("username", userName);
         formData.add("password", passWord);

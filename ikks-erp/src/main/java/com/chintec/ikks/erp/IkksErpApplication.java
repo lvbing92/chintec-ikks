@@ -1,9 +1,9 @@
 package com.chintec.ikks.erp;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
  * @author rubin
@@ -12,9 +12,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@MapperScan("com.chintec.ikks.erp.mapper")
+@EnableFeignClients
 public class IkksErpApplication {
     public static void main(String[] args) {
-        SpringApplication.run(IkksErpApplication.class,args);
+        SpringApplication.run(IkksErpApplication.class, args);
     }
 }

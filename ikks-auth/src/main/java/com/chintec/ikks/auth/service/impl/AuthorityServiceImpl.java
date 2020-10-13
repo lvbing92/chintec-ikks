@@ -9,6 +9,7 @@ import com.chintec.ikks.auth.entity.Credentials;
 import com.chintec.ikks.auth.mapper.AuthorityMapper;
 import com.chintec.ikks.auth.request.AuthorityRequest;
 import com.chintec.ikks.auth.service.IAuthorityService;
+import com.chintec.ikks.auth.service.IMenuService;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.PageResultResponse;
 import com.chintec.ikks.common.util.ResultResponse;
@@ -30,8 +31,9 @@ import java.io.Serializable;
 @Service
 public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority> implements IAuthorityService, Serializable {
 
-    public static final String SORT_A = "A";
-    public static final String SORT_D = "D";
+    private IMenuService iMenuService;
+    private static final String SORT_A = "A";
+    private static final String SORT_D = "D";
 
     @Override
     public ResultResponse getRoleList(Integer pageSize, Integer currentPage, String role,
@@ -69,6 +71,8 @@ public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority
         BeanUtils.copyProperties(authorityRequest, authority);
         //保存角色
         this.save(authority);
+        //保存角色关联的菜单
+        iMenuService.saveBatch(authorityRequest.getMenuList());
         return ResultResponse.successResponse("添加角色成功！",authority);
     }
 

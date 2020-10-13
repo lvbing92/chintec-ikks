@@ -1,18 +1,14 @@
-package com.chintec.ikks.auth.entity;
+package com.chintec.ikks.erp.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author rubIn·lv
@@ -21,30 +17,19 @@ import java.time.LocalDateTime;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "TMenu", description = "菜单信息")
-public class Menu extends Model<Menu> {
+public class Menu {
 
     private static final long serialVersionUID = 1L;
 
     /**
      * id
      */
-    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
      * 名称
      */
     private String menuName;
-
-    /**
-     * url
-     */
-    private String url;
-
-    /**
-     * 模块类型
-     */
-    private String modelType;
 
     /**
      * 父Id
@@ -71,10 +56,5 @@ public class Menu extends Model<Menu> {
      */
     private String updateByName;
 
-
-    @Override
-    protected Serializable pkVal() {
-        return this.id;
-    }
 
 }

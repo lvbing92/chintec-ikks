@@ -1,7 +1,7 @@
-package com.chintec.ikks.auth.controller;
+package com.chintec.ikks.erp.controller;
 
-import com.chintec.ikks.auth.service.IPasswordFedService;
 import com.chintec.ikks.common.util.ResultResponse;
+import com.chintec.ikks.erp.service.IPasswordFedService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.Data;
@@ -9,12 +9,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author RuBin
@@ -40,7 +38,7 @@ public class UserLoginController {
      */
     @ApiOperation(value = "BackOffice登出")
     @GetMapping(value = "/logout", produces = "application/json;charset=utf-8")
-    public ResultResponse logout(@RequestHeader(value = "access_token") String token) {
+    public ResultResponse logout(@RequestHeader(value = "access_token") String token){
         return iPasswordFedService.logout(token);
     }
 

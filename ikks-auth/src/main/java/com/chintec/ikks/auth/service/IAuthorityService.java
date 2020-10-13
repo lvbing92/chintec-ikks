@@ -13,6 +13,7 @@ import com.chintec.ikks.common.util.ResultResponse;
  * @author ruBIn·lv
  * @since 2020-08-26
  */
+
 public interface IAuthorityService extends IService<Authority> {
     /**
      * 角色列表查询

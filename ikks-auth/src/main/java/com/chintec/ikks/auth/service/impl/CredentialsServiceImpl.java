@@ -15,6 +15,7 @@ import com.chintec.ikks.common.util.PageResultResponse;
 import com.chintec.ikks.common.util.ResultResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -64,8 +65,11 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
 
     @Override
     public ResultResponse addUser(CredentialsRequest credentialsRequest) {
+        BCryptPasswordEncoder b = new BCryptPasswordEncoder();
+
         Credentials credentials = new Credentials();
         BeanUtils.copyProperties(credentialsRequest, credentials);
+        credentials.setPassword(b.encode(credentialsRequest.getPassword()));
         //添加用户
         boolean creFlag = this.save(credentials);
         AssertsUtil.isTrue(creFlag,"添加用户失败！");
