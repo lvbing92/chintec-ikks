@@ -14,35 +14,26 @@ import org.springframework.web.bind.annotation.*;
  * @author rubIn·lv
  * @since 2020-09-01
  */
-@FeignClient(value = "ikks-auth")
+@FeignClient(value = "ikks-auth",path = "v1")
 public interface IMenuService{
     /**
-     * 角色列表查询
+     *菜单列表查询
      *
-     * @param pageSize    页数
-     * @param currentPage 当前页
-     * @param status      状态
-     * @param searchValue 查询条件
-     * @param sorted      排序
      * @return ResultResponse
      */
     @ApiOperation(value = "菜单列表查询")
-    @GetMapping(value = "/v1/menus/")
-    ResultResponse getMenuList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
-                               @RequestParam(value = "currentPage") Integer currentPage,
-                               @RequestParam(value = "status", required = false) String status,
-                               @RequestParam(value = "searchValue", required = false) String searchValue,
-                               @RequestParam(value = "sorted", required = false) String sorted);
+    @GetMapping(value = "/menus/")
+    ResultResponse getMenuList();
 
     /**
-     * 新增菜单
+     * 新增或修改菜单保存
      *
      * @param menu 菜单
      * @return ResultResponse
      */
-    @ApiOperation(value = "新增菜单")
-    @GetMapping("/menu/add")
-    ResultResponse addMenu(@RequestBody Menu menu);
+    @ApiOperation(value = "新增或修改菜单保存")
+    @GetMapping("/menu/save")
+    ResultResponse addOrUpdateMenu(@RequestBody Menu menu);
 
     /**
      * 通过Id查询菜单

@@ -14,6 +14,7 @@ import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.PageResultResponse;
 import com.chintec.ikks.common.util.ResultResponse;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -30,31 +31,30 @@ import java.io.Serializable;
  */
 @Service
 public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority> implements IAuthorityService, Serializable {
-
+    @Autowired
     private IMenuService iMenuService;
+
     private static final String SORT_A = "A";
     private static final String SORT_D = "D";
 
     @Override
-    public ResultResponse getRoleList(Integer pageSize, Integer currentPage, String role,
-                                      String status, String searchValue, String sorted) {
+    public ResultResponse getRoleList(Integer pageSize, Integer currentPage, String searchValue, String sorted) {
         if (StringUtils.isEmpty(pageSize)) {
             pageSize = 10;
         }
         if (StringUtils.isEmpty(sorted)) {
-            sorted = SORT_A;
+            sorted = SORT_D;
         }
         //
         IPage<Authority> page = new Page<>(currentPage, pageSize);
         //分页查询
         IPage<Authority> authorityPage = this.page(page, new QueryWrapper<Authority>().lambda()
                 .eq(Authority::getEnabled, 1)
-//                .and(!StringUtils.isEmpty(searchValue), s -> s.like(Credentials::getUserName, searchValue).
-//                        or().like(Credentials::getCellphone, searchValue).
-//                        or().like(Credentials::getEmail, searchValue).
-//                        or().like(Credentials::getUserName, searchValue))
-                .orderByAsc(SORT_A.equals(sorted), Authority::getId)
-                .orderByDesc(SORT_D.equals(sorted), Authority::getId));
+                .and(!StringUtils.isEmpty(searchValue),
+                        s -> s.like(Authority::getAuthority, searchValue).
+                       or().like(Authority::getId, searchValue))
+//                .orderByAsc(SORT_A.equals(sorted), Authority::getId)
+                .orderByDesc(SORT_D.equals(sorted), Authority::getCreateTime));
 //返回结果
         PageResultResponse<Authority> pageResultResponse = new PageResultResponse<>(authorityPage.getTotal(), currentPage, pageSize);
         pageResultResponse.setTotalPages(authorityPage.getPages());

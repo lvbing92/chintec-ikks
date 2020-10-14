@@ -47,14 +47,26 @@ public class AuthController {
 
     /**
      * 新增用户
-     *
-     * @return
+     * @param credentialsRequest 客户信息
+     * @return ResultResponse
      */
     @ApiOperation(value = "新增用户")
-    @GetMapping("/user/add")
+    @PostMapping("/user/add")
     public ResultResponse addUser(@RequestBody CredentialsRequest credentialsRequest) {
 
         return iCredentialsService.addUser(credentialsRequest);
+    }
+
+    /**
+     * 更新客户
+     * @param credentialsRequest 客户信息
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "更新客户")
+    @PutMapping("/user/update")
+    public ResultResponse updateUser(@RequestBody CredentialsRequest credentialsRequest) {
+
+        return iCredentialsService.updateUser(credentialsRequest);
     }
 
     /**
@@ -65,7 +77,7 @@ public class AuthController {
      */
     @ApiOperation(value = "用户详情")
     @GetMapping("/user/{id}")
-    public ResultResponse queryUser(@PathVariable String id) {
+    public ResultResponse queryUser(@PathVariable Long id) {
         return iCredentialsService.queryUser(id);
     }
     /**
@@ -75,7 +87,7 @@ public class AuthController {
      */
     @ApiOperation(value = "删除用户")
     @DeleteMapping("/user/{id}")
-    public ResultResponse deleteUser(@PathVariable String id) {
+    public ResultResponse deleteUser(@PathVariable Long id) {
         return iCredentialsService.deleteUser(id);
     }
 

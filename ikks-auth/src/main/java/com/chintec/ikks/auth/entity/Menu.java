@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -40,6 +41,10 @@ public class Menu extends Model<Menu> {
      * url
      */
     private String url;
+    /**
+     * 图片
+     */
+    private String icon;
 
     /**
      * 模块类型
@@ -71,6 +76,10 @@ public class Menu extends Model<Menu> {
      */
     private String updateByName;
 
+    /**
+     * 子菜单
+     */
+    private List<Menu> childList;
 
     @Override
     protected Serializable pkVal() {

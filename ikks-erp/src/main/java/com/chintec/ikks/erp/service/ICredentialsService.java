@@ -55,7 +55,16 @@ public interface ICredentialsService {
      */
     @ApiOperation(value = "用户列表查询")
     @GetMapping(value = "/user/{id}")
-    ResultResponse queryUser(@PathVariable String id);
+    ResultResponse queryUser(@PathVariable Long id);
+
+    /**
+     * 更新客户
+     * @param credentialsRequest 客户信息
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "更新客户")
+    @PutMapping("/user/update")
+    ResultResponse updateUser(CredentialsRequest credentialsRequest);
 
     /**
      * 删除用户
@@ -65,5 +74,5 @@ public interface ICredentialsService {
      */
     @ApiOperation(value = "删除用户")
     @DeleteMapping(value = "/user/{id}")
-    ResultResponse deleteUser(@PathVariable String id);
+    ResultResponse deleteUser(@PathVariable Long id);
 }

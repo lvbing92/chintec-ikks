@@ -23,34 +23,25 @@ public class MenuController {
     /**
      * 菜单列表查询
      *
-     * @param pageSize    页数
-     * @param currentPage 当前页
-     * @param status      状态
-     * @param searchValue 查询条件
-     * @param sorted      排序
      * @return ResultResponse
      */
-    @ApiOperation(value = "查询部门列表")
+    @ApiOperation(value = "查询菜单列表")
     @GetMapping("/menus")
-    public ResultResponse getUserList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                      @RequestParam(value = "currentPage") Integer currentPage,
-                                      @RequestParam(value = "status", required = false) String status,
-                                      @RequestParam(value = "searchValue", required = false) String searchValue,
-                                      @RequestParam(value = "sorted", required = false) String sorted) {
-        return iMenuService.getMenuList(pageSize, currentPage, status, searchValue, sorted);
+    public ResultResponse getUserList() {
+        return iMenuService.getMenuList();
     }
 
     /**
-     * 新增菜单
+     * 新增或修改菜单
      *
      * @param menu 菜单信息
      * @return ResultResponse
      */
-    @ApiOperation(value = "新增菜单")
-    @GetMapping("/menu/add")
-    public ResultResponse addUser(@RequestBody Menu menu) {
+    @ApiOperation(value = "新增或修改菜单")
+    @PostMapping("/menu/save")
+    public ResultResponse addOrUpdateMenu(Menu menu) {
 
-        return iMenuService.addMenu(menu);
+        return iMenuService.addOrUpdateMenu(menu);
     }
 
     /**

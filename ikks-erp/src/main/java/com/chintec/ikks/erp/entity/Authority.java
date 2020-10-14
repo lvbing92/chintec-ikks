@@ -33,17 +33,4 @@ public class Authority  {
     @ApiModelProperty(value = "备注")
     private String remark;
 
-    @ApiModelProperty(value = "创建时间")
-    private String createTime;
-
-    @ApiModelProperty(value = "更新时间")
-    private String updateTime;
-
-    @ApiModelProperty(value = "更新人Id")
-    private String updateById;
-
-    @ApiModelProperty(value = "更新人名称")
-    private String updateByName;
-
-
 }

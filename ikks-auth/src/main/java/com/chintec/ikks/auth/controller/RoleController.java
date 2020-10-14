@@ -29,11 +29,9 @@ public class RoleController {
     @GetMapping("/roles")
     public ResultResponse getUserList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                       @RequestParam(value = "currentPage", required = true) Integer currentPage,
-                                      @RequestParam(value = "role", required = false) String role,
-                                      @RequestParam(value = "status", required = false) String status,
                                       @RequestParam(value = "searchValue", required = false) String searchValue,
                                       @RequestParam(value = "sorted", required = false) String sorted) {
-        return iAuthorityService.getRoleList(pageSize, currentPage, role, status, searchValue, sorted);
+        return iAuthorityService.getRoleList(pageSize, currentPage, searchValue, sorted);
     }
 
     /**

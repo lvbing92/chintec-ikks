@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chintec.ikks.auth.mapper.MenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.chintec.ikks.auth.entity.Menu">
+        <id column="id" property="id" />
+        <result column="meun_name" property="menuName" />
+        <result column="parent_id" property="parentId" />
+        <result column="url" property="url" />
+        <result column="model_type" property="modelType" />
+        <collection column="id" property="childList"
+                    ofType="com.chintec.ikks.auth.entity.Menu"
+                    select="getMenuChildren">
+        </collection>
+    </resultMap>
+
+    <select id="getMenuList" resultMap="BaseResultMap">
+        select * from menu t where t.parent_id = 0
+    </select>
+
+    <select id="getMenuChildren" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            menu
+        WHERE parent_id= #{id}
+    </select>
+
+</mapper>

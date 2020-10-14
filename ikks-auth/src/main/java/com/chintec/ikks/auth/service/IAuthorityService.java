@@ -25,8 +25,7 @@ public interface IAuthorityService extends IService<Authority> {
      * @param sorted      排序
      * @return ResultResponse
      */
-    ResultResponse getRoleList(Integer pageSize, Integer currentPage, String role,
-                               String status, String searchValue, String sorted);
+    ResultResponse getRoleList(Integer pageSize, Integer currentPage, String searchValue, String sorted);
 
     /**
      * 新增角色

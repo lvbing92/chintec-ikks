@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <p>
@@ -36,6 +37,8 @@ public class Authority extends Model<Authority> {
 
     @ApiModelProperty(value = "备注")
     private String remark;
+
+    private List<Menu> menuList;
 
     @ApiModelProperty(value = "创建时间")
     private String createTime;

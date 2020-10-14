@@ -16,7 +16,5 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class CredentialsRequest extends Credentials {
-    @ApiModelProperty(value = "角色Id")
-    private Long roleId;
 }
 

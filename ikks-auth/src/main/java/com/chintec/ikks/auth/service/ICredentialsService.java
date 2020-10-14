@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.chintec.ikks.auth.entity.Credentials;
 import com.chintec.ikks.auth.request.CredentialsRequest;
 import com.chintec.ikks.common.util.ResultResponse;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * <p>
@@ -38,12 +39,19 @@ public interface ICredentialsService extends IService<Credentials> {
     ResultResponse addUser(CredentialsRequest credentialsRequest);
 
     /**
+     * 更新用户
+     *
+     * @param credentialsRequest 更新用户
+     * @return ResultResponse
+     */
+    ResultResponse updateUser(CredentialsRequest credentialsRequest);
+    /**
      * 通过Id查询用户
      *
      * @param id 用户Id
      * @return ResultResponse
      */
-    ResultResponse queryUser(String id);
+    ResultResponse queryUser(Long id);
 
     /**
      * 删除用户
@@ -51,5 +59,5 @@ public interface ICredentialsService extends IService<Credentials> {
      * @param id 用户Id
      * @return ResultResponse
      */
-    ResultResponse deleteUser(String id);
+    ResultResponse deleteUser(Long id);
 }
