@@ -76,11 +76,6 @@ public class Menu extends Model<Menu> {
      */
     private String updateByName;
 
-    /**
-     * 子菜单
-     */
-    private List<Menu> childList;
-
     @Override
     protected Serializable pkVal() {
         return this.id;

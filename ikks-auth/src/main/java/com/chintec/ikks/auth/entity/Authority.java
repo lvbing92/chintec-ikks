@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -29,22 +31,20 @@ public class Authority extends Model<Authority> {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ApiModelProperty(value = "角色类型")
+    @ApiModelProperty(value = "角色名称")
     private String authority;
 
     @ApiModelProperty(value = "是否可用")
-    private String enabled;
+    private Boolean enabled;
 
     @ApiModelProperty(value = "备注")
     private String remark;
 
-    private List<Menu> menuList;
-
     @ApiModelProperty(value = "创建时间")
-    private String createTime;
+    private LocalDateTime createTime;
 
     @ApiModelProperty(value = "更新时间")
-    private String updateTime;
+    private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "更新人Id")
     private String updateById;

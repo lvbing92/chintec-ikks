@@ -32,7 +32,7 @@ public interface IMenuService{
      * @return ResultResponse
      */
     @ApiOperation(value = "新增或修改菜单保存")
-    @GetMapping("/menu/save")
+    @PostMapping("/menu/save")
     ResultResponse addOrUpdateMenu(@RequestBody Menu menu);
 
     /**

@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.chintec.ikks.auth.entity.Authority;
 import com.chintec.ikks.auth.request.AuthorityRequest;
 import com.chintec.ikks.common.util.ResultResponse;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * <p>
@@ -20,7 +23,6 @@ public interface IAuthorityService extends IService<Authority> {
      *
      * @param pageSize    页数
      * @param currentPage 当前页
-     * @param status      状态
      * @param searchValue 查询条件
      * @param sorted      排序
      * @return ResultResponse
@@ -34,6 +36,16 @@ public interface IAuthorityService extends IService<Authority> {
      * @return ResultResponse
      */
     ResultResponse addRole(AuthorityRequest authorityRequest);
+
+    /**
+     * 更新角色
+     *
+     * @param authorityRequest 角色信息
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "更新角色")
+    @PutMapping("/user/update")
+    ResultResponse updateRole(@RequestBody AuthorityRequest authorityRequest);
 
     /**
      * 通过Id查询角色

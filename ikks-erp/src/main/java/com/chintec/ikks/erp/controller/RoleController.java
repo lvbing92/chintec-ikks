@@ -1,8 +1,8 @@
-package com.chintec.ikks.auth.controller;
+package com.chintec.ikks.erp.controller;
 
-import com.chintec.ikks.auth.request.AuthorityRequest;
-import com.chintec.ikks.auth.service.IAuthorityService;
 import com.chintec.ikks.common.util.ResultResponse;
+import com.chintec.ikks.erp.request.AuthorityRequest;
+import com.chintec.ikks.erp.service.IAuthorityService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class RoleController {
      */
     @ApiOperation(value = "新增角色")
     @PostMapping("/role/add")
-    public ResultResponse addRole(@RequestBody AuthorityRequest authorityRequest) {
+    public ResultResponse addRole(AuthorityRequest authorityRequest) {
 
         return iAuthorityService.addRole(authorityRequest);
     }
@@ -55,7 +55,7 @@ public class RoleController {
      */
     @ApiOperation(value = "更新角色")
     @PutMapping("/role/update")
-    public ResultResponse updateRole(@RequestBody AuthorityRequest authorityRequest) {
+    public ResultResponse updateRole(AuthorityRequest authorityRequest) {
 
         return iAuthorityService.updateRole(authorityRequest);
     }

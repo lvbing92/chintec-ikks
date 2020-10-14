@@ -3,15 +3,14 @@
 <mapper namespace="com.chintec.ikks.auth.mapper.MenuMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.chintec.ikks.auth.entity.Menu">
+    <resultMap id="BaseResultMap" type="com.chintec.ikks.auth.request.MenuRequest">
         <id column="id" property="id" />
-        <result column="meun_name" property="menuName" />
+        <result column="menu_name" property="menuName" />
         <result column="parent_id" property="parentId" />
+        <result column="icon" property="icon" />
         <result column="url" property="url" />
         <result column="model_type" property="modelType" />
-        <collection column="id" property="childList"
-                    ofType="com.chintec.ikks.auth.entity.Menu"
-                    select="getMenuChildren">
+        <collection column="id" property="childList" ofType="com.chintec.ikks.auth.request.MenuRequest" select="getMenuChildren">
         </collection>
     </resultMap>
 

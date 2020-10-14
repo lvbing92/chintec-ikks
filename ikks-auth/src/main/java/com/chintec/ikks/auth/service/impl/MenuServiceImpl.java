@@ -8,9 +8,8 @@ import com.chintec.ikks.auth.mapper.MenuMapper;
 import com.chintec.ikks.auth.service.IMenuService;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.ResultResponse;
-import io.netty.util.internal.StringUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,12 +39,12 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
      */
     @Override
     public ResultResponse addOrUpdateMenu(Menu menu) {
-        if(StringUtil.isNullOrEmpty(menu.getId().toString())){
+        if (StringUtils.isEmpty(menu.getId())) {
             menu.setCreateTime(LocalDateTime.now());
             //添加用户
             boolean creFlag = this.save(menu);
-            AssertsUtil.isTrue(creFlag, "保存失败！");
-        }else{
+            AssertsUtil.isTrue(!creFlag, "保存失败！");
+        } else {
             menu.setUpdateTime(LocalDateTime.now());
             this.updateById(menu);
         }
