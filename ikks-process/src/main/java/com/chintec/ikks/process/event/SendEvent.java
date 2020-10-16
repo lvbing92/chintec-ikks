@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 /**
+ * 状态机消息发送类
+ * 线程安全的
  * @author Jeff·Tang
  * @version 1.0
  * @date 2020/9/24 10:02
@@ -49,15 +51,15 @@ public class SendEvent {
                 persister.restore(nodeStateMachine, flowTaskStatus);
                 log.info("消息id={},id={},状态机 nodeStateMachine id={}", flowTaskStatus.getId(), s, nodeStateMachine.getId());
                 result = nodeStateMachine.sendEvent(message);
+                log.info("状态机状态:{}---消息发送状态:{}", nodeStateMachine.getState(), result);
                 //持久化状态机状态
                 persister.persist(nodeStateMachine, flowTaskStatus);
-                return result;
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 nodeStateMachine.stop();
             }
-            return !result;
+            return result;
         }
     }
 }

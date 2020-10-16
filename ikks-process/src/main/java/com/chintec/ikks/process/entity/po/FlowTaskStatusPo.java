@@ -41,10 +41,6 @@ public class FlowTaskStatusPo {
     private String taskStatus;
 
     private Integer isFinish;
-    /**
-     * 驳回节点
-     */
-    private Integer rejectNode;
 
     private List<NodeFunctionVo> nodeIds;
 
@@ -55,5 +51,9 @@ public class FlowTaskStatusPo {
             return this.nodeIds;
         }
         return JSONObject.parseArray(data.getTaskFunction(), NodeFunctionVo.class);
+    }
+
+    public Integer getRejectNode() {
+        return data.getRejectNode();
     }
 }

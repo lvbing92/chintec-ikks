@@ -75,6 +75,10 @@ public class FlowTaskStatus extends Model<FlowTaskStatus> {
      * 状态机的Id
      */
     private String statusId;
+    /**
+     * 驳回节点
+     */
+    private Integer rejectNode;
 
     @Override
     protected Serializable pkVal() {

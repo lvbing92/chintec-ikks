@@ -14,6 +14,9 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
+ * 状态机 持久化类 实现了 StateMachinePersist 接口
+ *重写了 write 和read方法
+ *
  * @author Jeff·Tang
  * @version 1.0
  * @date 2020/9/23 16:14
@@ -33,7 +36,18 @@ public class NodeMachinePersister implements StateMachinePersist<NodeStateEnum, 
     public void write(StateMachineContext<NodeStateEnum, NodeStateChangeEnum> context, FlowTaskStatusPo contextObj) {
         //状态持久化到redis缓存中去
         log.info("开启持久化::{}", contextObj.getId());
-        redisTemplate.opsForValue().set(contextObj.getId(), context.getState());
+        NodeStateEnum state = context.getState();
+        Object o = redisTemplate.opsForValue().get(contextObj.getId());
+        log.info("redis中的state:{}", o);
+        if (o != null) {
+            NodeStateEnum nodeStateEnum = JSONObject.parseObject(JSONObject.toJSONString(o), NodeStateEnum.class);
+            if (state.getCode() > nodeStateEnum.getCode()) {
+                log.info("更新redis中的状态机:{}", nodeStateEnum);
+                redisTemplate.opsForValue().set(contextObj.getId(), state);
+            }
+        } else {
+            redisTemplate.opsForValue().set(contextObj.getId(), state);
+        }
     }
 
     @Override

@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
+ * 队列监听类
+ *
  * @author Jeff·Tang
  * @version 1.0
  * @date 2020/9/17 9:34
@@ -46,7 +48,7 @@ public class ModelStatusListener {
             } else if ("0".equals(flowTaskStatus.getHandleStatus())) {
                 log.info("进入驳回::{}", flowTaskStatus);
                 org.springframework.messaging.Message<NodeStateChangeEnum> flowTaskStatusM = MessageBuilder.withPayload(NodeStateChangeEnum.REFUSE).setHeader("flowTaskStatusPo", flowTaskStatusPo).build();
-                AssertsUtil.isTrue(sendEvent.sendEvents(flowTaskStatusM, flowTaskStatusPo), "任务驳回失败");
+               sendEvent.sendEvents(flowTaskStatusM, flowTaskStatusPo);
             } else {
                 AssertsUtil.isTrue(true, "任务操作类型不存在");
             }

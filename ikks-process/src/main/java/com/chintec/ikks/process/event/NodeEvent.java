@@ -7,7 +7,7 @@ import com.chintec.ikks.process.entity.FlowTask;
 import com.chintec.ikks.process.entity.FlowTaskStatus;
 import com.chintec.ikks.process.entity.po.FlowTaskStatusPo;
 import com.chintec.ikks.process.entity.vo.NodeFunctionVo;
-import com.chintec.ikks.process.event.util.NodeEventFunction;
+import com.chintec.ikks.process.event.function.NodeEventFunction;
 import com.chintec.ikks.process.feign.IRabbitMqService;
 import com.chintec.ikks.process.service.IFlowNodeService;
 import com.chintec.ikks.process.service.IFlowTaskService;
@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.annotation.OnTransition;
 import org.springframework.statemachine.annotation.WithStateMachine;
 import org.springframework.util.CollectionUtils;
@@ -25,6 +26,9 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ * 事件类
+ * 根绝@OnTransition注解来实现对应的状态驱动
+ * 分为:进行中事件 通过事件 和 拒绝事件三个方法
  * @author Jeff·Tang
  * @version 1.0
  * @date 2020/9/22 14:23
@@ -45,6 +49,7 @@ public class NodeEvent {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
+
     /**
      * 进行中事件
      *
@@ -54,9 +59,12 @@ public class NodeEvent {
     public void going(Message<NodeStateChangeEnum> message) {
         logger.info("---节点审核中---节点::{}", message);
         //消息体取出信息
-        FlowTaskStatusPo flowTaskStatusPo = JSONObject.parseObject(JSONObject.toJSONString(message.getHeaders().get("flowTaskStatusPo")), FlowTaskStatusPo.class);
-        FlowTaskStatus flowTaskStatus = JSONObject.parseObject(JSONObject.toJSONString(flowTaskStatusPo.getData()), FlowTaskStatus.class);
-        //更新任务装填
+        FlowTaskStatusPo flowTaskStatusPo = message.getHeaders().get("flowTaskStatusPo", FlowTaskStatusPo.class);
+        assert flowTaskStatusPo != null;
+        flowTaskStatusPo.setStatus(NodeStateEnum.GOING);
+        FlowTaskStatus flowTaskStatus = flowTaskStatusPo.getData();
+        //更新任务状态
+        flowTaskStatus.setStatusId(flowTaskStatusPo.getId());
         NodeEventFunction.updateTaskStatus(flowTaskStatus, NodeStateEnum.GOING.getCode().toString(), iFlowTaskStatusService);
         NodeEventFunction.sendMessage(flowTaskStatusPo, iRabbitMqService);
     }
@@ -102,7 +110,7 @@ public class NodeEvent {
         logger.info("---节点审核不过---::{}", message);
         FlowTaskStatusPo flowTaskStatusPo = JSONObject.parseObject(JSONObject.toJSONString(message.getHeaders().get("flowTaskStatusPo")), FlowTaskStatusPo.class);
         FlowTaskStatus flowTaskStatus = flowTaskStatusPo.getData();
-//        updateTaskStatus(flowTaskStatus, NodeStateEnum.REFUSE.getCode().toString());
+        NodeEventFunction.updateTaskStatus(flowTaskStatus, NodeStateEnum.REFUSE.getCode().toString(), iFlowTaskStatusService);
 //        FlowTask byId = iFlowTaskService.getById(flowTaskStatus.getTaskId());
 //        if (StringUtils.isEmpty(flowTaskStatusPo.getRejectNode())) {
 //            finishTask(byId, NodeStateEnum.REFUSE.getCode().toString(), flowTaskStatus.getUpdataBy());

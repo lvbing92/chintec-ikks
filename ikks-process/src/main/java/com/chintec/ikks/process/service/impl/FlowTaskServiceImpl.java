@@ -81,6 +81,7 @@ public class FlowTaskServiceImpl extends ServiceImpl<FlowTaskMapper, FlowTask> i
                     flowTaskStatus.setUpdateTime(LocalDateTime.now());
                     flowTaskStatus.setCreateTime(LocalDateTime.now());
                     flowTaskStatus.setNodeExc(flowNode.getNodeExc());
+                    flowTaskStatus.setRejectNode(flowNode.getRejectNode());
                     return flowTaskStatus;
                 }).collect(Collectors.toList())), "创建任务失败");
         //初始化任务,开始第一个节点任务
@@ -110,7 +111,6 @@ public class FlowTaskServiceImpl extends ServiceImpl<FlowTaskMapper, FlowTask> i
         flowTaskStatusPo.setId(flowTaskStatus.getStatusId());
         flowTaskStatusPo.setStatus(NodeStateEnum.PENDING);
         flowTaskStatusPo.setIsFinish(StringUtils.isEmpty(one.getNodeType()) ? 2 : Integer.parseInt(one.getNodeType()));
-        flowTaskStatusPo.setRejectNode(one.getRejectNode());
         flowTaskStatusPo.setTime(one.getDelayTime() == null ? "" : one.getDelayTime() * 3600 * 1000 + "");
         Message<NodeStateChangeEnum> flowTaskStatus1 = MessageBuilder.withPayload(NodeStateChangeEnum.GOING).setHeader("flowTaskStatusPo", flowTaskStatusPo).build();
         return sendEvent.sendEvents(flowTaskStatus1, flowTaskStatusPo);

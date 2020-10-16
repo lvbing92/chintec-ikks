@@ -1,5 +1,6 @@
 package com.chintec.ikks.process;
 
+import com.baomidou.mybatisplus.core.conditions.interfaces.Func;
 import com.chintec.ikks.common.enums.NodeStateEnum;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.process.entity.FlowTaskStatus;
@@ -20,10 +21,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 /**
  * @author Jeff·Tang
@@ -62,7 +66,7 @@ class processTest {
             flowNodeVo.setRejectButtonName("驳回按钮" + i);
             flowNodeVo.setNodeExc("1");
             flowNodeVo.setNextNodeTrend("0");
-            flowNodeVo.setNodeFunctionVos(Arrays.asList(new NodeFunctionVo("1", "1", i %2==0 &&i<4? i + 2 : null), new NodeFunctionVo("1", "2", i % 2 == 1 ? i+2 : null)));
+            flowNodeVo.setNodeFunctionVos(Arrays.asList(new NodeFunctionVo("1", "1", i % 2 == 0 && i < 4 ? i + 2 : null), new NodeFunctionVo("1", "2", i % 2 == 1 ? i + 2 : null)));
             flowNodeVo.setRejectNode(i % 2 == 1 ? i - 1 : null);
             flowNodeVo.setNodeRunMode("1");
             flowInfoVos.add(flowNodeVo);
@@ -74,8 +78,8 @@ class processTest {
     @Test
     void startProcessTest() {
         FlowTaskVo flowTaskVo = new FlowTaskVo();
-        flowTaskVo.setFollowInfoId(8);
-        flowTaskVo.setModuleId(2);
+        flowTaskVo.setFollowInfoId(6);
+        flowTaskVo.setModuleId(4);
         flowTaskVo.setName("测试流程任务");
         flowTaskVo.setStatus(NodeStateEnum.PENDING.getCode().toString());
         ResultResponse task = iFlowTaskService.createTask(flowTaskVo);
@@ -84,22 +88,63 @@ class processTest {
 
     @Test
     void send() {
-        FlowTaskStatus byId = iFlowTaskStatusService.getById(273);
+        FlowTaskStatus byId = iFlowTaskStatusService.getById(515);
         FlowTaskStatusPo flowTaskStatus = new FlowTaskStatusPo();
         flowTaskStatus.setId(byId.getStatusId());
         flowTaskStatus.setName("这是个测试");
         flowTaskStatus.setTime("30000");
-        flowTaskStatus.setTaskStatus("2");
+        flowTaskStatus.setTaskStatus("1");
         flowTaskStatus.setData(byId);
-        flowTaskStatus.setIsFinish(1);
+        flowTaskStatus.setIsFinish(3);
+        byId.setHandleStatus("1");
         MessageReq messageReq = new MessageReq();
         messageReq.setSuccess(true);
         messageReq.setMessageMsg(flowTaskStatus);
         ResultResponse resultResponse = iRabbitMqService.modelMsg(messageReq);
+        log.info("结果:{}", resultResponse);
     }
 
     @Test
     void redis() {
-        System.out.println(redisTemplate.hasKey(iFlowTaskStatusService.getById(166).getStatusId()));
+        System.out.println(redisTemplate.opsForValue().get("589a690a-23f5-41df-ba74-6602d63b4e61"));
+    }
+
+    @Test
+    void concurrentHashMap() {
+        ConcurrentHashMap<String, Object> stringObjectConcurrentHashMap = new ConcurrentHashMap<>(10);
+        Object o = stringObjectConcurrentHashMap.putIfAbsent("1", "如果我说如果");
+        log.info("concurrentHashMap first {}", o);
+        Object put = stringObjectConcurrentHashMap.putIfAbsent("1", "哈哈");
+        log.info("concurrentHashMap second {}", put);
+    }
+
+    @Test
+    void stream() {
+        ConcurrentHashMap<String, Long> stringObjectConcurrentHashMap = new ConcurrentHashMap<>(getData(900));
+        log.info("init size:{}", stringObjectConcurrentHashMap.size());
+//        OptionalLong reduce = LongStream.rangeClosed(1, 10).reduce(Long::sum);
+//        assert reduce.isPresent();
+//        long asLong = reduce.getAsLong();
+//        System.out.println(asLong);
+        ForkJoinPool forkJoinPool = new ForkJoinPool(10);
+        forkJoinPool.execute(() -> LongStream.rangeClosed(1, 10).parallel().forEach(__ -> {
+            synchronized (stringObjectConcurrentHashMap) {
+                int size = 1000 - stringObjectConcurrentHashMap.size();
+                log.info("difference size:{}", size);
+                stringObjectConcurrentHashMap.putAll(getData(size));
+            }
+//            int size = 1000 - stringObjectConcurrentHashMap.size();
+//            log.info("difference size:{}", size);
+//            stringObjectConcurrentHashMap.putAll(getData(size));
+        }));
+        forkJoinPool.shutdown();
+        forkJoinPool.awaitQuiescence(1, TimeUnit.HOURS);
+        log.info("finish size:{}", stringObjectConcurrentHashMap.size());
+    }
+
+    private ConcurrentHashMap<String, Long> getData(int count) {
+        return LongStream.rangeClosed(1, count)
+                .boxed()
+                .collect(Collectors.toConcurrentMap(i -> UUID.randomUUID().toString(), Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
     }
 }

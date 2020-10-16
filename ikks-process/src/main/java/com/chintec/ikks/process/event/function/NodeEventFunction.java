@@ -1,4 +1,4 @@
-package com.chintec.ikks.process.event.util;
+package com.chintec.ikks.process.event.function;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -30,6 +30,8 @@ import java.util.stream.Collectors;
  * @author Jeff·Tang
  * @version 1.0
  * @date 2020/10/13 15:30
+ * 这个就是公共方法类,没啥很重要的作用
+ * 只是提出来,进行解耦的
  */
 public class NodeEventFunction {
 
@@ -62,7 +64,6 @@ public class NodeEventFunction {
             flowTaskStatusPo.setTime(StringUtils.isEmpty(node.getDelayTime()) ? "" : node.getDelayTime() * 3600 * 1000 + "");
             flowTaskStatusPo.setName(node.getNodeName());
             flowTaskStatusPo.setIsFinish(StringUtils.isEmpty(node.getNodeType()) ? 2 : Integer.parseInt(node.getNodeType()));
-            flowTaskStatusPo.setRejectNode(node.getRejectNode());
             flowTaskStatusPo.setStatus(NodeStateEnum.PENDING);
             FlowTaskStatus one = iFlowTaskStatusService.getOne(new QueryWrapper<FlowTaskStatus>()
                     .lambda()

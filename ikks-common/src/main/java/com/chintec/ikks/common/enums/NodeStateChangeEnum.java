@@ -7,6 +7,6 @@ package com.chintec.ikks.common.enums;
  */
 public enum NodeStateChangeEnum {
     //节点任务状态改变事件
-    GOING, PASS, REFUSE;
+    GOING, PASS, REFUSE, PENDING;
 
 }
