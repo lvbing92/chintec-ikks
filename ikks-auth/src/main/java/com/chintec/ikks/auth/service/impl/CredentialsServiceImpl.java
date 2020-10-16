@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
@@ -72,10 +73,10 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
     public ResultResponse addUser(CredentialsRequest credentialsRequest) {
         System.out.println("当前客户信息:" + JSONObject.toJSON(credentialsRequest));
         //判断当前客户是否存在
-//        Credentials user =this.getOne(new QueryWrapper<Credentials>().lambda()
-//                .eq(Credentials::getName,credentialsRequest.getName())
-//                .eq(Credentials::getCompanyName,credentialsRequest.getCompanyName()));
-//        if(!ObjectUtils.isEmpty(user)){
+        Credentials user =this.getOne(new QueryWrapper<Credentials>().lambda()
+                .eq(Credentials::getName,credentialsRequest.getName())
+                .eq(Credentials::getCompanyName,credentialsRequest.getCompanyName()));
+        if(!ObjectUtils.isEmpty(user)){
         BCryptPasswordEncoder b = new BCryptPasswordEncoder();
         Credentials credentials = new Credentials();
         BeanUtils.copyProperties(credentialsRequest, credentials);
@@ -93,9 +94,9 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
         credentialsAuthorities.setCredentialsId(credentials.getId());
         boolean creAuthFlag = iCredentialsAuthoritiesService.save(credentialsAuthorities);
         AssertsUtil.isTrue(!creAuthFlag, "添加用户角色失败！");
-//        }else{
-//            return ResultResponse.failResponse("当前客户已存在！");
-//        }
+        }else{
+            return ResultResponse.failResponse("当前客户已存在！");
+        }
         return ResultResponse.successResponse("添加用户成功！");
     }
 
@@ -120,7 +121,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
     @Override
     public ResultResponse queryUser(Long id) {
         //查询用户
-        Credentials credentials = this.getOne(new QueryWrapper<Credentials>().lambda().eq(Credentials::getId, id));
+        Credentials credentials = this.getById(id);
         //查询当前用户
         return ResultResponse.successResponse("查询用户详情成功", credentials);
     }
@@ -128,7 +129,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
     @Override
     public ResultResponse deleteUser(Long id) {
         //查询用户
-        Credentials credentials = this.getOne(new QueryWrapper<Credentials>().lambda().eq(Credentials::getId, id));
+        Credentials credentials = this.getById(id);
         credentials.setEnabled(false);
         boolean flag = this.saveOrUpdate(credentials);
        if(!flag){

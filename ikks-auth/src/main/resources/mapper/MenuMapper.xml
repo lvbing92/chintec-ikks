@@ -3,21 +3,26 @@
 <mapper namespace="com.chintec.ikks.auth.mapper.MenuMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.chintec.ikks.auth.request.MenuRequest">
+    <resultMap id="BaseResultMap" type="com.chintec.ikks.auth.response.MenuResponse">
         <id column="id" property="id" />
         <result column="menu_name" property="menuName" />
+        <result column="user_menu_name" property="userMenuName" />
         <result column="parent_id" property="parentId" />
         <result column="icon" property="icon" />
         <result column="url" property="url" />
         <result column="model_type" property="modelType" />
-        <collection column="id" property="childList" ofType="com.chintec.ikks.auth.request.MenuRequest" select="getMenuChildren">
+        <collection column="id" property="childList" ofType="com.chintec.ikks.auth.response.MenuResponse" select="getMenuChildren">
         </collection>
     </resultMap>
-
-    <select id="getMenuList" resultMap="BaseResultMap">
-        select * from menu t where t.parent_id = 0
+    <!--查询所有菜单-->
+    <select id="getMenuList" resultMap="BaseResultMap" parameterType="long" >
+        select * from menu t
+        <where>  t.parent_id = 0
+            <if test="id != null and id != 0 ">
+                and t.id=#{id}
+            </if>
+        </where>
     </select>
-
     <select id="getMenuChildren" resultMap="BaseResultMap">
         SELECT
             *

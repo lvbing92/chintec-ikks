@@ -6,6 +6,8 @@ import com.chintec.ikks.auth.mapper.OauthClientDetailsMapper;
 import com.chintec.ikks.auth.service.IOauthClientDetailsService;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
+
 /**
  * <p>
  * 服务实现类
@@ -17,6 +19,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class OauthClientDetailsServiceImpl extends
         ServiceImpl<OauthClientDetailsMapper, OauthClientDetails>
-        implements IOauthClientDetailsService {
+        implements IOauthClientDetailsService, Serializable {
 
 }

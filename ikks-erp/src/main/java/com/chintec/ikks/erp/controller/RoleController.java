@@ -2,6 +2,7 @@ package com.chintec.ikks.erp.controller;
 
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.erp.request.AuthorityRequest;
+import com.chintec.ikks.erp.request.MenuRequest;
 import com.chintec.ikks.erp.service.IAuthorityService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,6 +48,19 @@ public class RoleController {
         return iAuthorityService.addRole(authorityRequest);
     }
 
+
+    /**
+     * 新增角色菜单数据
+     *
+     * @param menuRequest 角色对象
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "新增角色菜单")
+    @PostMapping("/role/addMenu")
+    public ResultResponse addRoleMenu(MenuRequest menuRequest) {
+        return iAuthorityService.addRoleMenu(menuRequest);
+    }
+
     /**
      * 更新角色
      *
@@ -61,6 +75,18 @@ public class RoleController {
     }
 
     /**
+     * 编辑角色菜单数据
+     *
+     * @param menuRequest 菜单对象
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "编辑角色菜单")
+    @PostMapping("/role/updateMenu")
+    public ResultResponse updateRoleMenu(MenuRequest menuRequest) {
+        return iAuthorityService.updateRoleMenu(menuRequest);
+    }
+
+    /**
      * 通过Id查询角色
      *
      * @param id 角色Id
@@ -68,7 +94,7 @@ public class RoleController {
      */
     @ApiOperation(value = "角色详情")
     @GetMapping("/role/{id}")
-    public ResultResponse queryRole(@PathVariable String id) {
+    public ResultResponse queryRole(@PathVariable Long id) {
 
         return iAuthorityService.queryRole(id);
     }
@@ -77,11 +103,11 @@ public class RoleController {
      * 删除角色
      *
      * @param id 角色Id
-     * @return
+     * @return ResultResponse
      */
     @ApiOperation(value = "删除角色")
     @DeleteMapping("/role/{id}")
-    public ResultResponse deleteRole(@PathVariable String id) {
+    public ResultResponse deleteRole(@PathVariable Long id) {
         return iAuthorityService.deleteRole(id);
     }
 }

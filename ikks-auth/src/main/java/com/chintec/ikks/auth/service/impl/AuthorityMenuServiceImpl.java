@@ -7,6 +7,7 @@ import com.chintec.ikks.auth.mapper.AuthorityMenuMapper;
 import com.chintec.ikks.auth.service.IAuthorityMenuService;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
  * @since 2020-09-01
  */
 @Service
-public class AuthorityMenuServiceImpl extends ServiceImpl<AuthorityMenuMapper, AuthorityMenu> implements IAuthorityMenuService {
+public class AuthorityMenuServiceImpl extends ServiceImpl<AuthorityMenuMapper, AuthorityMenu> implements IAuthorityMenuService, Serializable {
 
     /**
      * 获取菜单Id

@@ -1,6 +1,7 @@
 package com.chintec.ikks.auth.controller;
 
 import com.chintec.ikks.auth.request.AuthorityRequest;
+import com.chintec.ikks.auth.request.MenuRequest;
 import com.chintec.ikks.auth.service.IAuthorityService;
 import com.chintec.ikks.common.util.ResultResponse;
 import io.swagger.annotations.Api;
@@ -23,8 +24,11 @@ public class RoleController {
 
     /**
      * 查询角色列表
-     *
-     * @return
+     * @param currentPage 当前页
+     * @param pageSize  页面数据数
+     * @param searchValue 搜索条件
+     * @param sorted 排序
+     * @return ResultResponse
      */
     @ApiOperation(value = "查询角色列表")
     @GetMapping("/roles")
@@ -37,8 +41,8 @@ public class RoleController {
 
     /**
      * 新增角色
-     *
-     * @return
+     * @param authorityRequest 角色信息
+     * @return ResultResponse
      */
     @ApiOperation(value = "新增角色")
     @PostMapping("/role/add")
@@ -47,6 +51,18 @@ public class RoleController {
         return iAuthorityService.addRole(authorityRequest);
     }
 
+
+    /**
+     * 新增角色菜单数据
+     *
+     * @param menuRequest 角色对象
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "新增角色菜单")
+    @PostMapping("/role/addMenu")
+    public ResultResponse addRoleMenu(@RequestBody MenuRequest menuRequest){
+        return iAuthorityService.addRoleMenu(menuRequest);
+    }
     /**
      * 更新角色
      *
@@ -60,6 +76,18 @@ public class RoleController {
         return iAuthorityService.updateRole(authorityRequest);
     }
 
+
+    /**
+     * 编辑角色菜单数据
+     *
+     * @param menuRequest 菜单对象
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "编辑角色菜单")
+    @PostMapping("/role/updateMenu")
+    public ResultResponse updateRoleMenu(@RequestBody MenuRequest menuRequest){
+        return iAuthorityService.updateRoleMenu(menuRequest);
+    }
     /**
      * 通过Id查询角色
      *
@@ -68,7 +96,7 @@ public class RoleController {
      */
     @ApiOperation(value = "角色详情")
     @GetMapping("/role/{id}")
-    public ResultResponse queryRole(@PathVariable String id) {
+    public ResultResponse queryRole(@PathVariable Long id) {
 
         return iAuthorityService.queryRole(id);
     }
@@ -77,11 +105,11 @@ public class RoleController {
      * 删除角色
      *
      * @param id 角色Id
-     * @return
+     * @return ResultResponse
      */
     @ApiOperation(value = "删除角色")
     @DeleteMapping("/role/{id}")
-    public ResultResponse deleteRole(@PathVariable String id) {
+    public ResultResponse deleteRole(@PathVariable Long id) {
         return iAuthorityService.deleteRole(id);
     }
 }

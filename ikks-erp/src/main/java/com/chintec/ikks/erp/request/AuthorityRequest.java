@@ -40,8 +40,9 @@ public class AuthorityRequest {
      * 角色关联的菜单
      */
     private List<Menu> menuList;
+
     /**
      * 角关联的菜单Id
      */
-    private List<Long> menuIds;
+    private String menuIds;
 }

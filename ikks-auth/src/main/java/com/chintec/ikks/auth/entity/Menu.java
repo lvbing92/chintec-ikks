@@ -36,6 +36,10 @@ public class Menu extends Model<Menu> {
      * 名称
      */
     private String menuName;
+    /**
+     * 客户命名菜单名称
+     */
+    private String userMenuName;
 
     /**
      * url
@@ -45,6 +49,10 @@ public class Menu extends Model<Menu> {
      * 图片
      */
     private String icon;
+    /**
+     * 客户命名图片
+     */
+    private String userIcon;
 
     /**
      * 模块类型

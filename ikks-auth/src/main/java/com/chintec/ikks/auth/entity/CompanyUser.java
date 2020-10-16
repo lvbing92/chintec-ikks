@@ -3,7 +3,6 @@ package com.chintec.ikks.auth.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
-import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,38 +11,53 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ * 公司用户表
  * </p>
  *
  * @author rubIn·lv
- * @since 2020-09-02
+ * @since 2020-10-16
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "Department", description = "部门信息")
-public class Department extends Model<Department> {
+public class CompanyUser extends Model<CompanyUser> {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 部门Id
+     * 主键Id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
-     * 部门名称
+     * 用户名称
      */
-    private String name;
+    private String userName;
 
     /**
-     * 是否可用
+     * 公司名称
      */
-    private Boolean enabled;
+    private String companyName;
+
     /**
-     * 是否默认
+     * 邮箱
      */
-    private Boolean isDefault;
+    private String email;
+
+    /**
+     * 电话
+     */
+    private String phone;
+
+    /**
+     * 密码
+     */
+    private String password;
+
+    /**
+     * 所属部门Id
+     */
+    private Integer departmentId;
 
     /**
      * 创建时间

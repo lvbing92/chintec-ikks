@@ -1,9 +1,9 @@
-package com.chintec.ikks.auth.controller;
+package com.chintec.ikks.erp.controller;
 
-import com.chintec.ikks.auth.entity.Department;
-import com.chintec.ikks.auth.request.DepartmentRequest;
-import com.chintec.ikks.auth.service.IDepartmentService;
 import com.chintec.ikks.common.util.ResultResponse;
+import com.chintec.ikks.erp.entity.Department;
+import com.chintec.ikks.erp.request.DepartmentRequest;
+import com.chintec.ikks.erp.service.IDepartmentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +33,9 @@ public class DepartmentController {
     @ApiOperation(value = "查询部门列表")
     @GetMapping("/departments")
     public ResultResponse getDepartmentList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                      @RequestParam(value = "currentPage") Integer currentPage,
-                                      @RequestParam(value = "searchValue", required = false) String searchValue,
-                                      @RequestParam(value = "sorted", required = false) String sorted) {
+                                            @RequestParam(value = "currentPage") Integer currentPage,
+                                            @RequestParam(value = "searchValue", required = false) String searchValue,
+                                            @RequestParam(value = "sorted", required = false) String sorted) {
         return iDepartmentService.getDepartmentList(pageSize, currentPage, searchValue, sorted);
     }
 
@@ -47,7 +47,7 @@ public class DepartmentController {
      */
     @ApiOperation(value = "部门新增")
     @PostMapping("/department/add")
-    public ResultResponse addDepartment(@RequestBody DepartmentRequest departmentRequest) {
+    public ResultResponse addDepartment(DepartmentRequest departmentRequest) {
 
         return iDepartmentService.addDepartment(departmentRequest);
     }

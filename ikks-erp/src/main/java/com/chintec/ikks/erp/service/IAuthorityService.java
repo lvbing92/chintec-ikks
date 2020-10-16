@@ -2,6 +2,7 @@ package com.chintec.ikks.erp.service;
 
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.erp.request.AuthorityRequest;
+import com.chintec.ikks.erp.request.MenuRequest;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -43,14 +44,34 @@ public interface IAuthorityService {
     ResultResponse addRole(@RequestBody AuthorityRequest authorityRequest);
 
     /**
+     * 新增角色菜单数据
+     *
+     * @param menuRequest 角色对象
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "新增角色菜单")
+    @PostMapping("/role/addMenu")
+    ResultResponse addRoleMenu(@RequestBody MenuRequest menuRequest);
+
+    /**
      * 更新角色
      *
      * @param authorityRequest 角色信息
      * @return ResultResponse
      */
     @ApiOperation(value = "更新角色")
-    @PutMapping("/user/update")
+    @PutMapping("/role/update")
     ResultResponse updateRole(@RequestBody AuthorityRequest authorityRequest);
+
+    /**
+     * 编辑角色菜单数据
+     *
+     * @param menuRequest 菜单对象
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "编辑角色菜单")
+    @PostMapping("/role/updateMenu")
+    ResultResponse updateRoleMenu(@RequestBody MenuRequest menuRequest);
 
     /**
      * 通过Id查询角色
@@ -60,7 +81,7 @@ public interface IAuthorityService {
      */
     @ApiOperation(value = "角色详情")
     @GetMapping("/role/{id}")
-    ResultResponse queryRole(@PathVariable String id);
+    ResultResponse queryRole(@PathVariable Long id);
 
     /**
      * 删除角色
@@ -70,5 +91,5 @@ public interface IAuthorityService {
      */
     @ApiOperation(value = "删除角色")
     @DeleteMapping("/role/{id}")
-    ResultResponse deleteRole(@PathVariable String id);
+    ResultResponse deleteRole(@PathVariable Long id);
 }

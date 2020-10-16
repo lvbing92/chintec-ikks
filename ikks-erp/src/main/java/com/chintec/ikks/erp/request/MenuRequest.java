@@ -1,4 +1,4 @@
-package com.chintec.ikks.auth.request;
+package com.chintec.ikks.erp.request;
 
 import lombok.Data;
 

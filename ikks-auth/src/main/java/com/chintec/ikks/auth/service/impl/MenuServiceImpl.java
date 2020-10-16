@@ -5,12 +5,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chintec.ikks.auth.entity.Menu;
 import com.chintec.ikks.auth.mapper.MenuMapper;
+import com.chintec.ikks.auth.request.MenuRequest;
 import com.chintec.ikks.auth.service.IMenuService;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.ResultResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,11 +25,16 @@ import java.util.List;
  * @since 2020-09-01
  */
 @Service
-public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IMenuService {
+public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IMenuService, Serializable {
 
+    /**
+     * 角色列表查询
+//     * @param menuRequest 菜单请求参数
+     * @return ResultResponse
+     */
     @Override
     public ResultResponse getMenuList() {
-        List<Menu> menuList = this.baseMapper.getMenuList();
+        List<Menu> menuList = this.baseMapper.getMenuList(0);
         return ResultResponse.successResponse("查询菜单成功", menuList);
     }
 

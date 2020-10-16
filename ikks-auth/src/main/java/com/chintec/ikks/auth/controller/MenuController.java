@@ -2,6 +2,7 @@ package com.chintec.ikks.auth.controller;
 
 import com.chintec.ikks.auth.entity.Menu;
 import com.chintec.ikks.auth.request.DepartmentRequest;
+import com.chintec.ikks.auth.request.MenuRequest;
 import com.chintec.ikks.auth.service.IDepartmentService;
 import com.chintec.ikks.auth.service.IMenuService;
 import com.chintec.ikks.common.util.ResultResponse;
@@ -36,7 +37,7 @@ public class MenuController {
     /**
      * 新增或修改菜单
      *
-     * @param menu 菜单信息
+     * @param menu 菜单信息2
      * @return ResultResponse
      */
     @ApiOperation(value = "新增或修改菜单")

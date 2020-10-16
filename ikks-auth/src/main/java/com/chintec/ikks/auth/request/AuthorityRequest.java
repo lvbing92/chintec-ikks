@@ -23,5 +23,9 @@ public class AuthorityRequest extends Authority {
     /**
      * 角关联的菜单Id
      */
-    private List<Long> menuIds;
+//    private List<Long> menuIds;
+    /**
+     * 角色关联的菜单Ids
+     */
+    private String menuIds;
 }

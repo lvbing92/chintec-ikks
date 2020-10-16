@@ -10,6 +10,6 @@ import com.chintec.ikks.generator.config.GeneratorConfig;
  */
 public class MyGenerator {
     public static void main(String[] args) {
-    GeneratorConfig.getMyGenerator("TDepartment","t_department","rubIn·lv");
+    GeneratorConfig.getMyGenerator("UserAuthorities","user_authorities","rubIn·lv");
     }
 }

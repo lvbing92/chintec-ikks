@@ -3,6 +3,7 @@ package com.chintec.ikks.auth.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.chintec.ikks.auth.entity.Menu;
 import com.chintec.ikks.auth.request.MenuRequest;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,6 +22,6 @@ public interface MenuMapper extends BaseMapper<Menu> {
      *
      * @return List<Menu>
      */
-    List<Menu> getMenuList();
-
+//    List<Menu> getMenuList(MenuRequest menuRequest);
+    List<Menu> getMenuList(@Param("id") long id);
 }

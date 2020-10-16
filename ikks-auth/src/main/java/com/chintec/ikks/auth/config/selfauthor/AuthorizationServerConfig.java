@@ -22,6 +22,8 @@ import javax.sql.DataSource;
 import java.io.IOException;
 
 /**
+ * 授权服务器
+ *
  * @author rubin
  */
 @Configuration

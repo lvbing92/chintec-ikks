@@ -1,9 +1,8 @@
-package com.chintec.ikks.auth.controller;
+package com.chintec.ikks.erp.controller;
 
-import com.chintec.ikks.auth.request.CompanyUserRequest;
-import com.chintec.ikks.auth.request.CredentialsRequest;
-import com.chintec.ikks.auth.service.ICompanyUserService;
 import com.chintec.ikks.common.util.ResultResponse;
+import com.chintec.ikks.erp.request.CompanyUserRequest;
+import com.chintec.ikks.erp.service.ICompanyUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,39 +29,41 @@ public class CompanyUserController {
      * @param searchValue 查询条件
      * @param sorted      排序
      * @return ResultResponse
-     * */
+     */
     @ApiOperation(value = "查询公司用户列表")
     @GetMapping("/companyUsers")
     public ResultResponse getCompanyUserList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                      @RequestParam(value = "currentPage", required = true) Integer currentPage,
-                                      @RequestParam(value = "searchValue", required = false) String searchValue,
-                                      @RequestParam(value = "sorted", required = false) String sorted) {
+                                             @RequestParam(value = "currentPage", required = true) Integer currentPage,
+                                             @RequestParam(value = "searchValue", required = false) String searchValue,
+                                             @RequestParam(value = "sorted", required = false) String sorted) {
         return iCompanyUserService.getCompanyUserList(pageSize, currentPage, searchValue, sorted);
     }
 
     /**
      * 新增公司用户
+     *
      * @param companyUserRequest 公司用户信息
      * @return ResultResponse
      */
     @ApiOperation(value = "新增公司用户")
     @PostMapping("/companyUser/add")
-    public ResultResponse addCompanyUser(@RequestBody CompanyUserRequest companyUserRequest) {
+    public ResultResponse addCompanyUser(CompanyUserRequest companyUserRequest) {
 
         return iCompanyUserService.addCompanyUser(companyUserRequest);
     }
 
     /**
      * 更新公司用户
+     *
      * @param companyUserRequest 公司用户信息
      * @return ResultResponse
      */
-    @ApiOperation(value = "更新客户")
+    /*@ApiOperation(value = "更新客户")
     @PutMapping("/companyUsers/update")
     public ResultResponse updateCompanyUser(@RequestBody CompanyUserRequest companyUserRequest) {
 
         return iCompanyUserService.updateCompanyUser(companyUserRequest);
-    }
+    }*/
 
     /**
      * 通过Id查询公司用户
@@ -75,6 +76,7 @@ public class CompanyUserController {
     public ResultResponse queryCompanyUser(@PathVariable Integer id) {
         return iCompanyUserService.queryCompanyUser(id);
     }
+
     /**
      * 删除公司用户
      *

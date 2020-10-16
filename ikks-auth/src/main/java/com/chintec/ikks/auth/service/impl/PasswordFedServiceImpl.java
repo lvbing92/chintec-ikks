@@ -1,7 +1,6 @@
 package com.chintec.ikks.auth.service.impl;
 
 import com.chintec.ikks.auth.entity.OAuth2Token;
-import com.chintec.ikks.auth.service.IOauthClientDetailsService;
 import com.chintec.ikks.auth.service.IPasswordFedService;
 import com.chintec.ikks.common.enums.CommonCodeEnum;
 import com.chintec.ikks.common.util.AssertsUtil;
@@ -9,14 +8,12 @@ import com.chintec.ikks.common.util.ResultResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Arrays;
 
@@ -27,30 +24,29 @@ import java.util.Arrays;
  */
 @Slf4j
 @Service
-public class PasswordFedServiceImpl implements IPasswordFedService {
+public class PasswordFedServiceImpl implements IPasswordFedService, Serializable {
 
     private static final String URL = "http://localhost:7070/oauth/token";
-    @Autowired
-    private IOauthClientDetailsService iOauthClientDetailsService;
     @Autowired
     private LogoutSuccessHandlerImpl logoutSuccessHandler;
 
     @Override
-    public ResultResponse logout(String token){
-        boolean flag =logoutSuccessHandler.onLogoutSuccess(token);
-        AssertsUtil.isTrue(!flag,"退出失败!");
+    public ResultResponse logout(String token) {
+        boolean flag = logoutSuccessHandler.onLogoutSuccess(token);
+        AssertsUtil.isTrue(!flag, "退出失败!");
         return ResultResponse.successResponse("退出成功！");
     }
 
     @Override
-    public ResultResponse userLogin(String userName,String passWord) {
+    public ResultResponse userLogin(String userName, String passWord) {
 
         OAuth2Token tokenMsg = null;
         try {
-            tokenMsg = getToken(userName,passWord);
+            tokenMsg = getToken(userName, passWord);
             log.info("tokenMsg=" + tokenMsg);
 
         } catch (Exception e) {
+            e.printStackTrace();
             return ResultResponse.failResponse(CommonCodeEnum.PARAMS_ERROR_CODE.getCode(), "用户名或密码错误");
         }
         //查询用户角色，菜单
@@ -63,10 +59,10 @@ public class PasswordFedServiceImpl implements IPasswordFedService {
      *
      * @return
      */
-    public OAuth2Token getToken(String userName,String passWord) {
+    public OAuth2Token getToken(String userName, String passWord) {
         RestTemplate rest = new RestTemplate();
         RequestEntity<MultiValueMap<String, String>> requestEntity = new RequestEntity<>(
-                getBody(userName,passWord), getHeader(), HttpMethod.POST, URI.create(URL));
+                getBody(userName, passWord), getHeader(), HttpMethod.POST, URI.create(URL));
 
         ResponseEntity<OAuth2Token> responseEntity = rest.exchange(
                 requestEntity, OAuth2Token.class);
@@ -82,7 +78,7 @@ public class PasswordFedServiceImpl implements IPasswordFedService {
      *
      * @return
      */
-    private MultiValueMap<String, String> getBody(String userName,String passWord) {
+    private MultiValueMap<String, String> getBody(String userName, String passWord) {
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("grant_type", "password");
         formData.add("username", userName);
