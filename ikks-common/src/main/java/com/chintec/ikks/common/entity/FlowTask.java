@@ -1,4 +1,4 @@
-package com.chintec.ikks.process.entity;
+package com.chintec.ikks.common.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class FlowTaskStatus extends Model<FlowTaskStatus> {
+public class FlowTask extends Model<FlowTask> {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,58 +27,46 @@ public class FlowTaskStatus extends Model<FlowTaskStatus> {
     private Integer id;
 
     /**
-     * 任务实例ID
+     * 模块Id
      */
-    private Integer taskId;
+    private Integer moduleId;
 
     /**
-     * 节点id
+     * 实例id
      */
-    private Integer nodeId;
+    private Integer followInfoId;
 
     /**
-     * 名称
+     * 任务名称
      */
     private String name;
 
     /**
-     * 任务状态
+     * 状态
      */
     private String status;
 
     /**
-     * 节点function
+     * 创建时间
      */
-    private String taskFunction;
-
-    /**
-     * 任务处理人
-     */
-    private Integer assignee;
-
-    /**
-     * 审批状态
-     */
-    private String handleStatus;
-
     private LocalDateTime createTime;
 
+    /**
+     * 审核时间
+     */
+    private LocalDateTime auditTime;
+
+    /**
+     * 更新时间
+     */
     private LocalDateTime updateTime;
 
+    /**
+     * 更新人
+     */
     private String updataBy;
 
-    /**
-     * 节点执行条件
-     */
-    private String nodeExc;
-    /**
-     * 状态机的Id
-     */
-    private String statusId;
-    /**
-     * 驳回节点
-     */
-    private Integer rejectNode;
+
 
     @Override
     protected Serializable pkVal() {

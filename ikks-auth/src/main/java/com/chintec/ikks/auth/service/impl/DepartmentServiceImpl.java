@@ -2,8 +2,6 @@ package com.chintec.ikks.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.chintec.ikks.auth.entity.Authority;
-import com.chintec.ikks.auth.entity.Credentials;
 import com.chintec.ikks.auth.entity.Department;
 import com.chintec.ikks.auth.mapper.DepartmentMapper;
 import com.chintec.ikks.auth.service.IDepartmentService;

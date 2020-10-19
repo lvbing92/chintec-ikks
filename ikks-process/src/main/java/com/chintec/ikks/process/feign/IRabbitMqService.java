@@ -1,7 +1,7 @@
 package com.chintec.ikks.process.feign;
 
+import com.chintec.ikks.common.entity.po.MessageReq;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.process.entity.po.MessageReq;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

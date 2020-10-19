@@ -1,9 +1,9 @@
-package com.chintec.ikks.process.entity.po;
+package com.chintec.ikks.common.entity.po;
 
 import com.alibaba.fastjson.JSONObject;
+import com.chintec.ikks.common.entity.FlowTaskStatus;
+import com.chintec.ikks.common.entity.vo.NodeFunctionVo;
 import com.chintec.ikks.common.enums.NodeStateEnum;
-import com.chintec.ikks.process.entity.FlowTaskStatus;
-import com.chintec.ikks.process.entity.vo.NodeFunctionVo;
 import lombok.Data;
 
 import java.util.List;

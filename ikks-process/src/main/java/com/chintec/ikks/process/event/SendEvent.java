@@ -1,8 +1,8 @@
 package com.chintec.ikks.process.event;
 
+import com.chintec.ikks.common.entity.po.FlowTaskStatusPo;
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;
 import com.chintec.ikks.common.enums.NodeStateEnum;
-import com.chintec.ikks.process.entity.po.FlowTaskStatusPo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;

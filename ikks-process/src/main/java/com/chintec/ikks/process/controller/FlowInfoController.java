@@ -1,8 +1,8 @@
 package com.chintec.ikks.process.controller;
 
 
+import com.chintec.ikks.common.entity.vo.FlowInfoVo;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.process.entity.vo.FlowInfoVo;
 import com.chintec.ikks.process.service.IFlowInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

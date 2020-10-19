@@ -1,4 +1,4 @@
-package com.chintec.ikks.process.entity.vo;
+package com.chintec.ikks.common.entity.vo;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.chintec.ikks.process.entity;
+package com.chintec.ikks.common.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author jeff·Tang
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class FlowInfo extends Model<FlowInfo> {
+public class FlowTaskStatus extends Model<FlowTaskStatus> {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,19 +27,39 @@ public class FlowInfo extends Model<FlowInfo> {
     private Integer id;
 
     /**
-     * 流程名字
+     * 任务实例ID
      */
-    private String flowName;
+    private Integer taskId;
 
     /**
-     * 停用：0，启用：1
+     * 节点id
      */
-    private String flowStatus;
+    private Integer nodeId;
 
     /**
-     * 模块ID
+     * 名称
      */
-    private Integer moduleId;
+    private String name;
+
+    /**
+     * 任务状态
+     */
+    private String status;
+
+    /**
+     * 节点function
+     */
+    private String taskFunction;
+
+    /**
+     * 任务处理人
+     */
+    private Integer assignee;
+
+    /**
+     * 审批状态
+     */
+    private String handleStatus;
 
     private LocalDateTime createTime;
 
@@ -47,6 +67,18 @@ public class FlowInfo extends Model<FlowInfo> {
 
     private String updataBy;
 
+    /**
+     * 节点执行条件
+     */
+    private String nodeExc;
+    /**
+     * 状态机的Id
+     */
+    private String statusId;
+    /**
+     * 驳回节点
+     */
+    private Integer rejectNode;
 
     @Override
     protected Serializable pkVal() {

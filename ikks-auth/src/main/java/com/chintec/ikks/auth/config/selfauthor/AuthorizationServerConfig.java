@@ -17,9 +17,7 @@ import org.springframework.security.oauth2.provider.client.JdbcClientDetailsServ
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
-import javax.servlet.*;
 import javax.sql.DataSource;
-import java.io.IOException;
 
 /**
  * @author rubin

@@ -1,9 +1,9 @@
 package com.chintec.ikks.process.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.chintec.ikks.common.entity.FlowTask;
+import com.chintec.ikks.common.entity.vo.FlowTaskVo;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.process.entity.FlowTask;
-import com.chintec.ikks.process.entity.vo.FlowTaskVo;
 
 /**
  * <p>

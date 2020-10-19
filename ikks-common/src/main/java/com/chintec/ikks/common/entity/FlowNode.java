@@ -1,4 +1,4 @@
-package com.chintec.ikks.process.entity;
+package com.chintec.ikks.common.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

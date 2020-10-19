@@ -1,11 +1,11 @@
 package com.chintec.ikks.process.mq;
 
 import com.alibaba.fastjson.JSONObject;
+import com.chintec.ikks.common.entity.FlowTaskStatus;
+import com.chintec.ikks.common.entity.po.FlowTaskStatusPo;
+import com.chintec.ikks.common.entity.po.MessageReq;
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;
 import com.chintec.ikks.common.util.AssertsUtil;
-import com.chintec.ikks.process.entity.FlowTaskStatus;
-import com.chintec.ikks.process.entity.po.FlowTaskStatusPo;
-import com.chintec.ikks.process.entity.po.MessageReq;
 import com.chintec.ikks.process.event.SendEvent;
 import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;

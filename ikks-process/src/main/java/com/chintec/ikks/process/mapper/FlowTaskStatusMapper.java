@@ -1,7 +1,7 @@
 package com.chintec.ikks.process.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.chintec.ikks.process.entity.FlowTaskStatus;
+import com.chintec.ikks.common.entity.FlowTaskStatus;
 
 /**
  * <p>

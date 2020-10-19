@@ -1,4 +1,4 @@
-package com.chintec.ikks.process.entity;
+package com.chintec.ikks.common.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -11,15 +11,15 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- *
+ * 供应商属性字段表
  * </p>
  *
  * @author jeff·Tang
- * @since 2020-09-24
+ * @since 2020-10-19
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class FlowTask extends Model<FlowTask> {
+public class SupplierField extends Model<SupplierField> {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,24 +27,24 @@ public class FlowTask extends Model<FlowTask> {
     private Integer id;
 
     /**
-     * 模块Id
+     * 英文字段
      */
-    private Integer moduleId;
+    private String field;
 
     /**
-     * 实例id
+     * 中文字段
      */
-    private Integer followInfoId;
+    private String fieldName;
 
     /**
-     * 任务名称
+     * 字段属性，如：文本,图片,视频
      */
-    private String name;
+    private String fieldType;
 
     /**
-     * 状态
+     * 字段说明
      */
-    private String status;
+    private String fieldExplain;
 
     /**
      * 创建时间
@@ -52,20 +52,29 @@ public class FlowTask extends Model<FlowTask> {
     private LocalDateTime createTime;
 
     /**
-     * 审核时间
-     */
-    private LocalDateTime auditTime;
-
-    /**
      * 更新时间
      */
     private LocalDateTime updateTime;
 
     /**
-     * 更新人
+     * 更新人Id
      */
-    private String updataBy;
+    private Integer updateById;
 
+    /**
+     * 更新人名称
+     */
+    private String updateByName;
+
+    /**
+     * 是否有效
+     */
+    private Integer isDeleted;
+
+    /**
+     * 所属节点
+     */
+    private Integer nodeId;
 
 
     @Override

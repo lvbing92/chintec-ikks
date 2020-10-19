@@ -1,11 +1,10 @@
 package com.chintec.ikks.process.event.guard;
 
+import com.chintec.ikks.common.entity.po.FlowTaskStatusPo;
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;
 import com.chintec.ikks.common.enums.NodeStateEnum;
-import com.chintec.ikks.process.entity.po.FlowTaskStatusPo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.statemachine.StateContext;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 /**

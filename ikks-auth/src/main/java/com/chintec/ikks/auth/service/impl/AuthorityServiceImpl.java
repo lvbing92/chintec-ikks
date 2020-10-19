@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chintec.ikks.auth.entity.Authority;
-import com.chintec.ikks.auth.entity.Credentials;
 import com.chintec.ikks.auth.mapper.AuthorityMapper;
 import com.chintec.ikks.auth.request.AuthorityRequest;
 import com.chintec.ikks.auth.service.IAuthorityService;

@@ -1,7 +1,7 @@
 package com.chintec.ikks.process.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.chintec.ikks.process.entity.FlowTaskStatus;
+import com.chintec.ikks.common.entity.FlowTaskStatus;
 
 /**
  * <p>

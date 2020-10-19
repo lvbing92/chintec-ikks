@@ -1,6 +1,5 @@
 package com.chintec.ikks.process;
 
-import com.baomidou.mybatisplus.core.conditions.interfaces.Func;
 import com.chintec.ikks.common.enums.NodeStateEnum;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.process.entity.FlowTaskStatus;
@@ -23,10 +22,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 /**
@@ -140,6 +141,25 @@ class processTest {
         forkJoinPool.shutdown();
         forkJoinPool.awaitQuiescence(1, TimeUnit.HOURS);
         log.info("finish size:{}", stringObjectConcurrentHashMap.size());
+//        List<Long> list = new ArrayList<>();
+//        stringObjectConcurrentHashMap.forEach((k, v) -> {
+//            System.out.println("k 值:" + k + " ------ v 值" + v);
+//            list.add(v);
+//        });
+//        list.stream().sorted().forEach(System.out::println);
+    }
+
+    @Test
+    void copyOnWriteArrayList() {
+        List<Integer> copyOnWriteArrayList = new CopyOnWriteArrayList<>();
+        log.info("开始copy:{}", copyOnWriteArrayList);
+        long l = System.currentTimeMillis();
+        IntStream.rangeClosed(1, 100).parallel().forEach(copyOnWriteArrayList::add);
+        long l1 = System.currentTimeMillis();
+        log.info("结束copy  耗时:{}", l1 - l);
+        copyOnWriteArrayList.forEach(System.out::println);
+        long l2 = System.currentTimeMillis();
+        log.info("结束遍历  耗时:{}", l2 - l1);
     }
 
     private ConcurrentHashMap<String, Long> getData(int count) {
@@ -147,4 +167,5 @@ class processTest {
                 .boxed()
                 .collect(Collectors.toConcurrentMap(i -> UUID.randomUUID().toString(), Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
     }
+
 }

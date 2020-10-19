@@ -1,15 +1,11 @@
 package com.chintec.ikks.process.config;
 
+import com.chintec.ikks.common.entity.po.FlowTaskStatusPo;
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;
 import com.chintec.ikks.common.enums.NodeStateEnum;
-import com.chintec.ikks.process.entity.po.FlowTaskStatusPo;
-import com.chintec.ikks.process.event.SendEvent;
 import com.chintec.ikks.process.event.action.NodeRefuseActionCommon;
 import com.chintec.ikks.process.event.guard.NodeReturnChoiceGuard;
 import com.chintec.ikks.process.event.persister.NodeMachinePersister;
-import com.chintec.ikks.process.service.IFlowNodeService;
-import com.chintec.ikks.process.service.IFlowTaskService;
-import com.chintec.ikks.process.service.IFlowTaskStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,8 +18,6 @@ import org.springframework.statemachine.persist.DefaultStateMachinePersister;
 import org.springframework.statemachine.persist.StateMachinePersister;
 
 import java.util.EnumSet;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.LongStream;
 
 /**
  * 状态机配置类 实现了 StateMachineConfigurerAdapter接口

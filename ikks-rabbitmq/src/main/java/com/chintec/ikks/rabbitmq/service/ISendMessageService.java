@@ -1,7 +1,7 @@
 package com.chintec.ikks.rabbitmq.service;
 
+import com.chintec.ikks.common.entity.po.MessageReq;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.rabbitmq.entity.MessageReq;
 
 /**
  * @author rubin·lv

@@ -1,9 +1,9 @@
 package com.chintec.ikks.process.event.persister;
 
 import com.alibaba.fastjson.JSONObject;
+import com.chintec.ikks.common.entity.po.FlowTaskStatusPo;
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;
 import com.chintec.ikks.common.enums.NodeStateEnum;
-import com.chintec.ikks.process.entity.po.FlowTaskStatusPo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.statemachine.StateMachineContext;

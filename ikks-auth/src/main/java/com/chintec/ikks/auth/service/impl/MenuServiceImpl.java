@@ -3,15 +3,11 @@ package com.chintec.ikks.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.chintec.ikks.auth.entity.Credentials;
-import com.chintec.ikks.auth.entity.CredentialsAuthorities;
 import com.chintec.ikks.auth.entity.Menu;
 import com.chintec.ikks.auth.mapper.MenuMapper;
 import com.chintec.ikks.auth.service.IMenuService;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.ResultResponse;
-import org.springframework.beans.BeanUtils;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**

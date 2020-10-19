@@ -12,6 +12,7 @@
         <module>ikks-auth</module>
         <module>ikks-message</module>
         <module>ikks-rabbitmq</module>
+        <module>ikks-supplier</module>
     </modules>
 
     <parent>
