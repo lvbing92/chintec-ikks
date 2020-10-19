@@ -22,7 +22,7 @@ public class LogoutSuccessHandlerImpl {
     boolean onLogoutSuccess(String token) {
 //        String auth = httpServletRequest.getHeader(HEADER_AUTHENTICATION);
 //        String token = httpServletRequest.getParameter("access_token");
-        System.out.println("access_token:"+token);
+        System.out.println("access_token:" + token);
 //        if (auth != null && auth.startsWith(BEARER_AUTHENTICATION)) {
 //            token = token.split(" ")[0];
 //        }
@@ -33,7 +33,7 @@ public class LogoutSuccessHandlerImpl {
                 tokenStore.removeAccessToken(accessToken);
             }
             return true;
-        }else{
+        } else {
             return false;
         }
     }

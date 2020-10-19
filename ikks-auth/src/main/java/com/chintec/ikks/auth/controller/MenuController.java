@@ -1,6 +1,9 @@
 package com.chintec.ikks.auth.controller;
 
 import com.chintec.ikks.auth.entity.Menu;
+import com.chintec.ikks.auth.request.DepartmentRequest;
+import com.chintec.ikks.auth.request.MenuRequest;
+import com.chintec.ikks.auth.service.IDepartmentService;
 import com.chintec.ikks.auth.service.IMenuService;
 import com.chintec.ikks.common.util.ResultResponse;
 import io.swagger.annotations.Api;
@@ -23,34 +26,25 @@ public class MenuController {
     /**
      * 菜单列表查询
      *
-     * @param pageSize    页数
-     * @param currentPage 当前页
-     * @param status      状态
-     * @param searchValue 查询条件
-     * @param sorted      排序
      * @return ResultResponse
      */
-    @ApiOperation(value = "查询部门列表")
+    @ApiOperation(value = "查询菜单列表")
     @GetMapping("/menus")
-    public ResultResponse getUserList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                      @RequestParam(value = "currentPage") Integer currentPage,
-                                      @RequestParam(value = "status", required = false) String status,
-                                      @RequestParam(value = "searchValue", required = false) String searchValue,
-                                      @RequestParam(value = "sorted", required = false) String sorted) {
-        return iMenuService.getMenuList(pageSize, currentPage, status, searchValue, sorted);
+    public ResultResponse getUserList() {
+        return iMenuService.getMenuList();
     }
 
     /**
-     * 新增菜单
+     * 新增或修改菜单
      *
-     * @param departmentRequest 菜单信息
+     * @param menu 菜单信息2
      * @return ResultResponse
      */
-    @ApiOperation(value = "新增菜单")
-    @GetMapping("/menu/add")
-    public ResultResponse addUser(@RequestBody Menu departmentRequest) {
+    @ApiOperation(value = "新增或修改菜单")
+    @PostMapping("/menu/save")
+    public ResultResponse addOrUpdateMenu(@RequestBody Menu menu) {
 
-        return iMenuService.addMenu(departmentRequest);
+        return iMenuService.addOrUpdateMenu(menu);
     }
 
     /**

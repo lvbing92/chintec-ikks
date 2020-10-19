@@ -1,6 +1,5 @@
 package com.chintec.ikks.auth.request;
 
-import com.chintec.ikks.auth.entity.Department;
 import lombok.Data;
 
 /**
@@ -9,6 +8,24 @@ import lombok.Data;
  * @date 2020/10/10 11:05
  */
 @Data
-public class DepartmentRequest extends Department {
+public class DepartmentRequest {
+    /**
+     * 主键id
+     */
+    private Integer id;
 
+    /**
+     * 部门名称
+     */
+    private String name;
+
+    /**
+     * 是否可用
+     */
+    private Boolean enabled;
+
+    /**
+     * 是否默认
+     */
+    private Boolean isDefault;
 }

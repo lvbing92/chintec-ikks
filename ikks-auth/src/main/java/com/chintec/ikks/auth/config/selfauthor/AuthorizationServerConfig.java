@@ -20,6 +20,8 @@ import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import javax.sql.DataSource;
 
 /**
+ * 授权服务器
+ *
  * @author rubin
  */
 @Configuration

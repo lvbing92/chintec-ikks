@@ -9,35 +9,52 @@ import com.chintec.ikks.auth.service.IMenuService;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.ResultResponse;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author rubIn·lv
  * @since 2020-09-01
  */
 @Service
-public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IMenuService {
-
-    @Override
-    public ResultResponse getMenuList(Integer pageSize, Integer currentPage, String status, String searchValue, String sorted) {
-        return null;
-    }
+public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu>
+        implements IMenuService {
 
     /**
-     * 新增菜单
+     * 菜单列表查询
      *
-     * @param menu 菜单
      * @return ResultResponse
      */
     @Override
-    public ResultResponse addMenu(Menu menu) {
-        //添加用户
-        boolean creFlag = this.save(menu);
-        AssertsUtil.isTrue(creFlag,"添加菜单失败！");
-        return ResultResponse.successResponse("添加菜单成功！");
+    public ResultResponse getMenuList() {
+        List<Menu> menuList = this.baseMapper.getMenuList(0);
+        return ResultResponse.successResponse("查询菜单成功", menuList);
+    }
+
+    /**
+     * 新增编辑菜单保存
+     *
+     * @param menu 菜单信息
+     * @return ResultResponse
+     */
+    @Override
+    public ResultResponse addOrUpdateMenu(Menu menu) {
+        if (StringUtils.isEmpty(menu.getId())) {
+            menu.setCreateTime(LocalDateTime.now());
+            //添加用户
+            boolean creFlag = this.save(menu);
+            AssertsUtil.isTrue(!creFlag, "保存失败！");
+        } else {
+            menu.setUpdateTime(LocalDateTime.now());
+            this.updateById(menu);
+        }
+        return ResultResponse.successResponse("保存成功！");
     }
 
     /**
@@ -49,9 +66,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     @Override
     public ResultResponse queryMenu(String id) {
         //查询用户
-        Menu menu =getById(new QueryWrapper<Menu>().lambda().eq(Menu::getId,id));
+        Menu menu = getById(new QueryWrapper<Menu>().lambda().eq(Menu::getId, id));
         //查询当前用户
-        return ResultResponse.successResponse("查询用户详情成功",menu);
+        return ResultResponse.successResponse("查询用户详情成功", menu);
     }
 
     /**
@@ -62,7 +79,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
      */
     @Override
     public ResultResponse deleteMenu(String id) {
-        this.baseMapper.deleteById(new QueryWrapper<Menu>().lambda().eq(Menu::getId,id));
+        this.baseMapper.deleteById(id);
         return ResultResponse.successResponse("删除成功");
     }
 }

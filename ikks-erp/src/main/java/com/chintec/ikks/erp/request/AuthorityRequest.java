@@ -14,10 +14,35 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class AuthorityRequest extends Authority {
+public class AuthorityRequest {
+
+    /**
+     * id
+     */
+    private Long id;
+
+    /**
+     * 角色名称
+     */
+    private String authority;
+
+    /**
+     * 是否可用
+     */
+    private boolean enabled;
+
+    /**
+     * 备注
+     */
+    private String remark;
 
     /**
      * 角色关联的菜单
      */
     private List<Menu> menuList;
+
+    /**
+     * 角关联的菜单Id
+     */
+    private String menuIds;
 }

@@ -1,5 +1,6 @@
 package com.chintec.ikks.auth.controller;
 
+import com.chintec.ikks.auth.entity.Department;
 import com.chintec.ikks.auth.request.DepartmentRequest;
 import com.chintec.ikks.auth.service.IDepartmentService;
 import com.chintec.ikks.common.util.ResultResponse;
@@ -25,19 +26,17 @@ public class DepartmentController {
      *
      * @param pageSize    页数
      * @param currentPage 当前页
-     * @param status      状态
      * @param searchValue 查询条件
      * @param sorted      排序
      * @return ResultResponse
      */
     @ApiOperation(value = "查询部门列表")
     @GetMapping("/departments")
-    public ResultResponse getUserList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
+    public ResultResponse getDepartmentList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                       @RequestParam(value = "currentPage") Integer currentPage,
-                                      @RequestParam(value = "status", required = false) String status,
                                       @RequestParam(value = "searchValue", required = false) String searchValue,
                                       @RequestParam(value = "sorted", required = false) String sorted) {
-        return iDepartmentService.getDepartmentList(pageSize, currentPage, status, searchValue, sorted);
+        return iDepartmentService.getDepartmentList(pageSize, currentPage, searchValue, sorted);
     }
 
     /**
@@ -47,8 +46,8 @@ public class DepartmentController {
      * @return ResultResponse
      */
     @ApiOperation(value = "部门新增")
-    @GetMapping("/department/add")
-    public ResultResponse addUser(@RequestBody DepartmentRequest departmentRequest) {
+    @PostMapping("/department/add")
+    public ResultResponse addDepartment(@RequestBody DepartmentRequest departmentRequest) {
 
         return iDepartmentService.addDepartment(departmentRequest);
     }
@@ -61,7 +60,7 @@ public class DepartmentController {
      */
     @ApiOperation(value = "部门详情")
     @GetMapping("/department/{id}")
-    public ResultResponse queryUser(@PathVariable String id) {
+    public ResultResponse queryDepartment(@PathVariable Integer id) {
         return iDepartmentService.queryDepartment(id);
     }
 
@@ -73,7 +72,7 @@ public class DepartmentController {
      */
     @ApiOperation(value = "删除部门")
     @DeleteMapping("/department/{id}")
-    public ResultResponse deleteUser(@PathVariable String id) {
+    public ResultResponse deleteDepartment(@PathVariable Integer id) {
         return iDepartmentService.deleteDepartment(id);
     }
 }

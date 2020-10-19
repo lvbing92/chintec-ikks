@@ -15,8 +15,24 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class CredentialsRequest extends Credentials {
-    @ApiModelProperty(value = "角色Id")
-    private Long roleId;
+public class CredentialsRequest {
+
+    private Long id;
+
+    @ApiModelProperty(value = "用户名",required = true)
+    private String name;
+
+    @ApiModelProperty(value = "公司名",required = true)
+    private String companyName;
+
+    @ApiModelProperty(value = "密码",required = true)
+    private String password;
+
+    @ApiModelProperty(value = "邮箱")
+    private String email;
+
+    @ApiModelProperty(value = "手机号",hidden = true)
+    private String phone;
+
 }
 

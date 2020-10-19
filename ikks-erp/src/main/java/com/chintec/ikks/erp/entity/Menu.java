@@ -32,29 +32,22 @@ public class Menu {
     private String menuName;
 
     /**
+     * url
+     */
+    private String url;
+    /**
+     * 图片
+     */
+    private String icon;
+
+    /**
+     * 模块类型
+     */
+    private String modelType;
+
+    /**
      * 父Id
      */
     private String parentId;
-
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
-
-    /**
-     * 更新人Id
-     */
-    private Integer updateById;
-
-    /**
-     * 更新人名称
-     */
-    private String updateByName;
-
 
 }

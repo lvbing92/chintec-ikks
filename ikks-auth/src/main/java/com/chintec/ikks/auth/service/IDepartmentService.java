@@ -2,6 +2,7 @@ package com.chintec.ikks.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.chintec.ikks.auth.entity.Department;
+import com.chintec.ikks.auth.request.DepartmentRequest;
 import com.chintec.ikks.common.util.ResultResponse;
 
 /**
@@ -18,21 +19,19 @@ public interface IDepartmentService extends IService<Department> {
      *
      * @param pageSize    页数
      * @param currentPage 当前页
-     * @param status      状态
      * @param searchValue 查询条件
      * @param sorted      排序
      * @return ResultResponse
      */
-    ResultResponse getDepartmentList(Integer pageSize, Integer currentPage,
-                                     String status, String searchValue, String sorted);
+    ResultResponse getDepartmentList(Integer pageSize, Integer currentPage, String searchValue, String sorted);
 
     /**
      * 新增部门
      *
-     * @param department 部门对象
+     * @param departmentRequest 部门对象
      * @return ResultResponse
      */
-    ResultResponse addDepartment(Department department);
+    ResultResponse addDepartment(DepartmentRequest departmentRequest);
 
     /**
      * 通过Id查询部门
@@ -40,7 +39,7 @@ public interface IDepartmentService extends IService<Department> {
      * @param id 部门Id
      * @return ResultResponse
      */
-    ResultResponse queryDepartment(String id);
+    ResultResponse queryDepartment(Integer id);
 
     /**
      * 删除部门
@@ -48,5 +47,5 @@ public interface IDepartmentService extends IService<Department> {
      * @param id 部门Id
      * @return ResultResponse
      */
-    ResultResponse deleteDepartment(String id);
+    ResultResponse deleteDepartment(Integer id);
 }

@@ -25,12 +25,12 @@ public class AuthorityMenu extends Model<AuthorityMenu> {
     /**
      * 角色Id
      */
-    private Integer authorityId;
+    private Long authorityId;
 
     /**
      * 菜单Id
      */
-    private Integer menuId;
+    private Long menuId;
 
 
     @Override

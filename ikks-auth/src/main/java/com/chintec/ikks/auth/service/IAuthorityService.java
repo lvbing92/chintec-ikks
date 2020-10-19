@@ -3,7 +3,10 @@ package com.chintec.ikks.auth.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.chintec.ikks.auth.entity.Authority;
 import com.chintec.ikks.auth.request.AuthorityRequest;
+import com.chintec.ikks.auth.request.MenuRequest;
 import com.chintec.ikks.common.util.ResultResponse;
+
+import java.util.List;
 
 /**
  * <p>
@@ -20,14 +23,18 @@ public interface IAuthorityService extends IService<Authority> {
      *
      * @param pageSize    页数
      * @param currentPage 当前页
-     * @param status      状态
      * @param searchValue 查询条件
      * @param sorted      排序
      * @return ResultResponse
      */
-    ResultResponse getRoleList(Integer pageSize, Integer currentPage, String role,
-                               String status, String searchValue, String sorted);
+    ResultResponse getRoleList(Integer pageSize, Integer currentPage, String searchValue, String sorted);
 
+    /**
+     * 角色列表查询
+     *
+     * @return ResultResponse
+     */
+    List<Authority> getAllRoleList();
     /**
      * 新增角色
      *
@@ -37,12 +44,36 @@ public interface IAuthorityService extends IService<Authority> {
     ResultResponse addRole(AuthorityRequest authorityRequest);
 
     /**
-     * 通过Id查询角色
+     * 新增角色菜单数据
+     *
+     * @param menuRequest 角色对象
+     * @return ResultResponse
+     */
+    ResultResponse addRoleMenu(MenuRequest menuRequest);
+
+    /**
+     * 更新角色
+     *
+     * @param authorityRequest 角色信息
+     * @return ResultResponse
+     */
+    ResultResponse updateRole(AuthorityRequest authorityRequest);
+
+    /**
+     * 更新角色菜单
+     *
+     * @param menuRequest 菜单信息
+     * @return ResultResponse
+     */
+    ResultResponse updateRoleMenu(MenuRequest menuRequest);
+
+    /**
+     * 通过Id查询角色详情
      *
      * @param id 角色Id
      * @return ResultResponse
      */
-    ResultResponse queryRole(String id);
+    ResultResponse queryRole(Long id);
 
     /**
      * 删除角色
@@ -50,5 +81,5 @@ public interface IAuthorityService extends IService<Authority> {
      * @param id 角色Id
      * @return ResultResponse
      */
-    ResultResponse deleteRole(String id);
+    ResultResponse deleteRole(Long id);
 }

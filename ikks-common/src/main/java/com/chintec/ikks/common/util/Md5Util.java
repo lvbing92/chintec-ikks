@@ -1,7 +1,9 @@
 package com.chintec.ikks.common.util;
 
 import java.security.MessageDigest;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 
 
 /**
@@ -18,10 +20,13 @@ public class Md5Util {
 			return null;
 		}
 	}
-	
-	
-	public static void main(String[] args) {
-		System.out.println(encode("123456"));
-	}
 
+	public static void main(String[] args) {
+		boolean flag;
+		flag = 1==1;
+		flag &= 1==1;
+		flag &= 2==2;
+		System.out.println(flag);
+
+	}
 }

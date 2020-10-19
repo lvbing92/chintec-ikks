@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -46,10 +47,10 @@ public class Credentials extends Model<Credentials> {
     private String phone;
 
     @ApiModelProperty(value = "创建时间")
-    private String createTime;
+    private LocalDateTime createTime;
 
     @ApiModelProperty(value = "更新时间")
-    private String updateTime;
+    private LocalDateTime updateTime;
 
     @ApiModelProperty(value = "更新人Id")
     private String updateById;

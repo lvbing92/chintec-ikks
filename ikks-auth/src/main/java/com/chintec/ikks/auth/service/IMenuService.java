@@ -2,7 +2,9 @@ package com.chintec.ikks.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.chintec.ikks.auth.entity.Menu;
+import com.chintec.ikks.auth.request.MenuRequest;
 import com.chintec.ikks.common.util.ResultResponse;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * <p>
@@ -14,17 +16,11 @@ import com.chintec.ikks.common.util.ResultResponse;
  */
 public interface IMenuService extends IService<Menu> {
     /**
-     * 角色列表查询
+     * 菜单列表查询
      *
-     * @param pageSize    页数
-     * @param currentPage 当前页
-     * @param status      状态
-     * @param searchValue 查询条件
-     * @param sorted      排序
      * @return ResultResponse
      */
-    ResultResponse getMenuList(Integer pageSize, Integer currentPage,
-                               String status, String searchValue, String sorted);
+    ResultResponse getMenuList();
 
     /**
      * 新增菜单
@@ -32,7 +28,7 @@ public interface IMenuService extends IService<Menu> {
      * @param menu 菜单
      * @return ResultResponse
      */
-    ResultResponse addMenu(Menu menu);
+    ResultResponse addOrUpdateMenu(Menu menu);
 
     /**
      * 通过Id查询菜单

@@ -28,10 +28,4 @@ public class CredentialsAuthorities extends Model<CredentialsAuthorities> {
 
     @ApiModelProperty(value = "角色Id")
     private Long authoritiesId;
-
-    @Override
-    protected Serializable pkVal() {
-        return null;
-    }
-
 }

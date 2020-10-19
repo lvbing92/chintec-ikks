@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "TDepartment", description = "部门信息")
+@ApiModel(value = "Department", description = "部门信息")
 public class Department extends Model<Department> {
 
     private static final long serialVersionUID = 1L;
@@ -40,6 +40,10 @@ public class Department extends Model<Department> {
      * 是否可用
      */
     private Boolean enabled;
+    /**
+     * 是否默认
+     */
+    private Boolean isDefault;
 
     /**
      * 创建时间

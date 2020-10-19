@@ -1,6 +1,7 @@
 package com.chintec.ikks.auth.controller;
 
 import com.chintec.ikks.auth.request.AuthorityRequest;
+import com.chintec.ikks.auth.request.MenuRequest;
 import com.chintec.ikks.auth.service.IAuthorityService;
 import com.chintec.ikks.common.util.ResultResponse;
 import io.swagger.annotations.Api;
@@ -15,39 +16,78 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping(value = "v1")
-@Api(value = "auth" ,tags = "角色管理")
+@Api(value = "auth", tags = "角色管理")
 public class RoleController {
 
     @Autowired
     private IAuthorityService iAuthorityService;
+
     /**
      * 查询角色列表
-     *
-     * @return
+     * @param currentPage 当前页
+     * @param pageSize  页面数据数
+     * @param searchValue 搜索条件
+     * @param sorted 排序
+     * @return ResultResponse
      */
     @ApiOperation(value = "查询角色列表")
     @GetMapping("/roles")
     public ResultResponse getUserList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                       @RequestParam(value = "currentPage", required = true) Integer currentPage,
-                                      @RequestParam(value = "role", required = false) String role,
-                                      @RequestParam(value = "status", required = false) String status,
                                       @RequestParam(value = "searchValue", required = false) String searchValue,
                                       @RequestParam(value = "sorted", required = false) String sorted) {
-        return iAuthorityService.getRoleList(pageSize, currentPage, role, status, searchValue, sorted);
+        return iAuthorityService.getRoleList(pageSize, currentPage, searchValue, sorted);
     }
 
     /**
      * 新增角色
-     *
-     * @return
+     * @param authorityRequest 角色信息
+     * @return ResultResponse
      */
     @ApiOperation(value = "新增角色")
-    @GetMapping("/role/add")
-    public ResultResponse addUser(@RequestBody AuthorityRequest authorityRequest) {
+    @PostMapping("/role/add")
+    public ResultResponse addRole(@RequestBody AuthorityRequest authorityRequest) {
 
         return iAuthorityService.addRole(authorityRequest);
     }
 
+
+    /**
+     * 新增角色菜单数据
+     *
+     * @param menuRequest 角色对象
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "新增角色菜单")
+    @PostMapping("/role/addMenu")
+    public ResultResponse addRoleMenu(@RequestBody MenuRequest menuRequest){
+        return iAuthorityService.addRoleMenu(menuRequest);
+    }
+    /**
+     * 更新角色
+     *
+     * @param authorityRequest 角色信息
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "更新角色")
+    @PutMapping("/role/update")
+    public ResultResponse updateRole(@RequestBody AuthorityRequest authorityRequest) {
+
+        return iAuthorityService.updateRole(authorityRequest);
+    }
+
+
+    /**
+     * 编辑角色菜单数据
+     *
+     * @param menuRequest 菜单对象
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "编辑角色菜单")
+    @PostMapping("/role/updateMenu")
+    public ResultResponse updateRoleMenu(@RequestBody MenuRequest menuRequest){
+        return iAuthorityService.updateRoleMenu(menuRequest);
+    }
     /**
      * 通过Id查询角色
      *
@@ -56,19 +96,20 @@ public class RoleController {
      */
     @ApiOperation(value = "角色详情")
     @GetMapping("/role/{id}")
-    public ResultResponse queryUser(@PathVariable String id) {
-        iAuthorityService.queryRole(id);
-        return ResultResponse.successResponse("获取角色详情成功");
+    public ResultResponse queryRole(@PathVariable Long id) {
+
+        return iAuthorityService.queryRole(id);
     }
 
     /**
      * 删除角色
+     *
      * @param id 角色Id
-     * @return
+     * @return ResultResponse
      */
     @ApiOperation(value = "删除角色")
     @DeleteMapping("/role/{id}")
-    public ResultResponse deleteUser(@PathVariable String id) {
-        return ResultResponse.successResponse("删除角色成功");
+    public ResultResponse deleteRole(@PathVariable Long id) {
+        return iAuthorityService.deleteRole(id);
     }
 }

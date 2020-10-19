@@ -1,7 +1,6 @@
 package com.chintec.ikks.auth.request;
 
 import com.chintec.ikks.auth.entity.Credentials;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,7 +15,5 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class CredentialsRequest extends Credentials {
-    @ApiModelProperty(value = "角色Id")
-    private Long roleId;
 }
 

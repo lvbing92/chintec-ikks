@@ -45,42 +45,50 @@ public class AuthController {
 
     /**
      * 新增用户
-     *
-     * @return
+     * @param credentialsRequest 客户信息
+     * @return ResultResponse
      */
     @ApiOperation(value = "新增用户")
-    @GetMapping("/user/add")
-    public ResultResponse addUser(@RequestBody CredentialsRequest credentialsRequest) {
+    @PostMapping("/user/add")
+    public ResultResponse addUser(CredentialsRequest credentialsRequest) {
 
         return iCredentialsService.addUser(credentialsRequest);
     }
 
     /**
+     * 更新客户
+     * @param credentialsRequest 客户信息
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "更新客户")
+    @PutMapping("/user/update")
+    public ResultResponse updateUser(CredentialsRequest credentialsRequest) {
+
+        return iCredentialsService.updateUser(credentialsRequest);
+    }
+
+    /**
      * 通过Id查询用户
      *
-     * @param id
-     * @return
+     * @param id 客户Id
+     * @return ResultResponse
      */
     @ApiOperation(value = "用户详情")
     @GetMapping("/user/{id}")
-    public ResultResponse queryUser(@PathVariable String id) {
+    public ResultResponse queryUser(@PathVariable Long id) {
         return iCredentialsService.queryUser(id);
     }
+
     /**
      * 删除用户
-     *
-     * @return
+     * @param id 客户Id
+     * @return ResultResponse
      */
     @ApiOperation(value = "删除用户")
     @DeleteMapping("/user/{id}")
-    public ResultResponse deleteUser(@PathVariable String id) {
+    public ResultResponse deleteUser(@PathVariable Long id) {
         return iCredentialsService.deleteUser(id);
     }
 
 
-   /* @GetMapping("/welcome")
-    public String welcome() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return "Welcome " + authentication.getName();
-    }*/
 }

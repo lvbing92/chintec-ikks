@@ -35,6 +35,7 @@ public class GlobalExceptionCapture {
     @ExceptionHandler(RuntimeException.class)
     public ResultResponse runtimeException(RuntimeException e) {
         log.error(e.getMessage());
+        e.printStackTrace();
         return ResultResponse.failResponse(e.getMessage());
     }
 }

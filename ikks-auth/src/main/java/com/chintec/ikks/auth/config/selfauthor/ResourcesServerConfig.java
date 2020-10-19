@@ -41,10 +41,10 @@ public class ResourcesServerConfig extends ResourceServerConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
 
-    @Bean
+    /*@Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
+    }*/
 
     @Autowired
     private LogoutSuccessHandler logoutSuccessHandler;
