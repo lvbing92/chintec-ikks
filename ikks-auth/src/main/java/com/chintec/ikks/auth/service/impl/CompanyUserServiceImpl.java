@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chintec.ikks.auth.entity.CompanyUser;
-import com.chintec.ikks.auth.entity.Department;
 import com.chintec.ikks.auth.entity.UserAuthorities;
 import com.chintec.ikks.auth.mapper.CompanyUserMapper;
 import com.chintec.ikks.auth.request.CompanyUserRequest;
+import com.chintec.ikks.auth.response.CompanyUserResponse;
 import com.chintec.ikks.auth.service.ICompanyUserService;
 import com.chintec.ikks.auth.service.IUserAuthoritiesService;
 import com.chintec.ikks.common.util.AssertsUtil;
@@ -21,8 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -33,14 +34,16 @@ import java.time.LocalDateTime;
  * @since 2020-10-16
  */
 @Service
-public class CompanyUserServiceImpl extends ServiceImpl<CompanyUserMapper, CompanyUser> implements ICompanyUserService, Serializable {
+public class CompanyUserServiceImpl extends ServiceImpl<CompanyUserMapper, CompanyUser>
+        implements ICompanyUserService {
 
     @Autowired
     private IUserAuthoritiesService iUserAuthoritiesService;
 
     private static final String SORT_D = "D";
+
     @Override
-    public ResultResponse getCompanyUserList(Integer pageSize, Integer currentPage, String searchValue, String sorted) {
+    public ResultResponse getCompanyUserList(Integer pageSize, Integer currentPage, String searchValue, String sorted, Integer departmentId) {
         if (StringUtils.isEmpty(pageSize)) {
             pageSize = 10;
         }
@@ -51,17 +54,33 @@ public class CompanyUserServiceImpl extends ServiceImpl<CompanyUserMapper, Compa
         IPage<CompanyUser> page = new Page<>(currentPage, pageSize);
         //分页查询
         IPage<CompanyUser> credentialsPage = this.page(page, new QueryWrapper<CompanyUser>().lambda()
+                .eq(CompanyUser::getDepartmentId, departmentId)
                 .and(!StringUtils.isEmpty(searchValue), s -> s.like(CompanyUser::getUserName, searchValue).
                         or().like(CompanyUser::getEmail, searchValue).
-                        or().like(CompanyUser::getDepartmentId, searchValue).
                         or().like(CompanyUser::getUserName, searchValue))
 //                .orderByAsc(SORT_A.equals(sorted), Credentials::getName)
                 .orderByDesc(SORT_D.equals(sorted), CompanyUser::getCreateTime));
-        //返回结果
-        PageResultResponse<CompanyUser> paginationResultDto = new PageResultResponse<>(credentialsPage.getTotal(), currentPage, pageSize);
-        paginationResultDto.setTotalPages(credentialsPage.getPages());
-        paginationResultDto.setResults(credentialsPage.getRecords());
-        return ResultResponse.successResponse("查询列表成功!",paginationResultDto);
+        //根据用户Id查询角色Id
+        if (credentialsPage.getRecords().size() != 0) {
+            List<CompanyUserResponse> companyUserResponseList = credentialsPage.getRecords().stream().map(companyUser -> {
+                CompanyUserResponse companyUserResponse = new CompanyUserResponse();
+                BeanUtils.copyProperties(companyUser, companyUserResponse);
+                //查询角色Id
+                UserAuthorities userAuthorities = iUserAuthoritiesService.getOne(new QueryWrapper<UserAuthorities>()
+                        .lambda().eq(UserAuthorities::getCompanyUserId, companyUser.getId()));
+                companyUserResponse.setRoleId(userAuthorities.getAuthorityId());
+                return companyUserResponse;
+            }).collect(Collectors.toList());
+
+            //返回结果
+            PageResultResponse<CompanyUserResponse> paginationResultDto = new PageResultResponse<>(credentialsPage.getTotal(), currentPage, pageSize);
+            paginationResultDto.setTotalPages(credentialsPage.getPages());
+            paginationResultDto.setResults(companyUserResponseList);
+            return ResultResponse.successResponse("查询列表成功!", paginationResultDto);
+        } else {
+            return ResultResponse.successResponse(new PageResultResponse<CompanyUserResponse>(0L, currentPage, pageSize));
+        }
+
     }
 
     @Override
@@ -69,37 +88,37 @@ public class CompanyUserServiceImpl extends ServiceImpl<CompanyUserMapper, Compa
     public ResultResponse addCompanyUser(CompanyUserRequest companyUserRequest) {
         boolean flag;
         CompanyUser companyUser = new CompanyUser();
-        if(StringUtils.isEmpty(companyUserRequest.getId())){
-            BeanUtils.copyProperties(companyUserRequest,companyUser);
+        if (StringUtils.isEmpty(companyUserRequest.getId())) {
+            BeanUtils.copyProperties(companyUserRequest, companyUser);
             //查询当前部门是否已存在
             CompanyUser isHave = this.getOne(new QueryWrapper<CompanyUser>().lambda()
-                    .eq(CompanyUser::getUserName,companyUserRequest.getUserName()));
-            AssertsUtil.isTrue(!ObjectUtils.isEmpty(isHave),"当前人员已存在!");
+                    .eq(CompanyUser::getUserName, companyUserRequest.getUserName()));
+            AssertsUtil.isTrue(!ObjectUtils.isEmpty(isHave), "当前人员已存在!");
             companyUser.setCreateTime(LocalDateTime.now());
             flag = this.save(companyUser);
             //保存公司人员角色信息
             UserAuthorities userAuthorities = new UserAuthorities();
             userAuthorities.setCompanyUserId(companyUser.getId());
             userAuthorities.setAuthorityId(companyUserRequest.getRoleId());
-             flag &= iUserAuthoritiesService.save(userAuthorities);
-            if(!flag){
+            flag &= iUserAuthoritiesService.save(userAuthorities);
+            if (!flag) {
                 return ResultResponse.successResponse("保存公司人员信息失败!");
             }
-        }else{
+        } else {
             //g根据Id查询当前部门信息
             CompanyUser currentCompanyUser = this.getById(companyUserRequest.getId());
-            BeanUtils.copyProperties(companyUserRequest,currentCompanyUser);
+            BeanUtils.copyProperties(companyUserRequest, currentCompanyUser);
             currentCompanyUser.setUpdateTime(LocalDateTime.now());
-            flag =this.updateById(currentCompanyUser);
+            flag = this.updateById(currentCompanyUser);
             //更新角色信息
-            flag &=iUserAuthoritiesService.remove(new QueryWrapper<UserAuthorities>()
-                    .lambda().eq(UserAuthorities::getCompanyUserId,companyUserRequest.getId()));
+            flag &= iUserAuthoritiesService.remove(new QueryWrapper<UserAuthorities>()
+                    .lambda().eq(UserAuthorities::getCompanyUserId, companyUserRequest.getId()));
             //保存公司人员角色信息
             UserAuthorities userAuthorities = new UserAuthorities();
             userAuthorities.setCompanyUserId(companyUserRequest.getId());
             userAuthorities.setAuthorityId(companyUserRequest.getRoleId());
-            flag &=iUserAuthoritiesService.save(userAuthorities);
-            if(!flag){
+            flag &= iUserAuthoritiesService.save(userAuthorities);
+            if (!flag) {
                 return ResultResponse.successResponse("更新公司人员信息失败!");
             }
         }
@@ -120,14 +139,20 @@ public class CompanyUserServiceImpl extends ServiceImpl<CompanyUserMapper, Compa
 
     @Override
     public ResultResponse queryCompanyUser(Integer id) {
-
-        return null;
+        //查询公司人员信息
+        CompanyUser companyUser = this.getById(id);
+        CompanyUserRequest companyUserRequest = new CompanyUserRequest();
+        BeanUtils.copyProperties(companyUser, companyUserRequest);
+        //根据公司Id查询角色Id
+        UserAuthorities userAuthorities = iUserAuthoritiesService.getOne(new QueryWrapper<UserAuthorities>().lambda().eq(UserAuthorities::getCompanyUserId, id));
+        companyUserRequest.setRoleId(userAuthorities.getAuthorityId());
+        return ResultResponse.successResponse("查询成功!", companyUserRequest);
     }
 
     @Override
     public ResultResponse deleteCompanyUser(Integer id) {
         boolean flag = this.removeById(id);
-        AssertsUtil.isTrue(!flag,"删除失败!");
+        AssertsUtil.isTrue(!flag, "删除失败!");
         return ResultResponse.successResponse("删除成功!");
     }
 }

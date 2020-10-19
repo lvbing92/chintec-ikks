@@ -34,10 +34,11 @@ public class CompanyUserController {
     @ApiOperation(value = "查询公司用户列表")
     @GetMapping("/companyUsers")
     public ResultResponse getCompanyUserList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
-                                      @RequestParam(value = "currentPage", required = true) Integer currentPage,
-                                      @RequestParam(value = "searchValue", required = false) String searchValue,
-                                      @RequestParam(value = "sorted", required = false) String sorted) {
-        return iCompanyUserService.getCompanyUserList(pageSize, currentPage, searchValue, sorted);
+                                             @RequestParam(value = "currentPage", required = true) Integer currentPage,
+                                             @RequestParam(value = "searchValue", required = false) String searchValue,
+                                             @RequestParam(value = "sorted", required = false) String sorted,
+                                             @RequestParam(value = "departmentId", required = true) Integer departmentId) {
+        return iCompanyUserService.getCompanyUserList(pageSize, currentPage, searchValue, sorted,departmentId);
     }
 
     /**

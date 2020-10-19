@@ -6,8 +6,6 @@ import com.chintec.ikks.auth.mapper.UserAuthoritiesMapper;
 import com.chintec.ikks.auth.service.IUserAuthoritiesService;
 import org.springframework.stereotype.Service;
 
-import java.io.Serializable;
-
 /**
  * <p>
  * 公司人员角色关系表 服务实现类
@@ -17,6 +15,7 @@ import java.io.Serializable;
  * @since 2020-10-16
  */
 @Service
-public class UserAuthoritiesServiceImpl extends ServiceImpl<UserAuthoritiesMapper, UserAuthorities> implements IUserAuthoritiesService , Serializable {
+public class UserAuthoritiesServiceImpl extends ServiceImpl<UserAuthoritiesMapper, UserAuthorities>
+        implements IUserAuthoritiesService {
 
 }

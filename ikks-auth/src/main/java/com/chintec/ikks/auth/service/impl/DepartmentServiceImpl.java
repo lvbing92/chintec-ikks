@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.chintec.ikks.auth.entity.Authority;
 import com.chintec.ikks.auth.entity.CompanyUser;
 import com.chintec.ikks.auth.entity.Department;
 import com.chintec.ikks.auth.mapper.DepartmentMapper;
 import com.chintec.ikks.auth.request.DepartmentRequest;
 import com.chintec.ikks.auth.response.DepartmentResponse;
+import com.chintec.ikks.auth.service.IAuthorityService;
 import com.chintec.ikks.auth.service.ICompanyUserService;
 import com.chintec.ikks.auth.service.IDepartmentService;
 import com.chintec.ikks.common.util.AssertsUtil;
@@ -20,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,8 +35,11 @@ import java.util.stream.Collectors;
  * @since 2020-09-02
  */
 @Service
-public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Department> implements IDepartmentService, Serializable {
+public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Department> implements
+        IDepartmentService {
 
+    @Autowired
+    private IAuthorityService iAuthorityService;
     @Autowired
     private ICompanyUserService iCompanyUserService;
     private static final String SORT_D = "D";
@@ -117,11 +121,14 @@ public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Departm
      */
     @Override
     public ResultResponse queryDepartment(Integer id) {
-        //查询用户
+        DepartmentResponse departmentResponse = new DepartmentResponse();
+        //查询部门信息
         Department department = this.getById(id);
-
-        //查询当前用户
-        return ResultResponse.successResponse("查询部门详情成功", department);
+        BeanUtils.copyProperties(department, departmentResponse);
+        //查询角色信息
+        List<Authority> allRoleList = iAuthorityService.getAllRoleList();
+        departmentResponse.setAuthorities(allRoleList);
+        return ResultResponse.successResponse("查询部门详情成功", departmentResponse);
     }
 
     /**

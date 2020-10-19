@@ -19,13 +19,13 @@ public class CredentialsRequest {
 
     private Long id;
 
-    @ApiModelProperty(value = "用户名")
+    @ApiModelProperty(value = "用户名",required = true)
     private String name;
 
-    @ApiModelProperty(value = "公司名")
+    @ApiModelProperty(value = "公司名",required = true)
     private String companyName;
 
-    @ApiModelProperty(value = "密码")
+    @ApiModelProperty(value = "密码",required = true)
     private String password;
 
     @ApiModelProperty(value = "邮箱")
@@ -33,9 +33,6 @@ public class CredentialsRequest {
 
     @ApiModelProperty(value = "手机号",hidden = true)
     private String phone;
-
-    @ApiModelProperty(value = "是否可用",hidden = true)
-    private Boolean enabled;
 
 }
 

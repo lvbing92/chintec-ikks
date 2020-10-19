@@ -13,7 +13,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.Serializable;
 import java.net.URI;
 import java.util.Arrays;
 
@@ -24,9 +23,11 @@ import java.util.Arrays;
  */
 @Slf4j
 @Service
-public class PasswordFedServiceImpl implements IPasswordFedService, Serializable {
+public class PasswordFedServiceImpl implements
+        IPasswordFedService {
 
     private static final String URL = "http://localhost:7070/oauth/token";
+
     @Autowired
     private LogoutSuccessHandlerImpl logoutSuccessHandler;
 
@@ -59,13 +60,12 @@ public class PasswordFedServiceImpl implements IPasswordFedService, Serializable
      *
      * @return
      */
-    public OAuth2Token getToken(String userName, String passWord) {
+    private OAuth2Token getToken(String userName, String passWord) {
         RestTemplate rest = new RestTemplate();
         RequestEntity<MultiValueMap<String, String>> requestEntity = new RequestEntity<>(
                 getBody(userName, passWord), getHeader(), HttpMethod.POST, URI.create(URL));
 
-        ResponseEntity<OAuth2Token> responseEntity = rest.exchange(
-                requestEntity, OAuth2Token.class);
+        ResponseEntity<OAuth2Token> responseEntity = rest.exchange(requestEntity, OAuth2Token.class);
 
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
             return responseEntity.getBody();

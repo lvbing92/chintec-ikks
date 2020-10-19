@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +40,8 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
-public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority> implements IAuthorityService, Serializable {
+public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority>
+        implements IAuthorityService {
     @Autowired
     private IMenuService iMenuService;
 
@@ -97,6 +97,11 @@ public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority
         pageResultResponse.setTotalPages(authorityPage.getPages());
         pageResultResponse.setResults(authorityRequestList);
         return ResultResponse.successResponse(pageResultResponse);
+    }
+
+    @Override
+    public List<Authority> getAllRoleList() {
+        return this.list();
     }
 
     /**

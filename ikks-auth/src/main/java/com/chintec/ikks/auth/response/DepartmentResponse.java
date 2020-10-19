@@ -1,5 +1,6 @@
 package com.chintec.ikks.auth.response;
 
+import com.chintec.ikks.auth.entity.Authority;
 import com.chintec.ikks.auth.entity.CompanyUser;
 import com.chintec.ikks.auth.entity.Department;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.List;
  * @date 2020/10/16 10:09
  */
 @Data
-public class DepartmentResponse extends Department {
+public class DepartmentResponse {
     /**
      * 主键id
      */
@@ -37,6 +38,10 @@ public class DepartmentResponse extends Department {
      * 部门人员数量
      */
     private int countCompanyUser;
+    /**
+     * 角色集合
+     */
+    private List<Authority> authorities;
     /**
      * 部门人员数量
      */

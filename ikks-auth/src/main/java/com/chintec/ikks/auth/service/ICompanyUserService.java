@@ -24,7 +24,7 @@ public interface ICompanyUserService extends IService<CompanyUser> {
      * @param sorted      排序
      * @return ResultResponse
      */
-    ResultResponse getCompanyUserList(Integer pageSize, Integer currentPage, String searchValue, String sorted);
+    ResultResponse getCompanyUserList(Integer pageSize, Integer currentPage, String searchValue, String sorted,Integer departmentId);
 
     /**
      * 新增公司用户

@@ -6,6 +6,8 @@ import com.chintec.ikks.auth.request.AuthorityRequest;
 import com.chintec.ikks.auth.request.MenuRequest;
 import com.chintec.ikks.common.util.ResultResponse;
 
+import java.util.List;
+
 /**
  * <p>
  * 服务类
@@ -27,6 +29,12 @@ public interface IAuthorityService extends IService<Authority> {
      */
     ResultResponse getRoleList(Integer pageSize, Integer currentPage, String searchValue, String sorted);
 
+    /**
+     * 角色列表查询
+     *
+     * @return ResultResponse
+     */
+    List<Authority> getAllRoleList();
     /**
      * 新增角色
      *

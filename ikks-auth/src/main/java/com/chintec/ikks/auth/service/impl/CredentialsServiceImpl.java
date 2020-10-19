@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -35,7 +34,8 @@ import java.time.LocalDateTime;
  * @since 2020-08-26
  */
 @Service
-public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Credentials> implements ICredentialsService, Serializable {
+public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Credentials>
+        implements ICredentialsService {
 
     private static final String SORT_A = "A";
     private static final String SORT_D = "D";
@@ -61,7 +61,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
 //                        or().like(Credentials::getUserName, searchValue))
 //                .orderByAsc(SORT_A.equals(sorted), Credentials::getName)
                 .orderByDesc(SORT_D.equals(sorted), Credentials::getCreateTime));
-//返回结果
+        //返回结果
         PageResultResponse<Credentials> paginationResultDto = new PageResultResponse<>(credentialsPage.getTotal(), currentPage, pageSize);
         paginationResultDto.setTotalPages(credentialsPage.getPages());
         paginationResultDto.setResults(credentialsPage.getRecords());
@@ -73,28 +73,28 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
     public ResultResponse addUser(CredentialsRequest credentialsRequest) {
         System.out.println("当前客户信息:" + JSONObject.toJSON(credentialsRequest));
         //判断当前客户是否存在
-        Credentials user =this.getOne(new QueryWrapper<Credentials>().lambda()
-                .eq(Credentials::getName,credentialsRequest.getName())
-                .eq(Credentials::getCompanyName,credentialsRequest.getCompanyName()));
-        if(!ObjectUtils.isEmpty(user)){
-        BCryptPasswordEncoder b = new BCryptPasswordEncoder();
-        Credentials credentials = new Credentials();
-        BeanUtils.copyProperties(credentialsRequest, credentials);
-        credentials.setPassword(passWordEnCode(credentialsRequest.getPassword()));
-        credentials.setEnabled(true);
-        credentials.setCreateTime(LocalDateTime.now());
-        credentials.setVersion(1);
+        Credentials user = this.getOne(new QueryWrapper<Credentials>().lambda()
+                .eq(Credentials::getName, credentialsRequest.getName())
+                .eq(Credentials::getCompanyName, credentialsRequest.getCompanyName()));
+        if (ObjectUtils.isEmpty(user)) {
+            BCryptPasswordEncoder b = new BCryptPasswordEncoder();
+            Credentials credentials = new Credentials();
+            BeanUtils.copyProperties(credentialsRequest, credentials);
+            credentials.setPassword(passWordEnCode(credentialsRequest.getPassword()));
+            credentials.setEnabled(true);
+            credentials.setCreateTime(LocalDateTime.now());
+            credentials.setVersion(1);
 
-        //添加用户
-        boolean creFlag = this.save(credentials);
-        AssertsUtil.isTrue(!creFlag, "添加用户失败！");
-        //添加用户角色关系表信息
-        CredentialsAuthorities credentialsAuthorities = new CredentialsAuthorities();
-        credentialsAuthorities.setAuthoritiesId(4L);
-        credentialsAuthorities.setCredentialsId(credentials.getId());
-        boolean creAuthFlag = iCredentialsAuthoritiesService.save(credentialsAuthorities);
-        AssertsUtil.isTrue(!creAuthFlag, "添加用户角色失败！");
-        }else{
+            //添加用户
+            boolean creFlag = this.save(credentials);
+            AssertsUtil.isTrue(!creFlag, "添加用户失败！");
+            //添加用户角色关系表信息
+            CredentialsAuthorities credentialsAuthorities = new CredentialsAuthorities();
+            credentialsAuthorities.setAuthoritiesId(4L);
+            credentialsAuthorities.setCredentialsId(credentials.getId());
+            boolean creAuthFlag = iCredentialsAuthoritiesService.save(credentialsAuthorities);
+            AssertsUtil.isTrue(!creAuthFlag, "添加用户角色失败！");
+        } else {
             return ResultResponse.failResponse("当前客户已存在！");
         }
         return ResultResponse.successResponse("添加用户成功！");
@@ -132,9 +132,9 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
         Credentials credentials = this.getById(id);
         credentials.setEnabled(false);
         boolean flag = this.saveOrUpdate(credentials);
-       if(!flag){
-           return ResultResponse.failResponse("删除失败！");
-       }
+        if (!flag) {
+            return ResultResponse.failResponse("删除失败！");
+        }
         return ResultResponse.successResponse("删除成功");
     }
 

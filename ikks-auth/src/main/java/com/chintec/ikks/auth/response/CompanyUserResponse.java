@@ -1,14 +1,17 @@
-package com.chintec.ikks.auth.request;
+package com.chintec.ikks.auth.response;
 
 import lombok.Data;
 
 /**
  * @author rubin·lv
  * @version 1.0
- * @date 2020/10/16 10:59
+ * @date 2020/10/16 17:43
  */
 @Data
-public class CompanyUserRequest {
+public class CompanyUserResponse {
+    /**
+     * 主键Id
+     */
     private Integer id;
 
     /**
@@ -45,5 +48,4 @@ public class CompanyUserRequest {
      * 角色Id
      */
     private Integer roleId;
-
 }

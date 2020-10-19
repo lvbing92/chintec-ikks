@@ -1,6 +1,5 @@
 package com.chintec.ikks.auth.request;
 
-import com.chintec.ikks.auth.entity.Department;
 import lombok.Data;
 
 /**
