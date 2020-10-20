@@ -1,7 +1,6 @@
 package com.chintec.ikks.erp.service;
 
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.erp.entity.Department;
 import com.chintec.ikks.erp.request.DepartmentRequest;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;

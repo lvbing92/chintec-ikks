@@ -1,7 +1,7 @@
 package com.chintec.ikks.rabbitmq.service.impl;
 
+import com.chintec.ikks.common.entity.po.MessageReq;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.rabbitmq.entity.MessageReq;
 import com.chintec.ikks.rabbitmq.mq.MqSendMessage;
 import com.chintec.ikks.rabbitmq.service.ISendMessageService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,13 +1,9 @@
-package com.chintec.ikks.common.entity;
+package com.chintec.ikks.common.entity.response;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -19,66 +15,58 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SupplierField extends Model<SupplierField> {
+@ApiModel
+public class SupplierFieldResponse {
 
-    private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
+
     /**
      * 英文字段
      */
+    @ApiModelProperty("字段-英文名")
     private String field;
 
     /**
      * 中文字段
      */
+    @ApiModelProperty("字段-中文名")
     private String fieldName;
 
     /**
      * 字段属性，如：文本,图片,视频
      */
+    @ApiModelProperty("字段-类型,1文本2图片3视频")
     private String fieldType;
 
     /**
      * 字段说明
      */
+    @ApiModelProperty("字段-说明")
     private String fieldExplain;
 
     /**
      * 创建时间
      */
-    private LocalDateTime createTime;
+    @ApiModelProperty("字段-创建时间")
+    private String createTime;
 
     /**
      * 更新时间
      */
-    private LocalDateTime updateTime;
-
-    /**
-     * 更新人Id
-     */
-    private Integer updateById;
+    @ApiModelProperty("字段-更新时间")
+    private String updateTime;
 
     /**
      * 更新人名称
      */
+    @ApiModelProperty("字段-创建人名称")
     private String updateByName;
-
-    /**
-     * 是否有效
-     */
-    private Integer isDeleted;
 
     /**
      * 所属节点
      */
+    @ApiModelProperty("字段-所属节点")
     private Integer nodeId;
-
-
-    @Override
-    protected Serializable pkVal() {
-        return this.id;
-    }
 
 }

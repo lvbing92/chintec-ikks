@@ -1,11 +1,9 @@
 package com.chintec.ikks.controller;
 
 
-import com.baomidou.mybatisplus.extension.api.R;
-import com.chintec.ikks.common.entity.po.SupplierFieldPo;
+import com.chintec.ikks.common.entity.vo.SupplierFieldVo;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.service.ISupplierFieldService;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,22 +29,22 @@ public class SupplierFieldController {
     private ISupplierFieldService iSupplierFieldService;
 
     @PutMapping("/supplierField")
-    public ResultResponse updateField(@RequestBody @Valid SupplierFieldPo supplierFieldPo, BindingResult results) {
-        log.info("update supplierFieldPo :{}", supplierFieldPo);
+    public ResultResponse updateField(@RequestBody @Valid SupplierFieldVo supplierFieldVo, BindingResult results) {
+        log.info("update supplierFieldPo :{}", supplierFieldVo);
         if (results.hasErrors()) {
             return ResultResponse.failResponse(Objects.requireNonNull(results.getFieldError()).getDefaultMessage());
         }
-        return iSupplierFieldService.updateField(supplierFieldPo);
+        return iSupplierFieldService.updateField(supplierFieldVo);
     }
 
     @PostMapping("/supplierField")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResultResponse saveField(@RequestBody @Valid SupplierFieldPo supplierFieldPo, BindingResult results) {
-        log.info("save supplierFieldPo :{}", supplierFieldPo);
+    public ResultResponse saveField(@RequestBody @Valid SupplierFieldVo supplierFieldVo, BindingResult results) {
+        log.info("save supplierFieldPo :{}", supplierFieldVo);
         if (results.hasErrors()) {
             return ResultResponse.failResponse(Objects.requireNonNull(results.getFieldError()).getDefaultMessage());
         }
-        return iSupplierFieldService.saveField(supplierFieldPo);
+        return iSupplierFieldService.saveField(supplierFieldVo);
     }
 
     @DeleteMapping("/supplierField/{id}")
@@ -59,5 +57,10 @@ public class SupplierFieldController {
     public ResultResponse fields(@RequestParam Integer currentPage, @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
         log.info("list pageSize:{}", pageSize);
         return iSupplierFieldService.fields(currentPage, pageSize);
+    }
+
+    @GetMapping("/field/{id}")
+    public ResultResponse field(@PathVariable Integer id) {
+        return iSupplierFieldService.field(id);
     }
 }

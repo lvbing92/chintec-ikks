@@ -1,14 +1,14 @@
 package com.chintec.ikks.process;
 
+import com.chintec.ikks.common.entity.FlowTaskStatus;
+import com.chintec.ikks.common.entity.po.FlowTaskStatusPo;
+import com.chintec.ikks.common.entity.po.MessageReq;
+import com.chintec.ikks.common.entity.vo.FlowInfoVo;
+import com.chintec.ikks.common.entity.vo.FlowNodeVo;
+import com.chintec.ikks.common.entity.vo.FlowTaskVo;
+import com.chintec.ikks.common.entity.vo.NodeFunctionVo;
 import com.chintec.ikks.common.enums.NodeStateEnum;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.process.entity.FlowTaskStatus;
-import com.chintec.ikks.process.entity.po.FlowTaskStatusPo;
-import com.chintec.ikks.process.entity.po.MessageReq;
-import com.chintec.ikks.process.entity.vo.FlowInfoVo;
-import com.chintec.ikks.process.entity.vo.FlowNodeVo;
-import com.chintec.ikks.process.entity.vo.FlowTaskVo;
-import com.chintec.ikks.process.entity.vo.NodeFunctionVo;
 import com.chintec.ikks.process.feign.IRabbitMqService;
 import com.chintec.ikks.process.service.IFlowInfoService;
 import com.chintec.ikks.process.service.IFlowTaskService;
@@ -21,10 +21,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -167,5 +164,4 @@ class processTest {
                 .boxed()
                 .collect(Collectors.toConcurrentMap(i -> UUID.randomUUID().toString(), Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
     }
-
 }

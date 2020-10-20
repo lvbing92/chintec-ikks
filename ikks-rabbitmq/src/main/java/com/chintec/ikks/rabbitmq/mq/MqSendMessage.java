@@ -1,10 +1,10 @@
 package com.chintec.ikks.rabbitmq.mq;
 
 import com.alibaba.fastjson.JSONObject;
+import com.chintec.ikks.common.entity.po.MessageReq;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.MqVariableUtil;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.rabbitmq.entity.MessageReq;
 import io.netty.util.internal.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;

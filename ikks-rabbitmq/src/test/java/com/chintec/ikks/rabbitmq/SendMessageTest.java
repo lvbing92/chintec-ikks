@@ -1,6 +1,6 @@
 package com.chintec.ikks.rabbitmq;
 
-import com.chintec.ikks.rabbitmq.entity.MessageReq;
+import com.chintec.ikks.common.entity.po.MessageReq;
 import com.chintec.ikks.rabbitmq.mq.MqSendMessage;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

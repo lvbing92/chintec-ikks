@@ -2,7 +2,6 @@ package com.chintec.ikks.erp.service;
 
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.erp.entity.Menu;
-import com.chintec.ikks.erp.request.MenuRequest;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;

@@ -2,7 +2,7 @@ package com.chintec.ikks.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.chintec.ikks.common.entity.SupplierField;
-import com.chintec.ikks.common.entity.po.SupplierFieldPo;
+import com.chintec.ikks.common.entity.vo.SupplierFieldVo;
 import com.chintec.ikks.common.util.ResultResponse;
 
 /**
@@ -17,18 +17,18 @@ public interface ISupplierFieldService extends IService<SupplierField> {
     /**
      * 保存添加扩展字段
      *
-     * @param supplierFieldPo 字段属性
+     * @param supplierFieldVo 字段属性
      * @return resultResponse
      */
-    ResultResponse saveField(SupplierFieldPo supplierFieldPo);
+    ResultResponse saveField(SupplierFieldVo supplierFieldVo);
 
     /**
      * 修改自定属性
      *
-     * @param supplierFieldPo 字段属性类
+     * @param supplierFieldVo 字段属性类
      * @return resultResponse
      */
-    ResultResponse updateField(SupplierFieldPo supplierFieldPo);
+    ResultResponse updateField(SupplierFieldVo supplierFieldVo);
 
     /**
      * 启用禁用自定义字段
@@ -43,5 +43,7 @@ public interface ISupplierFieldService extends IService<SupplierField> {
      * @return
      */
     ResultResponse fields(Integer currentPage,Integer pageSize);
+
+    ResultResponse field(Integer id);
 
 }

@@ -1,7 +1,6 @@
 package com.chintec.ikks.erp.controller;
 
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.erp.entity.Department;
 import com.chintec.ikks.erp.request.DepartmentRequest;
 import com.chintec.ikks.erp.service.IDepartmentService;
 import io.swagger.annotations.Api;

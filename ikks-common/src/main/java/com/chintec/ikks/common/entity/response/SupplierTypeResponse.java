@@ -1,13 +1,8 @@
-package com.chintec.ikks.common.entity;
+package com.chintec.ikks.common.entity.response;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.extension.activerecord.Model;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -19,11 +14,9 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SupplierType extends Model<SupplierType> {
+@ApiModel
+public class SupplierTypeResponse {
 
-    private static final long serialVersionUID = 1L;
-
-    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -44,24 +37,19 @@ public class SupplierType extends Model<SupplierType> {
     /**
      * 创建时间
      */
-    private LocalDateTime createTime;
+    private String createTime;
 
     /**
      * 修改时间
      */
-    private LocalDateTime updateTime;
+    private String updateTime;
 
-    /**
-     * 创建人id
-     */
-    private String updateBy;
 
     /**
      * 创建人姓名
      */
     private String updateName;
 
-    private Integer isDeleted;
 
     /**
      * 节点id
@@ -73,9 +61,5 @@ public class SupplierType extends Model<SupplierType> {
      */
     private String flowName;
 
-    @Override
-    protected Serializable pkVal() {
-        return this.id;
-    }
 
 }
