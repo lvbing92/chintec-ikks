@@ -8,10 +8,12 @@ import com.chintec.ikks.erp.service.ISupplierErpService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Objects;
 
@@ -70,8 +72,8 @@ public class SupplierController {
                                     @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                                     @RequestParam(required = false, defaultValue = "0") Integer categoryId,
                                     @RequestParam(required = false, defaultValue = "0") Integer statusId,
-                                    @RequestParam(required = false) String params) {
-        return iSupplierErpService.suppliers(currentPage, pageSize, categoryId, statusId, params);
+                                    @RequestParam(required = false) String params, HttpServletRequest request) {
+        return iSupplierErpService.suppliers(currentPage, pageSize, categoryId, statusId, params, request.getHeader("access_token"));
     }
 
     @GetMapping("/supplier")

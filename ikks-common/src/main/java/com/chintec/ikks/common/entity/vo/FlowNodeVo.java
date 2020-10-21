@@ -2,6 +2,7 @@ package com.chintec.ikks.common.entity.vo;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 /**
@@ -15,6 +16,7 @@ public class FlowNodeVo {
     /**
      * 节点名称
      */
+    @NotBlank(message = "节点名称不能为空")
     private String nodeName;
 
     /**
@@ -80,6 +82,7 @@ public class FlowNodeVo {
     /**
      * 执行者角色
      */
+    @NotBlank(message = "执行角色不能为空")
     private String executorRole;
 
     /**
@@ -100,6 +103,7 @@ public class FlowNodeVo {
     /**
      * 下节点走向：1，单一走向 2，多条并行 3，多选一
      */
+    @NotBlank(message = "下节点走向不能为空")
     private String nextNodeTrend;
 
     /**

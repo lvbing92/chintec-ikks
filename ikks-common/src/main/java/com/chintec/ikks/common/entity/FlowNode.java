@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author jeff·Tang
@@ -92,12 +92,12 @@ public class FlowNode extends Model<FlowNode> {
     /**
      * 功能模块id
      */
-    private Integer  functionModuleId;
+    private Integer functionModuleId;
 
     /**
      * 执行者角色
      */
-    private String  executorRole;
+    private String executorRole;
 
     /**
      * 是否允许驳回：0，否 1：是
@@ -139,6 +139,10 @@ public class FlowNode extends Model<FlowNode> {
      */
     private String updataBy;
 
+    /**
+     * 当前节点审核的资质集合
+     */
+    private String qualificationIds;
 
     @Override
     protected Serializable pkVal() {

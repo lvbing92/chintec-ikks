@@ -22,12 +22,12 @@ public class SupplierTypeResponse {
     /**
      * 供应商类型
      */
-    private String name;
+    private String typeName;
 
     /**
      * 描述
      */
-    private String describe;
+    private String typeDescribe;
 
     /**
      * 类型状态码

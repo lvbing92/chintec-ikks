@@ -68,17 +68,6 @@ public class SupplierResponse {
     @ApiModelProperty("供应商-邮箱")
     private String contactEmail;
 
-    /**
-     * 法人
-     */
-    @ApiModelProperty("供应商-法人")
-    private String legalPerson;
-
-    /**
-     * 法人联系方式
-     */
-    @ApiModelProperty("供应商-法人电话")
-    private String legalPersonPhone;
 
     /**
      * 开户行
@@ -114,7 +103,7 @@ public class SupplierResponse {
      * 所属地区
      */
     @ApiModelProperty("供应商-所属地区")
-    private String affiliatingArea;
+    private String comAddress;
 
     /**
      * 成立日期

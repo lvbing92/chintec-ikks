@@ -52,7 +52,7 @@ public class SupplierTypeServiceImpl extends ServiceImpl<SupplierTypeMapper, Sup
 
     @Override
     public ResultResponse updateType(SupplierTypeVo supplierTypeVo) {
-        AssertsUtil.isTrue(!StringUtils.isEmpty(supplierTypeVo.getId()), "请选择要修改的内容");
+        AssertsUtil.isTrue(StringUtils.isEmpty(supplierTypeVo.getId()), "请选择要修改的内容");
         SupplierType byId = this.getById(supplierTypeVo.getId());
         AssertsUtil.isTrue(byId == null, "要修改的内容不存在");
         assert byId != null;
@@ -63,9 +63,9 @@ public class SupplierTypeServiceImpl extends ServiceImpl<SupplierTypeMapper, Sup
 
     @Override
     public ResultResponse deleteType(Integer id) {
-        AssertsUtil.isTrue(!StringUtils.isEmpty(id), "请选择要修改的内容");
+        AssertsUtil.isTrue(StringUtils.isEmpty(id), "请选择要删除的内容");
         SupplierType byId = this.getById(id);
-        AssertsUtil.isTrue(byId == null, "要修改的内容不存在");
+        AssertsUtil.isTrue(byId == null, "要删除的内容不存在");
         assert byId != null;
         byId.setIsDeleted(0);
         saveAndUpdate(byId);
@@ -74,7 +74,7 @@ public class SupplierTypeServiceImpl extends ServiceImpl<SupplierTypeMapper, Sup
 
     @Override
     public ResultResponse type(Integer id) {
-        AssertsUtil.isTrue(!StringUtils.isEmpty(id), "请选择要查询内容");
+        AssertsUtil.isTrue(StringUtils.isEmpty(id), "请选择要查询内容");
         SupplierType byId = this.getById(id);
         AssertsUtil.isTrue(byId == null, "要查询的内容不存在");
         return ResultResponse.successResponse(byId);

@@ -59,7 +59,7 @@ public class SupplierFieldController {
         return iSupplierFieldService.fields(currentPage, pageSize);
     }
 
-    @GetMapping("/field/{id}")
+    @GetMapping("/supplierField/{id}")
     public ResultResponse field(@PathVariable Integer id) {
         return iSupplierFieldService.field(id);
     }

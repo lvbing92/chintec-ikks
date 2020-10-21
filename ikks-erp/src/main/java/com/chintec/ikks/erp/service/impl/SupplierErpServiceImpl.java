@@ -19,6 +19,7 @@ import com.chintec.ikks.erp.service.ISupplierErpService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -33,6 +34,8 @@ import java.util.stream.Collectors;
 public class SupplierErpServiceImpl implements ISupplierErpService {
     @Autowired
     private ISupplierService iSupplierService;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public ResultResponse saveField(SupplierFieldVo supplierFieldVo) {
@@ -72,14 +75,14 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
         AssertsUtil.isTrue(!field.isSuccess(), field.getMessage());
         SupplierField supplierField = JSONObject.parseObject(JSONObject.toJSONString(field.getData()), SupplierField.class);
         SupplierFieldResponse supplierFieldResponse = new SupplierFieldResponse();
-        BeanUtils.copyProperties(field, supplierFieldResponse);
+        BeanUtils.copyProperties(supplierField, supplierFieldResponse);
         supplierFieldResponse.setCreateTime(TimeUtils.toTimeStamp(supplierField.getCreateTime()));
         supplierFieldResponse.setUpdateTime(TimeUtils.toTimeStamp(supplierField.getUpdateTime()));
         return ResultResponse.successResponse(supplierFieldResponse);
     }
 
     @Override
-    public ResultResponse suppliers(Integer currentPage, Integer pageSize, Integer categoryId, Integer statusId, String params) {
+    public ResultResponse suppliers(Integer currentPage, Integer pageSize, Integer categoryId, Integer statusId, String params, String token) {
         ResultResponse suppliers = iSupplierService.suppliers(currentPage, pageSize, categoryId, statusId, params);
         if (!suppliers.isSuccess()) {
             return suppliers;
@@ -158,7 +161,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
 
     @Override
     public ResultResponse deleteType(Integer id) {
-        return iSupplierService.deleteSupplier(id);
+        return iSupplierService.deleteType(id);
     }
 
     @Override

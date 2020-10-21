@@ -67,12 +67,6 @@ public class SupplierVo {
     @ApiModelProperty("联系人邮箱")
     private String contactEmail;
 
-    /**
-     * 法人
-     */
-    @NotBlank(message = "法人不能为空")
-    @ApiModelProperty("法人")
-    private String legalPerson;
 
     /**
      * 开户行
@@ -93,13 +87,12 @@ public class SupplierVo {
     @ApiModelProperty("logo")
     private String logo;
 
-
     /**
      * 所属地区
      */
     @NotBlank(message = "请输入正确地址")
     @ApiModelProperty("地址")
-    private String affiliatingArea;
+    private String comAddress;
 
     /**
      * 成立日期
@@ -111,8 +104,7 @@ public class SupplierVo {
     /**
      * 类别id
      */
-    @NotBlank(message = "请选择企业类别")
-    @ApiModelProperty("企业类别")
+    @ApiModelProperty("供应商类别")
     private Integer categoryId;
 
     /**

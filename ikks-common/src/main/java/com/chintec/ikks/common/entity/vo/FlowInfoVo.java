@@ -2,6 +2,7 @@ package com.chintec.ikks.common.entity.vo;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 /**
@@ -14,6 +15,7 @@ public class FlowInfoVo {
     /**
      * 流程名字
      */
+    @NotBlank(message = "流程名字不能为空")
     private String flowName;
 
     /**

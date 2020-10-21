@@ -25,7 +25,7 @@ public interface ISupplierErpService {
     ResultResponse field(Integer id);
 
 
-    ResultResponse suppliers(Integer currentPage, Integer pageSize, Integer categoryId, Integer statusId, String params);
+    ResultResponse suppliers(Integer currentPage, Integer pageSize, Integer categoryId, Integer statusId, String params,String tokens);
 
 
     ResultResponse supplierCount();

@@ -11,35 +11,38 @@ import java.time.LocalDateTime;
 
 /**
  * <p>
- * 供应商类型
+ * 
  * </p>
  *
- * @author jeff·Tang
- * @since 2020-10-19
+ * @author jeff·tang
+ * @since 2020-10-21
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class SupplierType extends Model<SupplierType> {
+public class QualificationSupplier extends Model<QualificationSupplier> {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 主键id
+     */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
-     * 供应商类型
+     * 供应商id
      */
-    private String  typeName;
+    private Integer supplierId;
 
     /**
-     * 描述
+     * 资质id
      */
-    private String typeDescribe;
+    private Integer qualificationId;
 
     /**
-     * 类型状态码
+     * 该资质的内容
      */
-    private Integer typeCode;
+    private String content;
 
     /**
      * 创建时间
@@ -52,26 +55,20 @@ public class SupplierType extends Model<SupplierType> {
     private LocalDateTime updateTime;
 
     /**
-     * 创建人id
+     * 是否有效0无效1有效
      */
-    private String updateBy;
-
-    /**
-     * 创建人姓名
-     */
-    private String updateName;
-
     private Integer isDeleted;
 
     /**
-     * 节点id
+     * 操作人id
      */
-    private Integer flowId;
+    private Integer updateBy;
 
     /**
-     * 节点名称
+     * 操作人名字
      */
-    private String flowName;
+    private String updateName;
+
 
     @Override
     protected Serializable pkVal() {

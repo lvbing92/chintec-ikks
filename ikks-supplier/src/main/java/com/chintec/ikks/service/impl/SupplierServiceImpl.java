@@ -44,16 +44,7 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
                 .eq(categoryId != 0, Supplier::getCategoryId, categoryId)
                 .eq(statusId != 0, Supplier::getIsAuthenticated, statusId)
                 .eq(Supplier::getIsDeleted, 1)
-                .and(!StringUtils.isEmpty(params), i ->
-                        i.eq(Supplier::getContactPhone, params)
-                                .or()
-                                .eq(Supplier::getId, Integer.parseInt(params))
-                                .or()
-                                .eq(Supplier::getCompanyName, params)
-                                .or()
-                                .eq(Supplier::getContactName, params)
-                                .or()
-                                .eq(Supplier::getContactEmail, params))
+                .apply(!StringUtils.isEmpty(params), "concat(IFNULL(id,''),IFNULL(company_name,''),IFNULL(contact_phone,''),IFNULL(contact_email,'')) like '%" + params + "%'")
                 .orderByDesc(Supplier::getUpdateTime));
         PageResultResponse<Supplier> pageResultResponse = new PageResultResponse<>(page.getTotal(), currentPage, pageSize);
         pageResultResponse.setTotalPages(page.getPages());
@@ -68,7 +59,7 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
                     SupplierFunctionPo supplierFunctionPo = new SupplierFunctionPo();
                     supplierFunctionPo.setCount(count(s.getId()));
                     supplierFunctionPo.setId(s.getId());
-                    supplierFunctionPo.setName(s.getName());
+                    supplierFunctionPo.setName(s.getTypeName());
                     return supplierFunctionPo;
                 }).collect(Collectors.toList());
         return ResultResponse.successResponse(collect);
@@ -78,7 +69,7 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
     public ResultResponse saveSupplier(SupplierVo supplierVo) {
         Supplier supplier = new Supplier();
         BeanUtils.copyProperties(supplierVo, supplier);
-        supplier.setComCreateDate(LocalDateTime.ofEpochSecond(Long.parseLong(supplierVo.getComCreateDate()) * 1000, 0, ZoneOffset.UTC));
+        supplier.setComCreateDate(LocalDateTime.ofEpochSecond(Long.parseLong(supplierVo.getComCreateDate()) , 0, ZoneOffset.UTC));
         supplier.setIsDeleted(1);
         supplier.setIsAuthenticated(1);
         saveAndUpdate(supplier);
@@ -87,19 +78,19 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
 
     @Override
     public ResultResponse updateSupplier(SupplierVo supplierVo) {
-        AssertsUtil.isTrue(!StringUtils.isEmpty(supplierVo.getId()), "请选择要修改的内容");
+        AssertsUtil.isTrue(StringUtils.isEmpty(supplierVo.getId()), "请选择要修改的内容");
         Supplier byId = this.getById(supplierVo.getId());
         AssertsUtil.isTrue(byId == null, "要修改的内容不存在");
         assert byId != null;
         BeanUtils.copyProperties(supplierVo, byId);
-        byId.setComCreateDate(LocalDateTime.ofEpochSecond(Long.parseLong(supplierVo.getComCreateDate()) * 1000, 0, ZoneOffset.UTC));
+        byId.setComCreateDate(LocalDateTime.ofEpochSecond(Long.parseLong(supplierVo.getComCreateDate()), 0, ZoneOffset.UTC));
         saveAndUpdate(byId);
         return ResultResponse.successResponse("修改成功");
     }
 
     @Override
     public ResultResponse deleteSupplier(Integer id) {
-        AssertsUtil.isTrue(!StringUtils.isEmpty(id), "请选择要删除的内容");
+        AssertsUtil.isTrue(StringUtils.isEmpty(id), "请选择要删除的内容");
         Supplier byId = this.getById(id);
         AssertsUtil.isTrue(byId == null, "要删除的内容不存在");
         assert byId != null;
@@ -110,7 +101,7 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
 
     @Override
     public ResultResponse supplier(Integer id) {
-        AssertsUtil.isTrue(!StringUtils.isEmpty(id), "请选择要查询的内容");
+        AssertsUtil.isTrue(StringUtils.isEmpty(id), "请选择要查询的内容");
         Supplier byId = this.getById(id);
         AssertsUtil.isTrue(byId == null, "要查询的内容不存在");
         return ResultResponse.successResponse(byId);

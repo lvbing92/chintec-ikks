@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * @author Jeff·Tang
  * @version 1.0
@@ -20,6 +22,7 @@ public class NodeFunctionVo {
     /**
      * 需要的状态
      */
+    @NotBlank(message = "需要的状态不能为空")
     private String status;
     /**
      * 对应的节点id

@@ -45,7 +45,7 @@ public class SupplierFieldServiceImpl extends ServiceImpl<SupplierFieldMapper, S
     @Override
     public ResultResponse updateField(SupplierFieldVo supplierFieldVo) {
         SupplierField supplierField = new SupplierField();
-        AssertsUtil.isTrue(!StringUtils.isEmpty(supplierField.getId()), "请选择要修改的属性");
+        AssertsUtil.isTrue(StringUtils.isEmpty(supplierFieldVo.getId()), "请选择要修改的属性");
         AssertsUtil.isTrue(this.getById(supplierFieldVo.getId()) == null, "要修改的属性类型不存在");
         checkField(supplierFieldVo, supplierField);
         return ResultResponse.successResponse("修改成功");

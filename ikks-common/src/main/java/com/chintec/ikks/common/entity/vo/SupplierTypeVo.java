@@ -23,14 +23,14 @@ public class SupplierTypeVo {
      */
     @NotBlank(message = "名字不能为空")
     @ApiModelProperty("名称")
-    private String name;
+    private String typeName;
 
     /**
      * 描述
      */
     @NotBlank(message = "描述不能为空")
     @ApiModelProperty("描述")
-    private String describe;
+    private String typeDescribe;
 
     /**
      * 节点id

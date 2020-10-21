@@ -66,18 +66,6 @@ public class Supplier extends Model<Supplier> {
     private String contactEmail;
 
     /**
-     * 法人
-     */
-    private String
-            legalPerson;
-
-    /**
-     * 法人联系方式
-     */
-    private String
-            legalPersonPhone;
-
-    /**
      * 开户行
      */
     private String openingBank;
@@ -105,8 +93,7 @@ public class Supplier extends Model<Supplier> {
     /**
      * 所属地区
      */
-    private String
-            affiliatingArea;
+    private String comAddress;
 
     /**
      * 成立日期
