@@ -47,6 +47,9 @@ public class CredentialsResponse extends Credentials {
     @ApiModelProperty(value = "角色Id")
     private Long roleId;
 
+    @ApiModelProperty(value = "角色等级")
+    private String level;
+
     @ApiModelProperty(value = "角色名称")
     private String roleName;
 

@@ -38,6 +38,9 @@ public class Authority extends Model<Authority> {
     @ApiModelProperty(value = "备注")
     private String remark;
 
+    @ApiModelProperty(value = "角色等级")
+    private String level;
+
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
 
