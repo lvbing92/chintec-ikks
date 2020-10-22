@@ -36,21 +36,25 @@ public class SupplierVo {
     /**
      * 公司简称
      */
-    @NotBlank(message = "公司简称不能为空")
     @ApiModelProperty("简称")
     private String shortName;
 
     /**
+     * 登录密码
+     */
+    @NotBlank(message = "登录密码不能为空")
+    @ApiModelProperty("登录密码")
+    private String password;
+    /**
      * 主营类型
      */
-    @NotBlank(message = "主营类型不能为空")
     @ApiModelProperty("类型")
     private String companyType;
 
     /**
      * 联系人姓名
      */
-    @NotBlank(message = "联系人姓名不能为空")
+
     @ApiModelProperty("联系人")
     private String contactName;
 
@@ -64,6 +68,7 @@ public class SupplierVo {
     /**
      * 联系人邮箱
      */
+    @NotBlank(message = "联系人邮箱不能为空")
     @ApiModelProperty("联系人邮箱")
     private String contactEmail;
 

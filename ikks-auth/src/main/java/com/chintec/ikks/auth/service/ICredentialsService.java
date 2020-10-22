@@ -43,10 +43,10 @@ public interface ICredentialsService extends IService<Credentials> {
     /**
      * 添加登录信息
      *
-     * @param credentialsRequest 用户对象
-     * @return ResultResponse
+     * @param credentials 用户信息
+     * @return boolean
      */
-    ResultResponse addLoginMsg(CredentialsRequest credentialsRequest,String userType);
+    boolean addLoginMsg(Credentials credentials);
 
     /**
      * 更新用户

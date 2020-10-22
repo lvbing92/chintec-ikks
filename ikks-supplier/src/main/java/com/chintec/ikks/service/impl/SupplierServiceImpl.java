@@ -1,22 +1,27 @@
 package com.chintec.ikks.service.impl;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.chintec.ikks.common.entity.Credentials;
 import com.chintec.ikks.common.entity.Supplier;
 import com.chintec.ikks.common.entity.SupplierType;
 import com.chintec.ikks.common.entity.po.SupplierFunctionPo;
 import com.chintec.ikks.common.entity.vo.SupplierVo;
 import com.chintec.ikks.common.util.AssertsUtil;
+import com.chintec.ikks.common.util.EncryptionUtil;
 import com.chintec.ikks.common.util.PageResultResponse;
 import com.chintec.ikks.common.util.ResultResponse;
+import com.chintec.ikks.feign.ICredentialsService;
 import com.chintec.ikks.mapper.SupplierMapper;
 import com.chintec.ikks.service.ISupplierService;
 import com.chintec.ikks.service.ISupplierTypeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -36,6 +41,8 @@ import java.util.stream.Collectors;
 public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> implements ISupplierService {
     @Autowired
     private ISupplierTypeService iSupplierTypeService;
+    @Autowired
+    private ICredentialsService iCredentialsService;
 
     @Override
     public ResultResponse suppliers(Integer currentPage, Integer pageSize, Integer categoryId, String params, Integer statusId) {
@@ -66,7 +73,15 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
     }
 
     @Override
+    @Transactional
     public ResultResponse saveSupplier(SupplierVo supplierVo) {
+        Credentials credentials = new Credentials();
+        credentials.setName(supplierVo.getContactEmail());
+        credentials.setPassword(EncryptionUtil.passWordEnCode(supplierVo.getPassword()));
+        credentials.setUserType("3");
+        credentials.setEnabled(true);
+        boolean flag =iCredentialsService.addLoginMsg(credentials);
+        AssertsUtil.isTrue(!flag,"创建供应商失败");
         Supplier supplier = new Supplier();
         BeanUtils.copyProperties(supplierVo, supplier);
         supplier.setComCreateDate(LocalDateTime.ofEpochSecond(Long.parseLong(supplierVo.getComCreateDate()) , 0, ZoneOffset.UTC));
