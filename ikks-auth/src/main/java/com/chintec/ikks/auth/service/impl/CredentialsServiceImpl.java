@@ -6,17 +6,22 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chintec.ikks.auth.mapper.CredentialsMapper;
+import com.chintec.ikks.auth.service.IAuthorityMenuService;
+import com.chintec.ikks.auth.service.IAuthorityService;
 import com.chintec.ikks.auth.service.ICredentialsAuthoritiesService;
 import com.chintec.ikks.auth.service.ICredentialsService;
+import com.chintec.ikks.common.entity.Authority;
+import com.chintec.ikks.common.entity.AuthorityMenu;
 import com.chintec.ikks.common.entity.Credentials;
 import com.chintec.ikks.common.entity.CredentialsAuthorities;
+import com.chintec.ikks.common.entity.response.AuthorityMenuResponse;
+import com.chintec.ikks.common.entity.response.CredentialsResponse;
 import com.chintec.ikks.common.entity.vo.CredentialsRequest;
-import com.chintec.ikks.common.util.AssertsUtil;
-import com.chintec.ikks.common.util.PageResultResponse;
-import com.chintec.ikks.common.util.ResultResponse;
+import com.chintec.ikks.common.util.*;
 import io.netty.util.internal.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,7 +30,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -42,6 +51,12 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
     private static final String SORT_D = "D";
     @Autowired
     private ICredentialsAuthoritiesService iCredentialsAuthoritiesService;
+    @Autowired
+    private IAuthorityMenuService iAuthorityMenuService;
+    @Resource
+    private RedisTemplate<String,Object> redisTemplate;
+    @Autowired
+    private IAuthorityService iAuthorityService;
 
     @Override
     public ResultResponse getUserList(Integer pageSize, Integer currentPage, String role, String status, String searchValue, String sorted) {
@@ -81,7 +96,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
             BCryptPasswordEncoder b = new BCryptPasswordEncoder();
             Credentials credentials = new Credentials();
             BeanUtils.copyProperties(credentialsRequest, credentials);
-            credentials.setPassword(passWordEnCode(credentialsRequest.getPassword()));
+            credentials.setPassword(EncryptionUtil.passWordEnCode(credentialsRequest.getPassword()));
             credentials.setEnabled(true);
             credentials.setCreateTime(LocalDateTime.now());
             credentials.setVersion(1);
@@ -104,19 +119,12 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
     /**
      * 添加登录信息
      *
-     * @param credentialsRequest 用户对象
+     * @param credentials 用户对象
      * @return ResultResponse
      */
     @Override
-    public ResultResponse addLoginMsg(CredentialsRequest credentialsRequest,String userType) {
-
-        //保存当前人员到登陆客户表
-        Credentials credentials = new Credentials();
-        BeanUtils.copyProperties(credentialsRequest,credentials);
-        credentials.setUserType(userType);
-        credentials.setEnabled(true);
-        boolean flag =save(credentials);
-        return null;
+    public boolean addLoginMsg(Credentials credentials) {
+        return save(credentials);
     }
 
     @Override
@@ -128,7 +136,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
         credentials.setCompanyName(credentialsRequest.getCompanyName());
         credentials.setEmail(credentialsRequest.getEmail());
         if (!StringUtil.isNullOrEmpty(credentialsRequest.getPassword())) {
-            credentials.setPassword(passWordEnCode(credentialsRequest.getPassword()));
+            credentials.setPassword(EncryptionUtil.passWordEnCode(credentialsRequest.getPassword()));
         }
         credentials.setUpdateTime(LocalDateTime.now());
         //更新客户信息
@@ -164,24 +172,31 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
      * @return ResultResponse
      */
     public ResultResponse getRoleAndMenu(String token) {
+        CredentialsResponse userMsg = new CredentialsResponse();
         //获取用户信息
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Credentials credentials = JSONObject.parseObject(JSONObject.toJSON(authentication.getCredentials()).toString(), Credentials.class);
+        BeanUtils.copyProperties(credentials,userMsg);
+        //查询用户角色关系
+        CredentialsAuthorities one = iCredentialsAuthoritiesService.getOne(new QueryWrapper<CredentialsAuthorities>().lambda()
+                .eq(CredentialsAuthorities::getCredentialsId, credentials.getId()));
+        AssertsUtil.isTrue(ObjectUtils.isEmpty(one),"用户和角色关系为空!");
         //查询角色信息
-        iCredentialsAuthoritiesService.getOne(new QueryWrapper<CredentialsAuthorities>().lambda()
-                .eq(CredentialsAuthorities::getCredentialsId,credentials.getId()));
+        Authority authority = iAuthorityService.getOne(new QueryWrapper<Authority>().lambda().eq(Authority::getId, one.getAuthoritiesId()));
+        AssertsUtil.isTrue(ObjectUtils.isEmpty(authentication),"当前用户无角色!");
+        userMsg.setRoleName(authority.getAuthority());
         //查询菜单信息
-        return ResultResponse.successResponse();
-    }
-
-    /**
-     * 密码加密
-     *
-     * @param passWord 密码
-     * @return String
-     */
-    private String passWordEnCode(String passWord) {
-        BCryptPasswordEncoder b = new BCryptPasswordEncoder();
-        return b.encode(passWord);
+        List<AuthorityMenu> authorityMenuList = iAuthorityMenuService.list(new QueryWrapper<AuthorityMenu>()
+                .lambda().eq(AuthorityMenu::getAuthorityId, one.getAuthoritiesId()));
+        if (authorityMenuList.size() != 0) {
+            List<AuthorityMenuResponse> collect = authorityMenuList.stream().map(authorityMenu -> {
+                AuthorityMenuResponse authorityMenuResponse = new AuthorityMenuResponse();
+                BeanUtils.copyProperties(authorityMenu, authorityMenuResponse);
+                return authorityMenuResponse;
+            }).collect(Collectors.toList());
+            userMsg.setMenuList(MenuTree.getMenuTrees(collect));
+        }
+        redisTemplate.opsForValue().set(token,userMsg);
+        return ResultResponse.successResponse("查询成功",userMsg);
     }
 }

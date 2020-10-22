@@ -2,6 +2,7 @@ package com.chintec.ikks.auth.controller;
 
 
 import com.chintec.ikks.auth.service.ICredentialsService;
+import com.chintec.ikks.common.entity.Credentials;
 import com.chintec.ikks.common.entity.vo.CredentialsRequest;
 import com.chintec.ikks.common.util.ResultResponse;
 import io.swagger.annotations.Api;
@@ -56,6 +57,18 @@ public class AuthController {
     public ResultResponse addUser(@RequestBody CredentialsRequest credentialsRequest) {
 
         return iCredentialsService.addUser(credentialsRequest);
+    }
+
+    /**
+     * 添加登录用户
+     *
+     * @param credentials 用户登录信息
+     * @return boolean
+     */
+    @ApiOperation(value = "添加增用户")
+    @PostMapping("/user/addLoginMsg")
+    public boolean addLoginMsg(Credentials credentials) {
+        return iCredentialsService.save(credentials);
     }
 
     /**

@@ -28,6 +28,10 @@ public class CompanyUser extends Model<CompanyUser> {
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
+    /**
+     * 客户登录Id
+     */
+    private Long loginId;
 
     /**
      * 用户名称

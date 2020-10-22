@@ -90,6 +90,7 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
         supplier.setComCreateDate(LocalDateTime.ofEpochSecond(Long.parseLong(supplierVo.getComCreateDate()), 0, ZoneOffset.UTC));
         supplier.setIsDeleted(1);
         supplier.setIsAuthenticated(1);
+        supplier.setLoginId(credentials.getId());
         saveAndUpdate(supplier);
         return ResultResponse.successResponse("创建供应商成功");
     }
