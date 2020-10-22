@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.chintec.ikks.auth.entity.Credentials;
 import com.chintec.ikks.auth.request.CredentialsRequest;
 import com.chintec.ikks.common.util.ResultResponse;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * <p>
@@ -45,6 +45,7 @@ public interface ICredentialsService extends IService<Credentials> {
      * @return ResultResponse
      */
     ResultResponse updateUser(CredentialsRequest credentialsRequest);
+
     /**
      * 通过Id查询用户
      *
@@ -60,4 +61,12 @@ public interface ICredentialsService extends IService<Credentials> {
      * @return ResultResponse
      */
     ResultResponse deleteUser(Long id);
+
+    /**
+     * 查询当前登录人角色和菜单信息
+     *
+     * @param token 当前登录人token
+     * @return ResultResponse
+     */
+    ResultResponse getRoleAndMenu(@RequestParam(value = "token") String token);
 }

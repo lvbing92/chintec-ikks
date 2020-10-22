@@ -25,4 +25,13 @@ public interface IPasswordFedService {
      * @return ResultResponse
      */
     ResultResponse userLogin(String userName, String passWord);
+
+    /**
+     * 客户端登入
+     *
+     * @param email 用户名
+     * @param passWord 密码
+     * @return ResultResponse
+     */
+    ResultResponse companyUserLogin(String email, String passWord);
 }

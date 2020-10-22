@@ -54,4 +54,19 @@ public class UserLoginController {
     public ResultResponse login(@RequestParam String userName,@RequestParam String passWord) {
         return iPasswordFedService.userLogin(userName,passWord);
     }
+
+
+   /**
+     * 登录
+     *
+     * @param email 用户名
+     * @param passWord 密码
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "客户端登录")
+    @GetMapping(value = "/userLogin", produces = "application/json;charset=utf-8")
+    @ResponseStatus(HttpStatus.OK)
+    public ResultResponse companyUserLogin(@RequestParam String email,@RequestParam String passWord) {
+        return iPasswordFedService.companyUserLogin(email,passWord);
+    }
 }

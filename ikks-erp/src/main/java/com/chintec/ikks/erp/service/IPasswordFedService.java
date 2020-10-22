@@ -35,4 +35,8 @@ public interface IPasswordFedService {
     @ApiOperation(value = "erp登入")
     @GetMapping(value = "/v1/login", produces = "application/json;charset=utf-8")
     ResultResponse userLogin(@RequestParam String userName, @RequestParam String passWord);
+
+    @ApiOperation(value = "客户端登入")
+    @GetMapping(value = "/v1/userLogin", produces = "application/json;charset=utf-8")
+    ResultResponse companyUserLogin(@RequestParam String email,@RequestParam String passWord);
 }

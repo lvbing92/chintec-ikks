@@ -77,7 +77,7 @@ public class ResourcesServerConfig extends ResourceServerConfigurerAdapter {
                 .logoutSuccessHandler(logoutSuccessHandler)//登出做的操作
                 .and()
                 .authorizeRequests()
-                .antMatchers("/v1/hello").permitAll()
+                .antMatchers("/v1/userLogin").permitAll()
                 .antMatchers("/v1/login").permitAll()
                 .antMatchers("/v1/logout").permitAll()
                 .antMatchers("/v1/**").authenticated();

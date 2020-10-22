@@ -6,14 +6,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chintec.ikks.auth.entity.Authority;
 import com.chintec.ikks.auth.entity.AuthorityMenu;
-import com.chintec.ikks.auth.entity.Menu;
 import com.chintec.ikks.auth.mapper.AuthorityMapper;
-import com.chintec.ikks.auth.mapper.MenuMapper;
 import com.chintec.ikks.auth.request.AuthorityRequest;
 import com.chintec.ikks.auth.request.MenuRequest;
+import com.chintec.ikks.auth.response.AuthorityMenuResponse;
+import com.chintec.ikks.auth.response.AuthorityResponse;
 import com.chintec.ikks.auth.service.IAuthorityMenuService;
 import com.chintec.ikks.auth.service.IAuthorityService;
-import com.chintec.ikks.auth.service.IMenuService;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.PageResultResponse;
 import com.chintec.ikks.common.util.ResultResponse;
@@ -28,6 +27,7 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -42,11 +42,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority>
         implements IAuthorityService {
-    @Autowired
-    private IMenuService iMenuService;
 
-    @Autowired
-    private MenuMapper menuMapper;
     @Autowired
     private IAuthorityMenuService iAuthorityMenuService;
 
@@ -80,25 +76,38 @@ public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority
 //                .orderByAsc(SORT_A.equals(sorted), Authority::getId)
                 .orderByDesc(SORT_D.equals(sorted), Authority::getCreateTime));
 
-        List<AuthorityRequest> authorityRequestList = authorityPage.getRecords().stream().map(authorityMsg -> {
-            AuthorityRequest authorityRequest = new AuthorityRequest();
-            BeanUtils.copyProperties(authorityMsg, authorityRequest);
+        //查询当前角色关联的菜单树结构
+        List<AuthorityResponse> authorityResponseList = authorityPage.getRecords().stream().map(authorityMsg -> {
+             //角色结果
+             AuthorityResponse authorityResponse =new AuthorityResponse();
+             BeanUtils.copyProperties(authorityMsg,authorityResponse);
             //查询菜单信息
-            List<Long> menuIByRoleId = iAuthorityMenuService.getMenuIByRoleId(authorityMsg.getId());
-            if (menuIByRoleId.size() != 0) {
-                List<Menu> authorityMenus = new ArrayList<>(iMenuService.listByIds(menuIByRoleId));
-                authorityRequest.setMenuList(authorityMenus);
+            List<AuthorityMenu> authorityMenuList = iAuthorityMenuService.list(new QueryWrapper<AuthorityMenu>()
+                    .lambda().eq(AuthorityMenu::getAuthorityId, authorityMsg.getId()));
+            //如果菜单不为空，将菜单以树状结构处理
+            if (authorityMenuList.size() != 0) {
+                List<AuthorityMenuResponse> collect = authorityMenuList.stream().map(authorityMenu -> {
+                    AuthorityMenuResponse authorityMenuResponse = new AuthorityMenuResponse();
+                    BeanUtils.copyProperties(authorityMenu, authorityMenuResponse);
+                    return authorityMenuResponse;
+                }).collect(Collectors.toList());
+                authorityResponse.setAuthorityMenuResponseList(getParentList(collect));
             }
-            return authorityRequest;
+            return authorityResponse;
         }).collect(Collectors.toList());
 
         //返回结果
-        PageResultResponse<AuthorityRequest> pageResultResponse = new PageResultResponse<>(authorityPage.getTotal(), currentPage, pageSize);
+        PageResultResponse<AuthorityResponse> pageResultResponse = new PageResultResponse<>(authorityPage.getTotal(), currentPage, pageSize);
         pageResultResponse.setTotalPages(authorityPage.getPages());
-        pageResultResponse.setResults(authorityRequestList);
+        pageResultResponse.setResults(authorityResponseList);
         return ResultResponse.successResponse(pageResultResponse);
     }
 
+    /**
+     * 查询所有角色
+     *
+     * @return List
+     */
     @Override
     public List<Authority> getAllRoleList() {
         return this.list();
@@ -134,17 +143,19 @@ public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority
      */
     @Override
     public ResultResponse addRoleMenu(MenuRequest menuRequest) {
-        //更新菜单信息
-        Menu menu = iMenuService.getOne(new QueryWrapper<Menu>().lambda().eq(Menu::getId, menuRequest.getId()));
-        menu.setUserMenuName(menuRequest.getUserMenuName());
-        menu.setUserIcon(menuRequest.getUserIcon());
-        iMenuService.updateById(menu);
-
-
+        //校验数据是否存在
+        AuthorityMenu isExist = iAuthorityMenuService.getOne(new QueryWrapper<AuthorityMenu>().lambda()
+                .eq(AuthorityMenu::getAuthorityId, menuRequest.getRoleId()).eq(AuthorityMenu::getMenuId, menuRequest.getId()));
+        if (!ObjectUtils.isEmpty(isExist)) {
+            return ResultResponse.successResponse("当前菜单已存在!");
+        }
         AuthorityMenu addAuthMenu = new AuthorityMenu();
         addAuthMenu.setMenuId(menuRequest.getId());
         addAuthMenu.setAuthorityId(menuRequest.getRoleId());
-        boolean flag = iAuthorityMenuService.saveOrUpdate(addAuthMenu);
+        addAuthMenu.setMenuName(menuRequest.getMenuName());
+        addAuthMenu.setMenuIcon(menuRequest.getIcon());
+        addAuthMenu.setParentId(menuRequest.getParentId());
+        boolean flag = iAuthorityMenuService.save(addAuthMenu);
         AssertsUtil.isTrue(!flag, "添加角菜单关系失败!");
 
         return ResultResponse.successResponse("编辑角色菜单成功！");
@@ -177,22 +188,20 @@ public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority
     @Override
     @Transactional
     public ResultResponse updateRoleMenu(MenuRequest menuRequest) {
-        //更新菜单信息
-        Menu menu = new Menu();
-        BeanUtils.copyProperties(menuRequest, menu);
-        iMenuService.addOrUpdateMenu(menu);
 
         //查询角色和菜单关系数据
         AuthorityMenu authorityMenu = iAuthorityMenuService.getOne(new QueryWrapper<AuthorityMenu>().lambda()
                 .eq(AuthorityMenu::getAuthorityId, menuRequest.getRoleId()).eq(AuthorityMenu::getMenuId, menuRequest.getId()));
-        if (ObjectUtils.isEmpty(authorityMenu)) {
-            AuthorityMenu addAuthMenu = new AuthorityMenu();
-            addAuthMenu.setMenuId(menuRequest.getId());
-            addAuthMenu.setAuthorityId(menuRequest.getRoleId());
-            boolean flag = iAuthorityMenuService.save(addAuthMenu);
+        if (!ObjectUtils.isEmpty(authorityMenu)) {
+            authorityMenu.setMenuName(menuRequest.getMenuName());
+            authorityMenu.setMenuIcon(menuRequest.getIcon());
+            boolean flag = iAuthorityMenuService.update(authorityMenu, new QueryWrapper<AuthorityMenu>().lambda()
+                    .eq(AuthorityMenu::getMenuId, menuRequest.getId()).eq(AuthorityMenu::getAuthorityId, menuRequest.getRoleId()));
             AssertsUtil.isTrue(!flag, "添加角菜单关系失败!");
+        } else {
+            return ResultResponse.failResponse("查无当前菜单!");
         }
-        return ResultResponse.successResponse("编辑角色菜单成功！");
+        return ResultResponse.successResponse("编辑角色菜单成功!");
     }
 
     /**
@@ -203,23 +212,45 @@ public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority
      */
     @Override
     public ResultResponse queryRole(Long id) {
-        AuthorityRequest authorityRequest = new AuthorityRequest();
+        AuthorityResponse authorityResponse = new AuthorityResponse();
         //查寻角色
         Authority authority = this.getById(id);
-        BeanUtils.copyProperties(authority, authorityRequest);
+        BeanUtils.copyProperties(authority, authorityResponse);
         //根据角色Id查询菜单
         //查询菜单信息
-        List<Long> menuIds = iAuthorityMenuService.getMenuIByRoleId(authority.getId());
-        List<Menu> resultMenus = new ArrayList<>();
-        if (menuIds.size() != 0) {
-            menuIds.forEach(menuId -> {
-                List<Menu> menuList = menuMapper.getMenuList(menuId);
-                resultMenus.addAll(menuList);
-            });
-            authorityRequest.setMenuList(resultMenus);
+        List<AuthorityMenu> authorityMenuList = iAuthorityMenuService.list(new QueryWrapper<AuthorityMenu>()
+                .lambda().eq(AuthorityMenu::getAuthorityId, id));
+        List<AuthorityMenuResponse> resultMenus = new ArrayList<>();
+        if (authorityMenuList.size() != 0) {
+            List<AuthorityMenuResponse> collect = authorityMenuList.stream().map(authorityMenu -> {
+                AuthorityMenuResponse authorityMenuResponse = new AuthorityMenuResponse();
+                BeanUtils.copyProperties(authorityMenu, authorityMenuResponse);
+                return authorityMenuResponse;
+            }).collect(Collectors.toList());
+            resultMenus = getParentList(collect);
         }
+        authorityResponse.setAuthorityMenuResponseList(resultMenus);
         //查询当前用户角色
-        return ResultResponse.successResponse("查询用户详情成功", authorityRequest);
+        return ResultResponse.successResponse("查询用户详情成功", authorityResponse);
+    }
+
+    private List<AuthorityMenuResponse> getParentList(List<AuthorityMenuResponse> menus) {
+        List<AuthorityMenuResponse> collect = menus.stream().filter(m -> m.getParentId() == 0).map((m) -> {
+            m.setChildList(getChildrenList(m, menus));
+            return m;
+        }).collect(Collectors.toList());
+        return collect;
+    }
+
+    private List<AuthorityMenuResponse> getChildrenList(AuthorityMenuResponse root, List<AuthorityMenuResponse> menus) {
+
+        List<AuthorityMenuResponse> children = menus.stream().filter(m -> {
+            return Objects.     equals(m.getParentId(), root.getMenuId());
+        }).map((m) -> {
+            m.setChildList(getChildrenList(m, menus));
+            return m;
+        }).collect(Collectors.toList());
+        return children;
     }
 
     @Override

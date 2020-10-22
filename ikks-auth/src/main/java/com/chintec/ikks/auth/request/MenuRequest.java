@@ -33,7 +33,7 @@ public class MenuRequest {
     /**
      * 父Id
      */
-    private String parentId;
+    private Long parentId;
 
     /**
      * 图片

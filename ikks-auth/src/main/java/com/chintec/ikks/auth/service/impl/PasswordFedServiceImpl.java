@@ -1,10 +1,14 @@
 package com.chintec.ikks.auth.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.chintec.ikks.auth.entity.CompanyUser;
 import com.chintec.ikks.auth.entity.OAuth2Token;
+import com.chintec.ikks.auth.service.ICompanyUserService;
 import com.chintec.ikks.auth.service.IPasswordFedService;
 import com.chintec.ikks.common.enums.CommonCodeEnum;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.ResultResponse;
+import com.chintec.ikks.common.util.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -23,13 +27,16 @@ import java.util.Arrays;
  */
 @Slf4j
 @Service
-public class PasswordFedServiceImpl implements
-        IPasswordFedService {
+public class PasswordFedServiceImpl implements IPasswordFedService {
 
     private static final String URL = "http://localhost:7070/oauth/token";
 
     @Autowired
     private LogoutSuccessHandlerImpl logoutSuccessHandler;
+
+    @Autowired
+    private ICompanyUserService iCompanyUserService;
+
 
     @Override
     public ResultResponse logout(String token) {
@@ -43,6 +50,11 @@ public class PasswordFedServiceImpl implements
 
         OAuth2Token tokenMsg = null;
         try {
+            /*if(userName.contains("@")){
+                //根据邮箱查询用户信息
+                CompanyUser companyUser = iCompanyUserService.getOne(new QueryWrapper<CompanyUser>().lambda().eq(CompanyUser::getEmail, userName));
+                userName=companyUser.getUserName();
+            }*/
             tokenMsg = getToken(userName, passWord);
             log.info("tokenMsg=" + tokenMsg);
 
@@ -51,7 +63,20 @@ public class PasswordFedServiceImpl implements
             return ResultResponse.failResponse(CommonCodeEnum.PARAMS_ERROR_CODE.getCode(), "用户名或密码错误");
         }
         //查询用户角色，菜单
+        return ResultResponse.successResponse("登录成功！", tokenMsg);
+    }
 
+    @Override
+    public ResultResponse companyUserLogin(String email, String passWord) {
+
+        OAuth2Token tokenMsg = null;
+        try {
+            tokenMsg = getToken(email, passWord);
+            log.info("tokenMsg=" + tokenMsg);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultResponse.failResponse(CommonCodeEnum.PARAMS_ERROR_CODE.getCode(), "用户名或密码错误");
+        }
         return ResultResponse.successResponse("登录成功！", tokenMsg);
     }
 

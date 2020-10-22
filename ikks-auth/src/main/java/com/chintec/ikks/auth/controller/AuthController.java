@@ -33,7 +33,7 @@ public class AuthController {
      * @param searchValue 查询条件
      * @param sorted      排序
      * @return ResultResponse
-     * */
+     */
     @ApiOperation(value = "查询用户列表")
     @GetMapping("/users")
     public ResultResponse getUserList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
@@ -47,6 +47,7 @@ public class AuthController {
 
     /**
      * 新增用户
+     *
      * @param credentialsRequest 客户信息
      * @return ResultResponse
      */
@@ -59,6 +60,7 @@ public class AuthController {
 
     /**
      * 更新客户
+     *
      * @param credentialsRequest 客户信息
      * @return ResultResponse
      */
@@ -80,6 +82,7 @@ public class AuthController {
     public ResultResponse queryUser(@PathVariable Long id) {
         return iCredentialsService.queryUser(id);
     }
+
     /**
      * 删除用户
      *
@@ -91,19 +94,22 @@ public class AuthController {
         return iCredentialsService.deleteUser(id);
     }
 
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello";
-    }
-
-    @GetMapping("/meet")
-    public String meet() {
-        return "I meet you";
-    }
-
     @GetMapping("/welcome")
     public String welcome() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return "Welcome " + authentication.getName();
+    }
+
+    /**
+     * 查询当前登录人角色和菜单信息
+     *
+     * @param token 当前登录人token
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "获取角色和菜单信息")
+    @RequestMapping(value = "/user/roleAndMenu")
+    public ResultResponse getRoleAndMenu(@RequestParam(value = "token") String token) {
+
+        return iCredentialsService.getRoleAndMenu(token);
     }
 }

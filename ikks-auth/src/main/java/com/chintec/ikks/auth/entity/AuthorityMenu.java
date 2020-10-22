@@ -1,5 +1,8 @@
 package com.chintec.ikks.auth.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -31,7 +34,20 @@ public class AuthorityMenu extends Model<AuthorityMenu> {
      * 菜单Id
      */
     private Long menuId;
+    /**
+     * 父菜单Id
+     */
+    private Long parentId;
 
+    /**
+     * 菜单名称
+     *
+     */
+    private String menuName;
+    /**
+     * 菜单icon
+     */
+    private String menuIcon;
 
     @Override
     protected Serializable pkVal() {

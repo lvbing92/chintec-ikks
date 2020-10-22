@@ -43,8 +43,8 @@ public class Credentials extends Model<Credentials> {
     @ApiModelProperty(value = "邮箱")
     private String email;
 
-    @ApiModelProperty(value = "手机号")
-    private String phone;
+    @ApiModelProperty(value = "用户类型")
+    private String userType;
 
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;

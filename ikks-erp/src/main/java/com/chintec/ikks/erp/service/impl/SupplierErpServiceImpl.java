@@ -34,8 +34,6 @@ import java.util.stream.Collectors;
 public class SupplierErpServiceImpl implements ISupplierErpService {
     @Autowired
     private ISupplierService iSupplierService;
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public ResultResponse saveField(SupplierFieldVo supplierFieldVo) {

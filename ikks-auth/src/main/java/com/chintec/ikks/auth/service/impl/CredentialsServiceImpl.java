@@ -17,6 +17,8 @@ import com.chintec.ikks.common.util.ResultResponse;
 import io.netty.util.internal.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,10 +36,9 @@ import java.time.LocalDateTime;
  * @since 2020-08-26
  */
 @Service
-public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Credentials>
-        implements ICredentialsService {
+public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Credentials> implements ICredentialsService {
 
-    private static final String SORT_A = "A";
+    //    private static final String SORT_A = "A";
     private static final String SORT_D = "D";
     @Autowired
     private ICredentialsAuthoritiesService iCredentialsAuthoritiesService;
@@ -136,6 +137,20 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
             return ResultResponse.failResponse("删除失败！");
         }
         return ResultResponse.successResponse("删除成功");
+    }
+
+    /**
+     * 查询当前登录人角色和菜单信息
+     *
+     * @param token 当前登录人token
+     * @return ResultResponse
+     */
+    public ResultResponse getRoleAndMenu(String token) {
+        //获取用户信息
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Credentials credentials = JSONObject.parseObject(JSONObject.toJSON(authentication.getCredentials()).toString(), Credentials.class);
+        //
+        return ResultResponse.successResponse();
     }
 
     /**

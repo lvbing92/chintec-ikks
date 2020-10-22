@@ -59,6 +59,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         // 获取 token 的策略
+        security.allowFormAuthenticationForClients();
         security.tokenKeyAccess("permitAll()");
         security.checkTokenAccess("isAuthenticated()");
     }
