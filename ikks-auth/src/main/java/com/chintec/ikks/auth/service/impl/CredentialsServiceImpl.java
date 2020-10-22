@@ -185,6 +185,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
         Authority authority = iAuthorityService.getOne(new QueryWrapper<Authority>().lambda().eq(Authority::getId, one.getAuthoritiesId()));
         AssertsUtil.isTrue(ObjectUtils.isEmpty(authentication),"当前用户无角色!");
         userMsg.setRoleName(authority.getAuthority());
+        userMsg.setLevel(authority.getLevel());
         //查询菜单信息
         List<AuthorityMenu> authorityMenuList = iAuthorityMenuService.list(new QueryWrapper<AuthorityMenu>()
                 .lambda().eq(AuthorityMenu::getAuthorityId, one.getAuthoritiesId()));
@@ -196,6 +197,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
             }).collect(Collectors.toList());
             userMsg.setMenuList(MenuTree.getMenuTrees(collect));
         }
+        //保存到redis
         redisTemplate.opsForValue().set(token,userMsg);
         return ResultResponse.successResponse("查询成功",userMsg);
     }
