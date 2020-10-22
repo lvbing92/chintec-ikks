@@ -1,5 +1,6 @@
 package com.chintec.ikks.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -45,12 +46,14 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
     private ICredentialsService iCredentialsService;
 
     @Override
-    public ResultResponse suppliers(Integer currentPage, Integer pageSize, Integer categoryId, String params, Integer statusId) {
+    public ResultResponse suppliers(Integer currentPage, Integer pageSize, Integer categoryId, String params, Integer statusId, String ids) {
+
         IPage<Supplier> page = this.page(new Page<>(currentPage, pageSize), new QueryWrapper<Supplier>()
                 .lambda()
                 .eq(categoryId != 0, Supplier::getCategoryId, categoryId)
                 .eq(statusId != 0, Supplier::getIsAuthenticated, statusId)
                 .eq(Supplier::getIsDeleted, 1)
+                .in(!StringUtils.isEmpty(ids), Supplier::getId, JSONObject.parseArray(ids, Integer.class))
                 .apply(!StringUtils.isEmpty(params), "concat(IFNULL(id,''),IFNULL(company_name,''),IFNULL(contact_phone,''),IFNULL(contact_email,'')) like '%" + params + "%'")
                 .orderByDesc(Supplier::getUpdateTime));
         PageResultResponse<Supplier> pageResultResponse = new PageResultResponse<>(page.getTotal(), currentPage, pageSize);
@@ -80,11 +83,11 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
         credentials.setPassword(EncryptionUtil.passWordEnCode(supplierVo.getPassword()));
         credentials.setUserType("3");
         credentials.setEnabled(true);
-        boolean flag =iCredentialsService.addLoginMsg(credentials);
-        AssertsUtil.isTrue(!flag,"创建供应商失败");
+        boolean flag = iCredentialsService.addLoginMsg(credentials);
+        AssertsUtil.isTrue(!flag, "创建供应商失败");
         Supplier supplier = new Supplier();
         BeanUtils.copyProperties(supplierVo, supplier);
-        supplier.setComCreateDate(LocalDateTime.ofEpochSecond(Long.parseLong(supplierVo.getComCreateDate()) , 0, ZoneOffset.UTC));
+        supplier.setComCreateDate(LocalDateTime.ofEpochSecond(Long.parseLong(supplierVo.getComCreateDate()), 0, ZoneOffset.UTC));
         supplier.setIsDeleted(1);
         supplier.setIsAuthenticated(1);
         saveAndUpdate(supplier);
