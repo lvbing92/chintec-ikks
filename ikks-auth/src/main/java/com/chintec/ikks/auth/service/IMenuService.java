@@ -1,10 +1,8 @@
 package com.chintec.ikks.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.chintec.ikks.auth.entity.Menu;
-import com.chintec.ikks.auth.request.MenuRequest;
+import com.chintec.ikks.common.entity.Menu;
 import com.chintec.ikks.common.util.ResultResponse;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * <p>

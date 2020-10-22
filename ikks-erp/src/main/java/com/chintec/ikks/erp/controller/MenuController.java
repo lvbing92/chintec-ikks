@@ -1,8 +1,8 @@
 package com.chintec.ikks.erp.controller;
 
+import com.chintec.ikks.common.entity.Menu;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.erp.entity.Menu;
-import com.chintec.ikks.erp.service.IMenuService;
+import com.chintec.ikks.erp.feign.IMenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

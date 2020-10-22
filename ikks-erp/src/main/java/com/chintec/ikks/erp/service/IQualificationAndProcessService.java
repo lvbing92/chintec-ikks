@@ -2,7 +2,6 @@ package com.chintec.ikks.erp.service;
 
 import com.chintec.ikks.common.entity.vo.QualificationVo;
 import com.chintec.ikks.common.util.ResultResponse;
-import org.springframework.cloud.openfeign.FeignClient;
 
 /**
  * <p>

@@ -1,8 +1,7 @@
 package com.chintec.ikks.auth.controller;
 
-import com.chintec.ikks.auth.request.CompanyUserRequest;
-import com.chintec.ikks.auth.request.CredentialsRequest;
 import com.chintec.ikks.auth.service.ICompanyUserService;
+import com.chintec.ikks.common.entity.vo.CompanyUserRequest;
 import com.chintec.ikks.common.util.ResultResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -3,7 +3,7 @@
 <mapper namespace="com.chintec.ikks.auth.mapper.MenuMapper">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.chintec.ikks.auth.response.MenuResponse">
+    <resultMap id="BaseResultMap" type="com.chintec.ikks.common.entity.response.MenuResponse">
         <id column="id" property="id" />
         <result column="menu_name" property="menuName" />
         <result column="user_menu_name" property="userMenuName" />
@@ -11,7 +11,7 @@
         <result column="icon" property="icon" />
         <result column="url" property="url" />
         <result column="model_type" property="modelType" />
-        <collection column="id" property="childList" ofType="com.chintec.ikks.auth.response.MenuResponse" select="getMenuChildren">
+        <collection column="id" property="childList" ofType="com.chintec.ikks.common.entity.response.MenuResponse" select="getMenuChildren">
         </collection>
     </resultMap>
     <!--查询所有菜单-->

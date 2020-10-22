@@ -1,9 +1,9 @@
 package com.chintec.ikks.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.chintec.ikks.auth.entity.Authority;
-import com.chintec.ikks.auth.request.AuthorityRequest;
-import com.chintec.ikks.auth.request.MenuRequest;
+import com.chintec.ikks.common.entity.Authority;
+import com.chintec.ikks.common.entity.vo.AuthorityRequest;
+import com.chintec.ikks.common.entity.vo.MenuRequest;
 import com.chintec.ikks.common.util.ResultResponse;
 
 import java.util.List;

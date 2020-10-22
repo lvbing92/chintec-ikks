@@ -1,8 +1,8 @@
 package com.chintec.ikks.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.chintec.ikks.auth.entity.CompanyUser;
-import com.chintec.ikks.auth.request.CompanyUserRequest;
+import com.chintec.ikks.common.entity.CompanyUser;
+import com.chintec.ikks.common.entity.vo.CompanyUserRequest;
 import com.chintec.ikks.common.util.ResultResponse;
 
 /**

@@ -1,7 +1,7 @@
 package com.chintec.ikks.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.chintec.ikks.auth.entity.CredentialsAuthorities;
+import com.chintec.ikks.common.entity.CredentialsAuthorities;
 
 /**
  * <p>

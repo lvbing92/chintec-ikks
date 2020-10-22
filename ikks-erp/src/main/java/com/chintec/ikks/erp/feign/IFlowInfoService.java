@@ -1,7 +1,5 @@
 package com.chintec.ikks.erp.feign;
 
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.chintec.ikks.common.entity.FlowInfo;
 import com.chintec.ikks.common.entity.vo.FlowInfoVo;
 import com.chintec.ikks.common.util.ResultResponse;
 import org.springframework.cloud.openfeign.FeignClient;

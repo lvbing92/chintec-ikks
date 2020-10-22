@@ -1,8 +1,8 @@
 package com.chintec.ikks.auth.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.chintec.ikks.auth.entity.Credentials;
-import com.chintec.ikks.auth.request.CredentialsRequest;
+import com.chintec.ikks.common.entity.Credentials;
+import com.chintec.ikks.common.entity.vo.CredentialsRequest;
 import com.chintec.ikks.common.util.ResultResponse;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -37,6 +37,16 @@ public interface ICredentialsService extends IService<Credentials> {
      * @return ResultResponse
      */
     ResultResponse addUser(CredentialsRequest credentialsRequest);
+
+
+
+    /**
+     * 添加登录信息
+     *
+     * @param credentialsRequest 用户对象
+     * @return ResultResponse
+     */
+    ResultResponse addLoginMsg(CredentialsRequest credentialsRequest,String userType);
 
     /**
      * 更新用户

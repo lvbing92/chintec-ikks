@@ -1,9 +1,9 @@
 package com.chintec.ikks.auth.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.chintec.ikks.auth.entity.CredentialsAuthorities;
 import com.chintec.ikks.auth.mapper.CredentialsAuthoritiesMapper;
 import com.chintec.ikks.auth.service.ICredentialsAuthoritiesService;
+import com.chintec.ikks.common.entity.CredentialsAuthorities;
 import org.springframework.stereotype.Service;
 
 /**

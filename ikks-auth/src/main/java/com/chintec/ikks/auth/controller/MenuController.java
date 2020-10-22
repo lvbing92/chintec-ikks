@@ -1,10 +1,7 @@
 package com.chintec.ikks.auth.controller;
 
-import com.chintec.ikks.auth.entity.Menu;
-import com.chintec.ikks.auth.request.DepartmentRequest;
-import com.chintec.ikks.auth.request.MenuRequest;
-import com.chintec.ikks.auth.service.IDepartmentService;
 import com.chintec.ikks.auth.service.IMenuService;
+import com.chintec.ikks.common.entity.Menu;
 import com.chintec.ikks.common.util.ResultResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

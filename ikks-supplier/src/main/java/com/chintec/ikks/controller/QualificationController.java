@@ -4,7 +4,6 @@ package com.chintec.ikks.controller;
 import com.chintec.ikks.common.entity.vo.QualificationVo;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.service.IQualificationService;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;

@@ -1,7 +1,7 @@
 package com.chintec.ikks.auth.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.chintec.ikks.auth.entity.Credentials;
+import com.chintec.ikks.common.entity.Credentials;
 
 /**
  * <p>

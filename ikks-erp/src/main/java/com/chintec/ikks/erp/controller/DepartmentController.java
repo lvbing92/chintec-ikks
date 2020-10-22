@@ -1,8 +1,8 @@
 package com.chintec.ikks.erp.controller;
 
+import com.chintec.ikks.common.entity.vo.DepartmentRequest;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.erp.request.DepartmentRequest;
-import com.chintec.ikks.erp.service.IDepartmentService;
+import com.chintec.ikks.erp.feign.IDepartmentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

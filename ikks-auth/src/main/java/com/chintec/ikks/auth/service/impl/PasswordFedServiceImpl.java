@@ -1,14 +1,11 @@
 package com.chintec.ikks.auth.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.chintec.ikks.auth.entity.CompanyUser;
-import com.chintec.ikks.auth.entity.OAuth2Token;
 import com.chintec.ikks.auth.service.ICompanyUserService;
 import com.chintec.ikks.auth.service.IPasswordFedService;
+import com.chintec.ikks.common.entity.OAuth2Token;
 import com.chintec.ikks.common.enums.CommonCodeEnum;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.common.util.TokenUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;

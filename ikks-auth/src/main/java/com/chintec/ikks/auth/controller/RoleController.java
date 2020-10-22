@@ -1,8 +1,8 @@
 package com.chintec.ikks.auth.controller;
 
-import com.chintec.ikks.auth.request.AuthorityRequest;
-import com.chintec.ikks.auth.request.MenuRequest;
 import com.chintec.ikks.auth.service.IAuthorityService;
+import com.chintec.ikks.common.entity.vo.AuthorityRequest;
+import com.chintec.ikks.common.entity.vo.MenuRequest;
 import com.chintec.ikks.common.util.ResultResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -1,8 +1,7 @@
 package com.chintec.ikks.auth.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.chintec.ikks.auth.entity.Menu;
-import com.chintec.ikks.auth.request.MenuRequest;
+import com.chintec.ikks.common.entity.Menu;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

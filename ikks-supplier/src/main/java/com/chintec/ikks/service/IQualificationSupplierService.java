@@ -2,7 +2,6 @@ package com.chintec.ikks.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.chintec.ikks.common.entity.QualificationSupplier;
-import com.chintec.ikks.common.util.ResultResponse;
 
 /**
  * <p>

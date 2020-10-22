@@ -2,9 +2,9 @@ package com.chintec.ikks.auth.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.chintec.ikks.auth.entity.AuthorityMenu;
 import com.chintec.ikks.auth.mapper.AuthorityMenuMapper;
 import com.chintec.ikks.auth.service.IAuthorityMenuService;
+import com.chintec.ikks.common.entity.AuthorityMenu;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

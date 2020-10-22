@@ -1,8 +1,8 @@
 package com.chintec.ikks.erp.controller;
 
+import com.chintec.ikks.common.entity.vo.CompanyUserRequest;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.erp.request.CompanyUserRequest;
-import com.chintec.ikks.erp.service.ICompanyUserService;
+import com.chintec.ikks.erp.feign.ICompanyUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

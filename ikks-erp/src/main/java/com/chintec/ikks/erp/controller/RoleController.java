@@ -1,9 +1,9 @@
 package com.chintec.ikks.erp.controller;
 
+import com.chintec.ikks.common.entity.vo.AuthorityRequest;
+import com.chintec.ikks.common.entity.vo.MenuRequest;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.erp.request.AuthorityRequest;
-import com.chintec.ikks.erp.request.MenuRequest;
-import com.chintec.ikks.erp.service.IAuthorityService;
+import com.chintec.ikks.erp.feign.IAuthorityService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

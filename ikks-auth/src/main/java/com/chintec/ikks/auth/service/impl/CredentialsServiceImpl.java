@@ -5,12 +5,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.chintec.ikks.auth.entity.Credentials;
-import com.chintec.ikks.auth.entity.CredentialsAuthorities;
 import com.chintec.ikks.auth.mapper.CredentialsMapper;
-import com.chintec.ikks.auth.request.CredentialsRequest;
 import com.chintec.ikks.auth.service.ICredentialsAuthoritiesService;
 import com.chintec.ikks.auth.service.ICredentialsService;
+import com.chintec.ikks.common.entity.Credentials;
+import com.chintec.ikks.common.entity.CredentialsAuthorities;
+import com.chintec.ikks.common.entity.vo.CredentialsRequest;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.PageResultResponse;
 import com.chintec.ikks.common.util.ResultResponse;
@@ -101,6 +101,24 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
         return ResultResponse.successResponse("添加用户成功！");
     }
 
+    /**
+     * 添加登录信息
+     *
+     * @param credentialsRequest 用户对象
+     * @return ResultResponse
+     */
+    @Override
+    public ResultResponse addLoginMsg(CredentialsRequest credentialsRequest,String userType) {
+
+        //保存当前人员到登陆客户表
+        Credentials credentials = new Credentials();
+        BeanUtils.copyProperties(credentialsRequest,credentials);
+        credentials.setUserType(userType);
+        credentials.setEnabled(true);
+        boolean flag =save(credentials);
+        return null;
+    }
+
     @Override
     public ResultResponse updateUser(CredentialsRequest credentialsRequest) {
         //查询用户
@@ -149,7 +167,10 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
         //获取用户信息
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Credentials credentials = JSONObject.parseObject(JSONObject.toJSON(authentication.getCredentials()).toString(), Credentials.class);
-        //
+        //查询角色信息
+        iCredentialsAuthoritiesService.getOne(new QueryWrapper<CredentialsAuthorities>().lambda()
+                .eq(CredentialsAuthorities::getCredentialsId,credentials.getId()));
+        //查询菜单信息
         return ResultResponse.successResponse();
     }
 

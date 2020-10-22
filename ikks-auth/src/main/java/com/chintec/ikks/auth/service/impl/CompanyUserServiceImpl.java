@@ -4,15 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.chintec.ikks.auth.entity.CompanyUser;
-import com.chintec.ikks.auth.entity.Credentials;
-import com.chintec.ikks.auth.entity.UserAuthorities;
 import com.chintec.ikks.auth.mapper.CompanyUserMapper;
-import com.chintec.ikks.auth.request.CompanyUserRequest;
-import com.chintec.ikks.auth.response.CompanyUserResponse;
 import com.chintec.ikks.auth.service.ICompanyUserService;
 import com.chintec.ikks.auth.service.ICredentialsService;
 import com.chintec.ikks.auth.service.IUserAuthoritiesService;
+import com.chintec.ikks.common.entity.CompanyUser;
+import com.chintec.ikks.common.entity.Credentials;
+import com.chintec.ikks.common.entity.UserAuthorities;
+import com.chintec.ikks.common.entity.response.CompanyUserResponse;
+import com.chintec.ikks.common.entity.vo.CompanyUserRequest;
+import com.chintec.ikks.common.entity.vo.CredentialsRequest;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.PageResultResponse;
 import com.chintec.ikks.common.util.ResultResponse;
@@ -94,6 +95,16 @@ public class CompanyUserServiceImpl extends ServiceImpl<CompanyUserMapper, Compa
         boolean flag;
         CompanyUser companyUser = new CompanyUser();
         if (StringUtils.isEmpty(companyUserRequest.getId())) {
+            CredentialsRequest credentialsRequest =new CredentialsRequest();
+            //保存当前人员到登陆客户表
+            Credentials credentials = new Credentials();
+            credentials.setName(companyUser.getEmail());
+            credentials.setPassword(companyUser.getPassword());
+            credentials.setUserType("2");
+            credentials.setEnabled(true);
+            //TODO
+          ResultResponse result =iCredentialsService.addLoginMsg(credentialsRequest,"11");
+
             BeanUtils.copyProperties(companyUserRequest, companyUser);
             //根据用户名和邮箱查询当前人员是否已存在
             CompanyUser isHave = this.getOne(new QueryWrapper<CompanyUser>().lambda()
@@ -108,13 +119,7 @@ public class CompanyUserServiceImpl extends ServiceImpl<CompanyUserMapper, Compa
             userAuthorities.setCompanyUserId(companyUser.getId());
             userAuthorities.setAuthorityId(companyUserRequest.getRoleId());
             flag &= iUserAuthoritiesService.save(userAuthorities);
-            //保存当前人员到登陆客户表
-            Credentials credentials = new Credentials();
-            credentials.setName(companyUser.getEmail());
-            credentials.setPassword(companyUser.getPassword());
-            credentials.setUserType("2");
-            credentials.setEnabled(true);
-            flag &=iCredentialsService.save(credentials);
+
             if (!flag) {
                 return ResultResponse.successResponse("保存公司人员信息失败!");
             }
