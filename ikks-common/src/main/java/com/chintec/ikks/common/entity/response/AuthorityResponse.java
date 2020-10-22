@@ -17,7 +17,9 @@ public class AuthorityResponse {
      * 角色名称
      */
     private String authority;
-
+    /**
+     * 是否可用
+     */
     private Boolean enabled;
 
     /**

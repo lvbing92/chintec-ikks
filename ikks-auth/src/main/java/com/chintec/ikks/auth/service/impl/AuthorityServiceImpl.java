@@ -14,6 +14,7 @@ import com.chintec.ikks.common.entity.response.AuthorityResponse;
 import com.chintec.ikks.common.entity.vo.AuthorityRequest;
 import com.chintec.ikks.common.entity.vo.MenuRequest;
 import com.chintec.ikks.common.util.AssertsUtil;
+import com.chintec.ikks.common.util.MenuTree;
 import com.chintec.ikks.common.util.PageResultResponse;
 import com.chintec.ikks.common.util.ResultResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,6 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -78,9 +78,9 @@ public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority
 
         //查询当前角色关联的菜单树结构
         List<AuthorityResponse> authorityResponseList = authorityPage.getRecords().stream().map(authorityMsg -> {
-             //角色结果
-             AuthorityResponse authorityResponse =new AuthorityResponse();
-             BeanUtils.copyProperties(authorityMsg,authorityResponse);
+            //角色结果
+            AuthorityResponse authorityResponse = new AuthorityResponse();
+            BeanUtils.copyProperties(authorityMsg, authorityResponse);
             //查询菜单信息
             List<AuthorityMenu> authorityMenuList = iAuthorityMenuService.list(new QueryWrapper<AuthorityMenu>()
                     .lambda().eq(AuthorityMenu::getAuthorityId, authorityMsg.getId()));
@@ -91,7 +91,7 @@ public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority
                     BeanUtils.copyProperties(authorityMenu, authorityMenuResponse);
                     return authorityMenuResponse;
                 }).collect(Collectors.toList());
-                authorityResponse.setAuthorityMenuResponseList(getParentList(collect));
+                authorityResponse.setAuthorityMenuResponseList(MenuTree.getMenuTrees(collect));
             }
             return authorityResponse;
         }).collect(Collectors.toList());
@@ -227,30 +227,11 @@ public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority
                 BeanUtils.copyProperties(authorityMenu, authorityMenuResponse);
                 return authorityMenuResponse;
             }).collect(Collectors.toList());
-            resultMenus = getParentList(collect);
+            resultMenus = MenuTree.getMenuTrees(collect);
         }
         authorityResponse.setAuthorityMenuResponseList(resultMenus);
         //查询当前用户角色
         return ResultResponse.successResponse("查询用户详情成功", authorityResponse);
-    }
-
-    private List<AuthorityMenuResponse> getParentList(List<AuthorityMenuResponse> menus) {
-        List<AuthorityMenuResponse> collect = menus.stream().filter(m -> m.getParentId() == 0).map((m) -> {
-            m.setChildList(getChildrenList(m, menus));
-            return m;
-        }).collect(Collectors.toList());
-        return collect;
-    }
-
-    private List<AuthorityMenuResponse> getChildrenList(AuthorityMenuResponse root, List<AuthorityMenuResponse> menus) {
-
-        List<AuthorityMenuResponse> children = menus.stream().filter(m -> {
-            return Objects.     equals(m.getParentId(), root.getMenuId());
-        }).map((m) -> {
-            m.setChildList(getChildrenList(m, menus));
-            return m;
-        }).collect(Collectors.toList());
-        return children;
     }
 
     @Override

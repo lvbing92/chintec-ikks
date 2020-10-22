@@ -133,9 +133,12 @@ public class Supplier extends Model<Supplier> {
      * 类别id
      */
     private Integer categoryId;
+    /**
+     * loginId
+     */
+    private Long loginId;
 
     @Override
-
     protected Serializable pkVal() {
         return this.id;
     }
