@@ -3,10 +3,19 @@ package com.chintec.ikks.auth;
 
 import com.chintec.ikks.auth.service.IAuthorityService;
 import com.chintec.ikks.auth.service.IMenuService;
+import com.chintec.ikks.common.util.EncryptionUtil;
 import com.chintec.ikks.common.util.ResultResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.concurrent.CyclicBarrier;
 
 /**
  * @author rubin·lv
@@ -21,9 +30,25 @@ public class MenuTest {
     private IAuthorityService iAuthorityService;
 
     @Test
-    void queryMenuList(){
+    void queryMenuList() {
         ResultResponse res = iAuthorityService.queryRole(4L);
         System.out.println(res);
 //        System.out.println(iMenuService.getMenuList("1"));
     }
+
+    @Test
+    void invokeTest() {
+        System.out.println(EncryptionUtil.passWordEnCode("123456", BCryptPasswordEncoder.class));
+    }
+
+    @Test
+    void invokeTest1() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Class bCryptPasswordEncoderClass = BCryptPasswordEncoder.class;
+        Constructor constructor = bCryptPasswordEncoderClass.getConstructor();
+        Object o = constructor.newInstance();
+        Method encode = bCryptPasswordEncoderClass.getMethod("encode", CharSequence.class);
+        Object invoke = encode.invoke(o, "123456");
+        System.out.println(invoke);
+    }
+
 }

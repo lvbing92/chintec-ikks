@@ -36,7 +36,8 @@ public interface ISupplierService {
                              @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                              @RequestParam(required = false, defaultValue = "0") Integer categoryId,
                              @RequestParam(required = false, defaultValue = "0") Integer statusId,
-                             @RequestParam(required = false) String params);
+                             @RequestParam(required = false) String params,
+                             @RequestParam(required = false) String ids);
 
     @GetMapping("/supplier")
     ResultResponse supplierCount();

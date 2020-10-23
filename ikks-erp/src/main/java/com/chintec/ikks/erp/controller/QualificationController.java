@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Objects;
 
@@ -32,20 +33,20 @@ public class QualificationController {
     @PostMapping("/qualification")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "资质文档-保存")
-    public ResultResponse saveQualification(@Valid QualificationVo qualificationVo, BindingResult result) {
+    public ResultResponse saveQualification(@Valid QualificationVo qualificationVo, BindingResult result, HttpServletRequest request) {
         if (result.hasErrors()) {
             return ResultResponse.failResponse(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
-        return iQualificationAndProcessService.saveQualification(qualificationVo);
+        return iQualificationAndProcessService.saveQualification(qualificationVo, request.getHeader("access_token"));
     }
 
     @PutMapping("/qualification")
     @ApiOperation(value = "资质文档-修改")
-    public ResultResponse updateQualification(@Valid QualificationVo qualificationVo, BindingResult result) {
+    public ResultResponse updateQualification(@Valid QualificationVo qualificationVo, BindingResult result, HttpServletRequest request) {
         if (result.hasErrors()) {
             return ResultResponse.failResponse(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
-        return iQualificationAndProcessService.updateQualification(qualificationVo);
+        return iQualificationAndProcessService.updateQualification(qualificationVo, request.getHeader("access_token"));
     }
 
     @GetMapping("/qualifications")

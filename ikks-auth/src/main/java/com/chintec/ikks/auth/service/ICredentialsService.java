@@ -6,6 +6,8 @@ import com.chintec.ikks.common.entity.vo.CredentialsRequest;
 import com.chintec.ikks.common.util.ResultResponse;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * <p>
  * 服务类
@@ -36,7 +38,7 @@ public interface ICredentialsService extends IService<Credentials> {
      * @param credentialsRequest 用户对象
      * @return ResultResponse
      */
-    ResultResponse addUser(CredentialsRequest credentialsRequest);
+    ResultResponse addUser(CredentialsRequest credentialsRequest) ;
 
 
 
@@ -54,7 +56,7 @@ public interface ICredentialsService extends IService<Credentials> {
      * @param credentialsRequest 更新用户
      * @return ResultResponse
      */
-    ResultResponse updateUser(CredentialsRequest credentialsRequest);
+    ResultResponse updateUser(CredentialsRequest credentialsRequest) ;
 
     /**
      * 通过Id查询用户

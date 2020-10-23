@@ -33,9 +33,10 @@ public class SupplierController {
                                     @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                                     @RequestParam(required = false, defaultValue = "0") Integer categoryId,
                                     @RequestParam(required = false, defaultValue = "0") Integer statusId,
-                                    @RequestParam(required = false) String params) {
+                                    @RequestParam(required = false) String params,
+                                    @RequestParam(required = false) String ids) {
         log.info("list currentPage:{},pageSize:{},categoryId:{},statusId:{}.params:{}", currentPage, pageSize, categoryId, statusId, params);
-        return iSupplierService.suppliers(currentPage, pageSize, categoryId, params, statusId);
+        return iSupplierService.suppliers(currentPage, pageSize, categoryId, params, statusId, ids);
     }
 
     @GetMapping("/supplier")

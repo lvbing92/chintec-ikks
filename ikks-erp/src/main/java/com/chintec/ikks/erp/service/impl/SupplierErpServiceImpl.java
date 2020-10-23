@@ -1,9 +1,11 @@
 package com.chintec.ikks.erp.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.chintec.ikks.common.entity.FlowTask;
 import com.chintec.ikks.common.entity.Supplier;
 import com.chintec.ikks.common.entity.SupplierField;
 import com.chintec.ikks.common.entity.SupplierType;
+import com.chintec.ikks.common.entity.response.CredentialsResponse;
 import com.chintec.ikks.common.entity.response.SupplierFieldResponse;
 import com.chintec.ikks.common.entity.response.SupplierResponse;
 import com.chintec.ikks.common.entity.response.SupplierTypeResponse;
@@ -14,13 +16,18 @@ import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.PageResultResponse;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.common.util.TimeUtils;
+import com.chintec.ikks.erp.feign.IFlowInfoService;
+import com.chintec.ikks.erp.feign.IFlowTaskService;
 import com.chintec.ikks.erp.feign.ISupplierService;
 import com.chintec.ikks.erp.service.ISupplierErpService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -33,14 +40,24 @@ import java.util.stream.Collectors;
 public class SupplierErpServiceImpl implements ISupplierErpService {
     @Autowired
     private ISupplierService iSupplierService;
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private IFlowTaskService iFlowTaskService;
 
     @Override
-    public ResultResponse saveField(SupplierFieldVo supplierFieldVo) {
+    public ResultResponse saveField(SupplierFieldVo supplierFieldVo, String token) {
+        CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
+        supplierFieldVo.setUpdateById(Integer.valueOf(String.valueOf(credentialsResponse.getId())));
+        supplierFieldVo.setUpdateByName(credentialsResponse.getUpdateByName());
         return iSupplierService.saveField(supplierFieldVo);
     }
 
     @Override
-    public ResultResponse updateField(SupplierFieldVo supplierFieldVo) {
+    public ResultResponse updateField(SupplierFieldVo supplierFieldVo, String token) {
+        CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
+        supplierFieldVo.setUpdateById(Integer.valueOf(String.valueOf(credentialsResponse.getId())));
+        supplierFieldVo.setUpdateByName(credentialsResponse.getUpdateByName());
         return iSupplierService.updateField(supplierFieldVo);
     }
 
@@ -80,19 +97,34 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
 
     @Override
     public ResultResponse suppliers(Integer currentPage, Integer pageSize, Integer categoryId, Integer statusId, String params, String token) {
-        ResultResponse suppliers = iSupplierService.suppliers(currentPage, pageSize, categoryId, statusId, params);
+        CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
+        String ids = null;
+        //判断用户所处的级别 是否是部门用户登录
+        if ("2".equals(credentialsResponse.getLevel())) {
+            ResultResponse tasks = iFlowTaskService.tasks(Integer.valueOf(String.valueOf(credentialsResponse.getId())));
+            AssertsUtil.isTrue(!tasks.isSuccess(), tasks.getMessage());
+            List<Integer> collect = JSONObject.parseArray(JSONObject.toJSONString(tasks.getData()), FlowTask.class)
+                    .stream()
+                    .map(FlowTask::getId)
+                    .collect(Collectors.toList());
+            ids = JSONObject.toJSONString(collect);
+        }
+        ResultResponse suppliers = iSupplierService.suppliers(currentPage, pageSize, categoryId, statusId, params, ids);
         if (!suppliers.isSuccess()) {
             return suppliers;
         }
         PageResultResponse pageResultResponse = JSONObject.parseObject(JSONObject.toJSONString(suppliers.getData()), PageResultResponse.class);
-        pageResultResponse.setResults(JSONObject.parseArray(JSONObject.toJSONString(pageResultResponse.getResults()), Supplier.class).stream().map(supplier -> {
-            SupplierResponse supplierResponse = new SupplierResponse();
-            BeanUtils.copyProperties(supplier, supplierResponse);
-            supplierResponse.setCreateTime(TimeUtils.toTimeStamp(supplier.getCreateTime()));
-            supplierResponse.setUpdateTime(TimeUtils.toTimeStamp(supplier.getUpdateTime()));
-            supplierResponse.setComCreateDate(TimeUtils.toTimeStamp(supplier.getComCreateDate()));
-            return supplierResponse;
-        }).collect(Collectors.toList()));
+        pageResultResponse.setResults(JSONObject.parseArray(JSONObject.toJSONString(pageResultResponse.getResults()), Supplier.class)
+                .stream()
+                .map(supplier -> {
+                    SupplierResponse supplierResponse = new SupplierResponse();
+                    BeanUtils.copyProperties(supplier, supplierResponse);
+                    supplierResponse.setCreateTime(TimeUtils.toTimeStamp(supplier.getCreateTime()));
+                    supplierResponse.setUpdateTime(TimeUtils.toTimeStamp(supplier.getUpdateTime()));
+                    supplierResponse.setComCreateDate(TimeUtils.toTimeStamp(supplier.getComCreateDate()));
+                    return supplierResponse;
+                })
+                .collect(Collectors.toList()));
         return ResultResponse.successResponse(pageResultResponse);
     }
 
@@ -102,12 +134,18 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
     }
 
     @Override
-    public ResultResponse saveSupplier(SupplierVo supplierVo) {
+    public ResultResponse saveSupplier(SupplierVo supplierVo, String token) {
+        CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
+        supplierVo.setUpdateById(Integer.valueOf(String.valueOf(credentialsResponse.getId())));
+        supplierVo.setUpdateByName(credentialsResponse.getUpdateByName());
         return iSupplierService.saveSupplier(supplierVo);
     }
 
     @Override
-    public ResultResponse updateSupplier(SupplierVo supplierVo) {
+    public ResultResponse updateSupplier(SupplierVo supplierVo, String token) {
+        CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
+        supplierVo.setUpdateById(Integer.valueOf(String.valueOf(credentialsResponse.getId())));
+        supplierVo.setUpdateByName(credentialsResponse.getUpdateByName());
         return iSupplierService.updateSupplier(supplierVo);
     }
 
@@ -147,12 +185,18 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
     }
 
     @Override
-    public ResultResponse saveType(SupplierTypeVo supplierTypeVo) {
+    public ResultResponse saveType(SupplierTypeVo supplierTypeVo, String token) {
+        CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
+        supplierTypeVo.setUpdateBy(String.valueOf(credentialsResponse.getId()));
+        supplierTypeVo.setUpdateName(credentialsResponse.getUpdateByName());
         return iSupplierService.saveType(supplierTypeVo);
     }
 
     @Override
-    public ResultResponse updateType(SupplierTypeVo supplierTypeVo) {
+    public ResultResponse updateType(SupplierTypeVo supplierTypeVo, String token) {
+        CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
+        supplierTypeVo.setUpdateBy(String.valueOf(credentialsResponse.getId()));
+        supplierTypeVo.setUpdateName(credentialsResponse.getUpdateByName());
         return iSupplierService.updateType(supplierTypeVo);
     }
 
@@ -171,5 +215,11 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
         supplierTypeResponse.setCreateTime(TimeUtils.toTimeStamp(supplierType.getCreateTime()));
         supplierTypeResponse.setUpdateTime(TimeUtils.toTimeStamp(supplierType.getUpdateTime()));
         return ResultResponse.successResponse(supplierTypeResponse);
+    }
+
+    private CredentialsResponse getCredentialsResponse(RedisTemplate<String, Object> redisTemplate, String token) {
+        Object o = redisTemplate.opsForHash().get(token,"userMsg");
+        AssertsUtil.isTrue(o == null, "请登录");
+        return JSONObject.parseObject(JSONObject.toJSONString(o), CredentialsResponse.class);
     }
 }

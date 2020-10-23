@@ -11,10 +11,10 @@ import com.chintec.ikks.common.util.ResultResponse;
  * @date 2020/10/20 9:54
  */
 public interface ISupplierErpService {
-    ResultResponse saveField(SupplierFieldVo supplierFieldVo);
+    ResultResponse saveField(SupplierFieldVo supplierFieldVo, String token);
 
 
-    ResultResponse updateField(SupplierFieldVo supplierFieldVo);
+    ResultResponse updateField(SupplierFieldVo supplierFieldVo, String token);
 
 
     ResultResponse deleteField(Integer id);
@@ -25,16 +25,16 @@ public interface ISupplierErpService {
     ResultResponse field(Integer id);
 
 
-    ResultResponse suppliers(Integer currentPage, Integer pageSize, Integer categoryId, Integer statusId, String params,String tokens);
+    ResultResponse suppliers(Integer currentPage, Integer pageSize, Integer categoryId, Integer statusId, String params, String tokens);
 
 
     ResultResponse supplierCount();
 
 
-    ResultResponse saveSupplier(SupplierVo supplierVo);
+    ResultResponse saveSupplier(SupplierVo supplierVo, String token);
 
 
-    ResultResponse updateSupplier(SupplierVo supplierVo);
+    ResultResponse updateSupplier(SupplierVo supplierVo, String token);
 
 
     ResultResponse deleteSupplier(Integer id);
@@ -46,10 +46,10 @@ public interface ISupplierErpService {
     ResultResponse types(Integer currentPage, Integer pageSize);
 
 
-    ResultResponse saveType(SupplierTypeVo supplierTypeVo);
+    ResultResponse saveType(SupplierTypeVo supplierTypeVo, String token);
 
 
-    ResultResponse updateType(SupplierTypeVo supplierTypeVo);
+    ResultResponse updateType(SupplierTypeVo supplierTypeVo, String token);
 
 
     ResultResponse deleteType(Integer id);

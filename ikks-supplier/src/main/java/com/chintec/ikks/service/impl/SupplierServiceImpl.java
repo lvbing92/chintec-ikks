@@ -80,7 +80,7 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
     public ResultResponse saveSupplier(SupplierVo supplierVo) {
         Credentials credentials = new Credentials();
         credentials.setName(supplierVo.getContactEmail());
-        credentials.setPassword(EncryptionUtil.passWordEnCode(supplierVo.getPassword()));
+        credentials.setPassword(supplierVo.getPassword());
         credentials.setUserType("3");
         credentials.setEnabled(true);
         boolean flag = iCredentialsService.addLoginMsg(credentials);

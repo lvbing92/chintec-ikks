@@ -16,18 +16,20 @@ public interface IQualificationAndProcessService {
     /**
      * 创建
      *
+     * @param token           令牌
      * @param qualificationVo 实体类
      * @return ResultResponse
      */
-    ResultResponse saveQualification(QualificationVo qualificationVo);
+    ResultResponse saveQualification(QualificationVo qualificationVo, String token);
 
     /**
      * 修改
      *
+     * @param token           令牌
      * @param qualificationVo 实体类
      * @return ResultResponse
      */
-    ResultResponse updateQualification(QualificationVo qualificationVo);
+    ResultResponse updateQualification(QualificationVo qualificationVo, String token);
 
     /**
      * 查询所有

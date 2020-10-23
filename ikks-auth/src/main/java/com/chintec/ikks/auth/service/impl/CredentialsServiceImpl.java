@@ -31,6 +31,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 
 import java.util.List;
@@ -54,7 +55,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
     @Autowired
     private IAuthorityMenuService iAuthorityMenuService;
     @Resource
-    private RedisTemplate<String,Object> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private IAuthorityService iAuthorityService;
 
@@ -96,7 +97,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
             BCryptPasswordEncoder b = new BCryptPasswordEncoder();
             Credentials credentials = new Credentials();
             BeanUtils.copyProperties(credentialsRequest, credentials);
-            credentials.setPassword(EncryptionUtil.passWordEnCode(credentialsRequest.getPassword()));
+            credentials.setPassword(EncryptionUtil.passWordEnCode(credentialsRequest.getPassword(), BCryptPasswordEncoder.class));
             credentials.setEnabled(true);
             credentials.setCreateTime(LocalDateTime.now());
             credentials.setVersion(1);
@@ -124,7 +125,8 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
      */
     @Override
     public boolean addLoginMsg(Credentials credentials) {
-        return save(credentials);
+        credentials.setPassword(EncryptionUtil.passWordEnCode(credentials.getPassword(), BCryptPasswordEncoder.class));
+        return this.save(credentials);
     }
 
     @Override
@@ -136,7 +138,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
         credentials.setCompanyName(credentialsRequest.getCompanyName());
         credentials.setEmail(credentialsRequest.getEmail());
         if (!StringUtil.isNullOrEmpty(credentialsRequest.getPassword())) {
-            credentials.setPassword(EncryptionUtil.passWordEnCode(credentialsRequest.getPassword()));
+            credentials.setPassword(EncryptionUtil.passWordEnCode(credentialsRequest.getPassword(), BCryptPasswordEncoder.class));
         }
         credentials.setUpdateTime(LocalDateTime.now());
         //更新客户信息
@@ -171,19 +173,20 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
      * @param token 当前登录人token
      * @return ResultResponse
      */
+    @Override
     public ResultResponse getRoleAndMenu(String token) {
         CredentialsResponse userMsg = new CredentialsResponse();
         //获取用户信息
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Credentials credentials = JSONObject.parseObject(JSONObject.toJSON(authentication.getCredentials()).toString(), Credentials.class);
-        BeanUtils.copyProperties(credentials,userMsg);
+        BeanUtils.copyProperties(credentials, userMsg);
         //查询用户角色关系
         CredentialsAuthorities one = iCredentialsAuthoritiesService.getOne(new QueryWrapper<CredentialsAuthorities>().lambda()
                 .eq(CredentialsAuthorities::getCredentialsId, credentials.getId()));
-        AssertsUtil.isTrue(ObjectUtils.isEmpty(one),"用户和角色关系为空!");
+        AssertsUtil.isTrue(ObjectUtils.isEmpty(one), "用户和角色关系为空!");
         //查询角色信息
         Authority authority = iAuthorityService.getOne(new QueryWrapper<Authority>().lambda().eq(Authority::getId, one.getAuthoritiesId()));
-        AssertsUtil.isTrue(ObjectUtils.isEmpty(authentication),"当前用户无角色!");
+        AssertsUtil.isTrue(ObjectUtils.isEmpty(authentication), "当前用户无角色!");
         userMsg.setRoleName(authority.getAuthority());
         userMsg.setLevel(authority.getLevel());
         //查询菜单信息
@@ -198,7 +201,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
             userMsg.setMenuList(MenuTree.getMenuTrees(collect));
         }
         //保存到redis
-        redisTemplate.opsForValue().set(token,userMsg);
-        return ResultResponse.successResponse("查询成功",userMsg);
+        redisTemplate.opsForValue().set(token, userMsg);
+        return ResultResponse.successResponse("查询成功", userMsg);
     }
 }

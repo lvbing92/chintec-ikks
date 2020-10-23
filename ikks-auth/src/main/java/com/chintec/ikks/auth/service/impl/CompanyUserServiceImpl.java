@@ -19,6 +19,7 @@ import com.chintec.ikks.common.util.PageResultResponse;
 import com.chintec.ikks.common.util.ResultResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -110,7 +111,7 @@ public class CompanyUserServiceImpl extends ServiceImpl<CompanyUserMapper, Compa
             AssertsUtil.isTrue(!ObjectUtils.isEmpty(isHave), "当前人员已存在!");
             companyUser.setLoginId(credentials.getId());
             companyUser.setCreateTime(LocalDateTime.now());
-            companyUser.setPassword(EncryptionUtil.passWordEnCode(companyUserRequest.getPassword()));
+            companyUser.setPassword(EncryptionUtil.passWordEnCode(companyUserRequest.getPassword(), BCryptPasswordEncoder.class));
             flag &= this.save(companyUser);
             //保存公司人员角色信息
             UserAuthorities userAuthorities = new UserAuthorities();
@@ -125,7 +126,7 @@ public class CompanyUserServiceImpl extends ServiceImpl<CompanyUserMapper, Compa
             CompanyUser currentCompanyUser = this.getById(companyUserRequest.getId());
 
             BeanUtils.copyProperties(companyUserRequest, currentCompanyUser);
-            currentCompanyUser.setPassword(EncryptionUtil.passWordEnCode(companyUserRequest.getPassword()));
+            currentCompanyUser.setPassword(EncryptionUtil.passWordEnCode(companyUserRequest.getPassword(),BCryptPasswordEncoder.class));
             currentCompanyUser.setUpdateTime(LocalDateTime.now());
             flag = this.updateById(currentCompanyUser);
             //更新角色信息

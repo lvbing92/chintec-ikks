@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * <p>
@@ -139,6 +140,5 @@ public class SupplierResponse {
      */
     @ApiModelProperty("供应商-类别")
     private Integer categoryId;
-
 
 }

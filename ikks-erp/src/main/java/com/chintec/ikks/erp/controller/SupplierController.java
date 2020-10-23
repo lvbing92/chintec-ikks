@@ -31,20 +31,20 @@ public class SupplierController {
     @PostMapping("/supplier/supplierField")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "自定义字段-保存")
-    public ResultResponse saveField(@Valid SupplierFieldVo supplierFieldVo, BindingResult result) {
+    public ResultResponse saveField(@Valid SupplierFieldVo supplierFieldVo, BindingResult result, HttpServletRequest request) {
         if (result.hasErrors()) {
             return ResultResponse.failResponse(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
-        return iSupplierErpService.saveField(supplierFieldVo);
+        return iSupplierErpService.saveField(supplierFieldVo, request.getHeader("access_token"));
     }
 
     @PutMapping("/supplier/supplierField")
     @ApiOperation(value = "自定义字段-修改")
-    public ResultResponse updateField(@Valid SupplierFieldVo supplierFieldVo, BindingResult result) {
+    public ResultResponse updateField(@Valid SupplierFieldVo supplierFieldVo, BindingResult result, HttpServletRequest request) {
         if (result.hasErrors()) {
             return ResultResponse.failResponse(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
-        return iSupplierErpService.updateField(supplierFieldVo);
+        return iSupplierErpService.updateField(supplierFieldVo, request.getHeader("access_token"));
     }
 
     @DeleteMapping("//supplier/supplierField/{id}")
@@ -84,20 +84,20 @@ public class SupplierController {
     @PostMapping("/supplier")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "供应商-保存")
-    public ResultResponse saveSupplier(@Valid SupplierVo supplierVo, BindingResult result) {
+    public ResultResponse saveSupplier(@Valid SupplierVo supplierVo, BindingResult result,HttpServletRequest request) {
         if (result.hasErrors()) {
             return ResultResponse.failResponse(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
-        return iSupplierErpService.saveSupplier(supplierVo);
+        return iSupplierErpService.saveSupplier(supplierVo,request.getHeader("access_token"));
     }
 
     @PutMapping("/supplier")
     @ApiOperation(value = "供应商-修改")
-    public ResultResponse updateSupplier(@Valid SupplierVo supplierVo, BindingResult result) {
+    public ResultResponse updateSupplier(@Valid SupplierVo supplierVo, BindingResult result,HttpServletRequest request) {
         if (result.hasErrors()) {
             return ResultResponse.failResponse(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
-        return iSupplierErpService.updateSupplier(supplierVo);
+        return iSupplierErpService.updateSupplier(supplierVo,request.getHeader("access_token"));
     }
 
     @DeleteMapping("/supplier/{id}")
@@ -121,20 +121,20 @@ public class SupplierController {
     @PostMapping("/supplier/supplierType")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "供应商类别-保存")
-    public ResultResponse saveType(@Valid SupplierTypeVo supplierTypeVo, BindingResult result) {
+    public ResultResponse saveType(@Valid SupplierTypeVo supplierTypeVo, BindingResult result,HttpServletRequest request) {
         if (result.hasErrors()) {
             return ResultResponse.failResponse(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
-        return iSupplierErpService.saveType(supplierTypeVo);
+        return iSupplierErpService.saveType(supplierTypeVo,request.getHeader("access_token"));
     }
 
     @PutMapping("/supplier/supplierType")
     @ApiOperation(value = "供应商类别-修改")
-    public ResultResponse updateType(@Valid SupplierTypeVo supplierTypeVo, BindingResult result) {
+    public ResultResponse updateType(@Valid SupplierTypeVo supplierTypeVo, BindingResult result,HttpServletRequest request) {
         if (result.hasErrors()) {
             return ResultResponse.failResponse(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
-        return iSupplierErpService.updateType(supplierTypeVo);
+        return iSupplierErpService.updateType(supplierTypeVo,request.getHeader("access_token"));
     }
 
     @DeleteMapping("/supplier/supplierType/{id}")

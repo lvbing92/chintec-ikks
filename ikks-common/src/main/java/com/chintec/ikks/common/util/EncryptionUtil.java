@@ -1,7 +1,11 @@
 package com.chintec.ikks.common.util;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.util.Base64;
 
@@ -9,6 +13,7 @@ import java.util.Base64;
 /**
  * @author rubin
  */
+@Slf4j
 public class EncryptionUtil {
 
     /**
@@ -22,7 +27,7 @@ public class EncryptionUtil {
             MessageDigest messageDigest = MessageDigest.getInstance("md5");
             return Base64.getEncoder().encodeToString(messageDigest.digest(msg.getBytes()));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.info("encode e:{}", e.getMessage());
             return null;
         }
     }
@@ -33,8 +38,18 @@ public class EncryptionUtil {
      * @param passWord 密码
      * @return String
      */
-    public static String passWordEnCode(String passWord) {
-        BCryptPasswordEncoder b = new BCryptPasswordEncoder();
-        return b.encode(passWord);
+    public static String passWordEnCode(String passWord, Class t) {
+        Method encode;
+        Object invoke = null;
+        try {
+            Constructor constructor = t.getConstructor();
+            Object o = constructor.newInstance();
+            encode = t.getMethod("encode", CharSequence.class);
+            invoke = encode.invoke(o, passWord);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
+            log.info("re  e:{}", e.getMessage());
+            return null;
+        }
+        return JSONObject.toJSONString(invoke);
     }
 }

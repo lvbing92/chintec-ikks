@@ -22,9 +22,10 @@ public interface ISupplierService extends IService<Supplier> {
      * @param categoryId  类别id
      * @param params      搜索参数
      * @param statusId    状态id
+     * @param ids         id集合
      * @return resultResponse
      */
-    ResultResponse suppliers(Integer currentPage, Integer pageSize, Integer categoryId, String params, Integer statusId);
+    ResultResponse suppliers(Integer currentPage, Integer pageSize, Integer categoryId, String params, Integer statusId, String ids);
 
     /**
      * 数据统计
@@ -59,8 +60,9 @@ public interface ISupplierService extends IService<Supplier> {
 
     /**
      * 查询详情
+     *
      * @param id 供应商id
-     * @return  ResultResponse
+     * @return ResultResponse
      */
     ResultResponse supplier(Integer id);
 }

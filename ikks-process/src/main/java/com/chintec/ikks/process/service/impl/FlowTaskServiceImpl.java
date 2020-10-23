@@ -23,11 +23,14 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -59,6 +62,16 @@ public class FlowTaskServiceImpl extends ServiceImpl<FlowTaskMapper, FlowTask> i
         flowTask.setUpdateTime(LocalDateTime.now());
         AssertsUtil.isTrue(!this.saveOrUpdate(flowTask), "创建任务失败");
         return saveTaskNodeStatus(flowTask.getFollowInfoId(), flowTask.getId());
+    }
+
+    @Override
+    public ResultResponse tasks(Integer userId) {
+        List<FlowTaskStatus> flowTaskStatusList = iFlowTaskStatusService.list(new QueryWrapper<FlowTaskStatus>().lambda()
+                .eq(FlowTaskStatus::getAssignee, userId));
+        List<Integer> collect = flowTaskStatusList.stream().map(FlowTaskStatus::getTaskId).collect(Collectors.toList());
+        List<FlowTask> flowTasks = this.list(new QueryWrapper<FlowTask>().lambda().in(!CollectionUtils.isEmpty(collect), FlowTask::getId, collect));
+        return ResultResponse.successResponse(flowTasks);
+
     }
 
     private ResultResponse saveTaskNodeStatus(Integer flowId, Integer flowTaskId) {

@@ -21,4 +21,6 @@ public interface IFlowTaskService extends IService<FlowTask> {
      * @return ResultResponse
      */
     ResultResponse createTask(FlowTaskVo flowTaskVo);
+
+    ResultResponse tasks( Integer userId);
 }
