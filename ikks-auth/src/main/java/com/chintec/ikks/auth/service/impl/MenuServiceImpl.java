@@ -47,7 +47,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu>
     public ResultResponse addOrUpdateMenu(Menu menu) {
         if (StringUtils.isEmpty(menu.getId())) {
             menu.setCreateTime(LocalDateTime.now());
-            //添加用户
+            //添加菜单
             boolean creFlag = this.save(menu);
             AssertsUtil.isTrue(!creFlag, "保存失败！");
         } else {
@@ -64,7 +64,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu>
      * @return ResultResponse
      */
     @Override
-    public ResultResponse queryMenu(String id) {
+    public ResultResponse queryMenu(Integer id) {
         //查询用户
         Menu menu = getById(new QueryWrapper<Menu>().lambda().eq(Menu::getId, id));
         //查询当前用户
@@ -78,7 +78,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu>
      * @return ResultResponse
      */
     @Override
-    public ResultResponse deleteMenu(String id) {
+    public ResultResponse deleteMenu(Integer id) {
         this.baseMapper.deleteById(id);
         return ResultResponse.successResponse("删除成功");
     }

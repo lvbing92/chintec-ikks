@@ -52,7 +52,7 @@ public class MenuController {
      */
     @ApiOperation(value = "菜单详情")
     @GetMapping("/menu/{id}")
-    public ResultResponse queryUser(@PathVariable String id) {
+    public ResultResponse queryUser(@PathVariable Integer id) {
         return iMenuService.queryMenu(id);
     }
 
@@ -64,7 +64,7 @@ public class MenuController {
      */
     @ApiOperation(value = "删除菜单")
     @DeleteMapping("/menu/{id}")
-    public ResultResponse deleteUser(@PathVariable String id) {
+    public ResultResponse deleteUser(@PathVariable Integer id) {
         return iMenuService.deleteMenu(id);
     }
 }

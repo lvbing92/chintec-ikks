@@ -75,7 +75,7 @@ public class AuthController {
      */
     @ApiOperation(value = "用户详情")
     @GetMapping("/user/{id}")
-    public ResultResponse queryUser(@PathVariable Long id) {
+    public ResultResponse queryUser(@PathVariable Integer id) {
         return iCredentialsService.queryUser(id);
     }
 
@@ -86,9 +86,21 @@ public class AuthController {
      */
     @ApiOperation(value = "删除用户")
     @DeleteMapping("/user/{id}")
-    public ResultResponse deleteUser(@PathVariable Long id) {
+    public ResultResponse deleteUser(@PathVariable Integer id) {
         return iCredentialsService.deleteUser(id);
     }
 
+
+    /**
+     * 查询当前登录人角色和菜单信息
+     *
+     * @param token 当前登录人token
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "获取角色和菜单信息")
+    @PostMapping(value = "/user/roleAndMenu")
+    public ResultResponse getRoleAndMenu(@RequestParam(value = "token") String token){
+        return iCredentialsService.getRoleAndMenu(token);
+    }
 
 }

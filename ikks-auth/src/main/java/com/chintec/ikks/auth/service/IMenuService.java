@@ -34,7 +34,7 @@ public interface IMenuService extends IService<Menu> {
      * @param id 菜单Id
      * @return ResultResponse
      */
-    ResultResponse queryMenu(String id);
+    ResultResponse queryMenu(Integer id);
 
     /**
      * 删除菜单
@@ -42,6 +42,6 @@ public interface IMenuService extends IService<Menu> {
      * @param id 菜单Id
      * @return ResultResponse
      */
-    ResultResponse deleteMenu(String id);
+    ResultResponse deleteMenu(Integer id);
 
 }

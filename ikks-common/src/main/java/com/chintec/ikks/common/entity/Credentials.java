@@ -26,7 +26,13 @@ public class Credentials extends Model<Credentials> {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
+    private Integer id;
+
+    /**
+     * 客户端Id或是供应商Id
+     */
+    @ApiModelProperty(value = "用户Id")
+    private Integer userId;
 
     @ApiModelProperty(value = "是否可用")
     private Boolean enabled;

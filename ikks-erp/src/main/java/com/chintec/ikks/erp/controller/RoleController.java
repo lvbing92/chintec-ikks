@@ -94,7 +94,7 @@ public class RoleController {
      */
     @ApiOperation(value = "角色详情")
     @GetMapping("/role/{id}")
-    public ResultResponse queryRole(@PathVariable Long id) {
+    public ResultResponse queryRole(@PathVariable Integer id) {
 
         return iAuthorityService.queryRole(id);
     }
@@ -107,7 +107,7 @@ public class RoleController {
      */
     @ApiOperation(value = "删除角色")
     @DeleteMapping("/role/{id}")
-    public ResultResponse deleteRole(@PathVariable Long id) {
+    public ResultResponse deleteRole(@PathVariable Integer id) {
         return iAuthorityService.deleteRole(id);
     }
 }

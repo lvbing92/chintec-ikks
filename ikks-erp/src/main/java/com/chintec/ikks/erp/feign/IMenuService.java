@@ -43,7 +43,7 @@ public interface IMenuService{
      */
     @ApiOperation(value = "菜单详情")
     @GetMapping("/menu/{id}")
-    ResultResponse queryMenu(@PathVariable String id);
+    ResultResponse queryMenu(@PathVariable Integer id);
 
     /**
      * 删除菜单
@@ -53,6 +53,6 @@ public interface IMenuService{
      */
     @ApiOperation(value = "删除菜单")
     @DeleteMapping("/menu/{id}")
-    ResultResponse deleteMenu(@PathVariable String id);
+    ResultResponse deleteMenu(@PathVariable Integer id);
 
 }

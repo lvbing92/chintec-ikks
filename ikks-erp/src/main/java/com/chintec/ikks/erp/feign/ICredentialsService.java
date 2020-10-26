@@ -55,7 +55,7 @@ public interface ICredentialsService {
      */
     @ApiOperation(value = "用户列表查询")
     @GetMapping(value = "/user/{id}")
-    ResultResponse queryUser(@PathVariable Long id);
+    ResultResponse queryUser(@PathVariable Integer id);
 
     /**
      * 更新客户
@@ -74,5 +74,15 @@ public interface ICredentialsService {
      */
     @ApiOperation(value = "删除用户")
     @DeleteMapping(value = "/user/{id}")
-    ResultResponse deleteUser(@PathVariable Long id);
+    ResultResponse deleteUser(@PathVariable Integer id);
+
+    /**
+     * 查询当前登录人角色和菜单信息
+     *
+     * @param token 当前登录人token
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "获取角色和菜单信息")
+    @PostMapping(value = "/user/roleAndMenu")
+    ResultResponse getRoleAndMenu(@RequestParam(value = "token") String token);
 }

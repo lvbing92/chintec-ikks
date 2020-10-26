@@ -62,7 +62,7 @@ public interface ICredentialsService extends IService<Credentials> {
      * @param id 用户Id
      * @return ResultResponse
      */
-    ResultResponse queryUser(Long id);
+    ResultResponse queryUser(Integer id);
 
     /**
      * 删除用户
@@ -70,7 +70,7 @@ public interface ICredentialsService extends IService<Credentials> {
      * @param id 用户Id
      * @return ResultResponse
      */
-    ResultResponse deleteUser(Long id);
+    ResultResponse deleteUser(Integer id);
 
     /**
      * 查询当前登录人角色和菜单信息

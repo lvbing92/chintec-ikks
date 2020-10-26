@@ -5,15 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.chintec.ikks.auth.feign.ISupplierService;
 import com.chintec.ikks.auth.mapper.CredentialsMapper;
-import com.chintec.ikks.auth.service.IAuthorityMenuService;
-import com.chintec.ikks.auth.service.IAuthorityService;
-import com.chintec.ikks.auth.service.ICredentialsAuthoritiesService;
-import com.chintec.ikks.auth.service.ICredentialsService;
-import com.chintec.ikks.common.entity.Authority;
-import com.chintec.ikks.common.entity.AuthorityMenu;
-import com.chintec.ikks.common.entity.Credentials;
-import com.chintec.ikks.common.entity.CredentialsAuthorities;
+import com.chintec.ikks.auth.service.*;
+import com.chintec.ikks.common.entity.*;
 import com.chintec.ikks.common.entity.response.AuthorityMenuResponse;
 import com.chintec.ikks.common.entity.response.CredentialsResponse;
 import com.chintec.ikks.common.entity.vo.CredentialsRequest;
@@ -33,6 +28,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -56,6 +52,12 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private IAuthorityService iAuthorityService;
+    @Autowired
+    private ICompanyUserService iCompanyUserService;
+    @Autowired
+    private IUserAuthoritiesService iUserAuthoritiesService;
+    @Autowired
+    private ISupplierService iSupplierService;
 
     @Override
     public ResultResponse getUserList(Integer pageSize, Integer currentPage, String role, String status, String searchValue, String sorted) {
@@ -105,7 +107,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
             AssertsUtil.isTrue(!creFlag, "添加用户失败！");
             //添加用户角色关系表信息
             CredentialsAuthorities credentialsAuthorities = new CredentialsAuthorities();
-            credentialsAuthorities.setAuthoritiesId(4L);
+            credentialsAuthorities.setAuthoritiesId(4);
             credentialsAuthorities.setCredentialsId(credentials.getId());
             boolean creAuthFlag = iCredentialsAuthoritiesService.save(credentialsAuthorities);
             AssertsUtil.isTrue(!creAuthFlag, "添加用户角色失败！");
@@ -146,7 +148,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
     }
 
     @Override
-    public ResultResponse queryUser(Long id) {
+    public ResultResponse queryUser(Integer id) {
         //查询用户
         Credentials credentials = this.getById(id);
         //查询当前用户
@@ -154,7 +156,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
     }
 
     @Override
-    public ResultResponse deleteUser(Long id) {
+    public ResultResponse deleteUser(Integer id) {
         //查询用户
         Credentials credentials = this.getById(id);
         credentials.setEnabled(false);
@@ -176,20 +178,40 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
         CredentialsResponse userMsg = new CredentialsResponse();
         //获取用户信息
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Credentials credentials = JSONObject.parseObject(JSONObject.toJSON(authentication.getCredentials()).toString(), Credentials.class);
-        BeanUtils.copyProperties(credentials, userMsg);
-        //查询用户角色关系
-        CredentialsAuthorities one = iCredentialsAuthoritiesService.getOne(new QueryWrapper<CredentialsAuthorities>().lambda()
-                .eq(CredentialsAuthorities::getCredentialsId, credentials.getId()));
-        AssertsUtil.isTrue(ObjectUtils.isEmpty(one), "用户和角色关系为空!");
+        //根据用户名称查询用户信息
+        Credentials credentials = getOne(new QueryWrapper<Credentials>().lambda().eq(Credentials::getName, authentication.getName()));
+        AssertsUtil.isTrue(ObjectUtils.isEmpty(credentials), "当前用户不存在!");
+        Integer roleId = null;
+        if ("2".equals(credentials.getUserType())) {
+            CompanyUser companyUser = iCompanyUserService.getOne(new QueryWrapper<CompanyUser>().lambda()
+                    .eq(CompanyUser::getId, credentials.getUserId()));
+            AssertsUtil.isTrue(ObjectUtils.isEmpty(companyUser), "当前客户不存在!");
+            userMsg.setId(companyUser.getId());
+            userMsg.setName(companyUser.getUserName());
+            UserAuthorities userAuthorities = iUserAuthoritiesService.getOne(new QueryWrapper<UserAuthorities>()
+                    .lambda().eq(UserAuthorities::getCompanyUserId, companyUser.getId()));
+            roleId = userAuthorities.getAuthorityId();
+        } else if ("3".equals(credentials.getUserType())) {
+            ResultResponse response = iSupplierService.supplier(credentials.getUserId());
+            Supplier supplier = JSONObject.parseObject(JSONObject.toJSON(response.getData()).toString(), Supplier.class);
+            userMsg.setId(supplier.getId());
+            userMsg.setName(supplier.getCompanyName());
+        } else {
+            BeanUtils.copyProperties(credentials, userMsg);
+            //查询用户角色关系
+            CredentialsAuthorities one = iCredentialsAuthoritiesService.getOne(new QueryWrapper<CredentialsAuthorities>().lambda()
+                    .eq(CredentialsAuthorities::getCredentialsId, credentials.getId()));
+            AssertsUtil.isTrue(ObjectUtils.isEmpty(one), "用户和角色关系为空!");
+            roleId = Integer.valueOf(one.getAuthoritiesId().toString());
+        }
         //查询角色信息
-        Authority authority = iAuthorityService.getOne(new QueryWrapper<Authority>().lambda().eq(Authority::getId, one.getAuthoritiesId()));
+        Authority authority = iAuthorityService.getOne(new QueryWrapper<Authority>().lambda().eq(Authority::getId, roleId));
         AssertsUtil.isTrue(ObjectUtils.isEmpty(authentication), "当前用户无角色!");
         userMsg.setRoleName(authority.getAuthority());
         userMsg.setLevel(authority.getLevel());
         //查询菜单信息
         List<AuthorityMenu> authorityMenuList = iAuthorityMenuService.list(new QueryWrapper<AuthorityMenu>()
-                .lambda().eq(AuthorityMenu::getAuthorityId, one.getAuthoritiesId()));
+                .lambda().eq(AuthorityMenu::getAuthorityId, roleId));
         if (authorityMenuList.size() != 0) {
             List<AuthorityMenuResponse> collect = authorityMenuList.stream().map(authorityMenu -> {
                 AuthorityMenuResponse authorityMenuResponse = new AuthorityMenuResponse();
@@ -199,7 +221,8 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
             userMsg.setMenuList(MenuTree.getMenuTrees(collect));
         }
         //保存到redis
-        redisTemplate.opsForValue().set(token, userMsg);
+        redisTemplate.opsForHash().put(token, "userMsg", userMsg);
+        redisTemplate.expire(token, 30, TimeUnit.MINUTES);
         return ResultResponse.successResponse("查询成功", userMsg);
     }
 }

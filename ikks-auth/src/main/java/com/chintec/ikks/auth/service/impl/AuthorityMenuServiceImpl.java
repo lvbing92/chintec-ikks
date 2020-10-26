@@ -29,11 +29,12 @@ public class AuthorityMenuServiceImpl extends ServiceImpl<AuthorityMenuMapper, A
      * @return List<Long>
      */
     @Override
-    public List<Long> getMenuIByRoleId(Long roleId) {
-        List<Long> menuIds = this.list(new QueryWrapper<AuthorityMenu>().
+    public List<Integer> getMenuIByRoleId(Integer roleId) {
+        List<Integer> menuIds = this.list(new QueryWrapper<AuthorityMenu>().
                 lambda().eq(AuthorityMenu::getAuthorityId, roleId))
                 .stream().map(AuthorityMenu::getMenuId).collect(Collectors.toList());
         return menuIds;
+
     }
 
     /**
@@ -42,7 +43,7 @@ public class AuthorityMenuServiceImpl extends ServiceImpl<AuthorityMenuMapper, A
      * @param roleId 角色Id
      */
     @Override
-    public void deleteByRoleId(Long roleId) {
+    public void deleteByRoleId(Integer roleId) {
         this.baseMapper.delete(new QueryWrapper<AuthorityMenu>().lambda().eq(AuthorityMenu::getAuthorityId, roleId));
     }
 
