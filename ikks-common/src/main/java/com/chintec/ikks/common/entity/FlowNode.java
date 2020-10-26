@@ -140,9 +140,9 @@ public class FlowNode extends Model<FlowNode> {
     private String updataBy;
 
     /**
-     * 当前节点审核的资质集合
+     * 当前节点审核的资质id
      */
-    private String qualificationIds;
+    private Integer qualificationId;
 
     @Override
     protected Serializable pkVal() {

@@ -54,16 +54,6 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-    <!--mq-->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-amqp</artifactId>
-    </dependency>
-    <!--rabbitmq-->
-    <dependency>
-      <groupId>com.rabbitmq</groupId>
-      <artifactId>amqp-client</artifactId>
-    </dependency>
     <!--mybatis-plus-->
     <dependency>
       <groupId>com.baomidou</groupId>

@@ -1,14 +1,9 @@
 package com.chintec.ikks.common.entity.vo;
 
 import com.chintec.ikks.common.entity.Authority;
-import com.chintec.ikks.common.entity.Menu;
-import com.chintec.ikks.common.entity.response.AuthorityMenuResponse;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import javax.validation.constraints.NotBlank;
-import java.util.List;
 
 /**
  * @author rubin

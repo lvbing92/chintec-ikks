@@ -1,7 +1,7 @@
 package com.chintec.ikks.message.service.impl;
 
+import com.chintec.ikks.common.entity.MessageRec;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.message.entity.MessageRec;
 import com.chintec.ikks.message.service.ISendMessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -111,4 +111,7 @@ public class FlowNodeVo {
      */
     private List<NodeFunctionVo> nodeFunctionVos;
 
+
+    private Integer qualificationId;
+
 }

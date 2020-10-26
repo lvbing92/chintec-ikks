@@ -1,11 +1,9 @@
 package com.chintec.ikks.common.entity.response;
 
-import com.chintec.ikks.common.entity.AuthorityMenu;
 import com.chintec.ikks.common.entity.Credentials;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.validator.constraints.URL;
 
 import java.util.List;
 

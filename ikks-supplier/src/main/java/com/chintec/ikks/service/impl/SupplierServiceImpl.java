@@ -1,7 +1,6 @@
 package com.chintec.ikks.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -12,7 +11,6 @@ import com.chintec.ikks.common.entity.SupplierType;
 import com.chintec.ikks.common.entity.po.SupplierFunctionPo;
 import com.chintec.ikks.common.entity.vo.SupplierVo;
 import com.chintec.ikks.common.util.AssertsUtil;
-import com.chintec.ikks.common.util.EncryptionUtil;
 import com.chintec.ikks.common.util.PageResultResponse;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.feign.ICredentialsService;
@@ -53,7 +51,7 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
                 .eq(categoryId != 0, Supplier::getCategoryId, categoryId)
                 .eq(statusId != 0, Supplier::getIsAuthenticated, statusId)
                 .eq(Supplier::getIsDeleted, 1)
-                .in(!StringUtils.isEmpty(ids), Supplier::getId, JSONObject.parseArray(ids, Integer.class))
+                .in(!StringUtils.isEmpty(ids), Supplier::getCategoryId, JSONObject.parseArray(ids, Integer.class))
                 .apply(!StringUtils.isEmpty(params), "concat(IFNULL(id,''),IFNULL(company_name,''),IFNULL(contact_phone,''),IFNULL(contact_email,'')) like '%" + params + "%'")
                 .orderByDesc(Supplier::getUpdateTime));
         PageResultResponse<Supplier> pageResultResponse = new PageResultResponse<>(page.getTotal(), currentPage, pageSize);

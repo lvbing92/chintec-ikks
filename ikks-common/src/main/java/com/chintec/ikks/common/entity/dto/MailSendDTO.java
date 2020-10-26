@@ -1,4 +1,4 @@
-package com.chintec.ikks.message.entity.dto;
+package com.chintec.ikks.common.entity.dto;
 
 import lombok.Data;
 

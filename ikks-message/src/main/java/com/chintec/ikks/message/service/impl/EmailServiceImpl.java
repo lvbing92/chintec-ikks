@@ -1,8 +1,8 @@
 package com.chintec.ikks.message.service.impl;
 
+import com.chintec.ikks.common.entity.dto.MailSendDTO;
 import com.chintec.ikks.common.enums.CommonCodeEnum;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.message.entity.dto.MailSendDTO;
 import com.chintec.ikks.message.service.IEmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

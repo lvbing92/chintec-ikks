@@ -7,10 +7,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Objects;
 
@@ -36,5 +35,23 @@ public class FlowInfoController {
             return ResultResponse.failResponse(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
         return iProcessAndControllerService.createProcess(flowInfoVo);
+    }
+
+    @GetMapping("/process/start")
+    @ApiOperation("流程控制管理---开启任务流程")
+    public ResultResponse startFlow(Integer supplierId, HttpServletRequest request) {
+        return iProcessAndControllerService.startProcess(request.getHeader("access_token"), supplierId);
+    }
+
+    @PutMapping("/process/pass/{flowTaskStatusId}/{code}")
+    @ApiOperation("流程控制管理---审核通过")
+    public ResultResponse passFlowNode(@PathVariable("flowTaskStatusId") Integer flowTaskStatusId, @PathVariable("code") Integer code, HttpServletRequest request) {
+        return iProcessAndControllerService.passFlowNode(request.getHeader("access_token"), flowTaskStatusId, code);
+    }
+
+    @DeleteMapping("/process/refuse/{flowTaskStatusId}")
+    @ApiOperation("流程控制管理---审核拒绝")
+    public ResultResponse refuseFlowNode(@PathVariable Integer flowTaskStatusId, HttpServletRequest request) {
+        return iProcessAndControllerService.refuseFlowNode(request.getHeader("access_token"), flowTaskStatusId);
     }
 }

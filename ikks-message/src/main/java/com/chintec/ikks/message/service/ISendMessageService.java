@@ -1,7 +1,7 @@
 package com.chintec.ikks.message.service;
 
+import com.chintec.ikks.common.entity.MessageRec;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.message.entity.MessageRec;
 
 /**
  * 此类提供消息提示，包含订单提示，后台消息推送等信息

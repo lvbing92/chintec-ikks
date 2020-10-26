@@ -9,10 +9,11 @@ import lombok.Data;
  */
 @Data
 public class FlowTaskVo {
+
     /**
      * 模块Id
      */
-    private Integer moduleId;
+    private Integer taskId;
 
     /**
      * 实例id

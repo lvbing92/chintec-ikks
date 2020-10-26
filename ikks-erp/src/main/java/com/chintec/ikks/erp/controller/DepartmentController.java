@@ -3,10 +3,13 @@ package com.chintec.ikks.erp.controller;
 import com.chintec.ikks.common.entity.vo.DepartmentRequest;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.erp.feign.IDepartmentService;
+import com.chintec.ikks.erp.service.IProcessAndControllerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author rubin
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 public class DepartmentController {
     @Autowired
     private IDepartmentService iDepartmentService;
+    @Autowired
+    private IProcessAndControllerService iProcessAndControllerService;
 
     /**
      * 部门列表查询
@@ -73,5 +78,14 @@ public class DepartmentController {
     @DeleteMapping("/department/{id}")
     public ResultResponse deleteDepartment(@PathVariable Integer id) {
         return iDepartmentService.deleteDepartment(id);
+    }
+
+    @GetMapping("/department/tasks")
+    @ApiOperation("部门---流程任务信息")
+    public ResultResponse tasks(@RequestParam Integer currentPage,
+                                @RequestParam(required = false, defaultValue = "0") Integer pageSize,
+                                @RequestParam(required = false, defaultValue = "0") Integer statusId,
+                                @RequestParam(required = false) String params, HttpServletRequest request) {
+        return iProcessAndControllerService.taskStatus(request.getHeader("access_token"), currentPage, pageSize, statusId, params);
     }
 }

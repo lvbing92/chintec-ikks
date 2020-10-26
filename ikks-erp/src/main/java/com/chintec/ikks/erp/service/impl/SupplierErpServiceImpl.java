@@ -16,7 +16,6 @@ import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.PageResultResponse;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.common.util.TimeUtils;
-import com.chintec.ikks.erp.feign.IFlowInfoService;
 import com.chintec.ikks.erp.feign.IFlowTaskService;
 import com.chintec.ikks.erp.feign.ISupplierService;
 import com.chintec.ikks.erp.service.ISupplierErpService;
@@ -27,7 +26,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -44,6 +45,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private IFlowTaskService iFlowTaskService;
+
 
     @Override
     public ResultResponse saveField(SupplierFieldVo supplierFieldVo, String token) {
@@ -105,9 +107,12 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
             AssertsUtil.isTrue(!tasks.isSuccess(), tasks.getMessage());
             List<Integer> collect = JSONObject.parseArray(JSONObject.toJSONString(tasks.getData()), FlowTask.class)
                     .stream()
-                    .map(FlowTask::getId)
+                    .map(FlowTask::getFollowInfoId)
                     .collect(Collectors.toList());
             ids = JSONObject.toJSONString(collect);
+            ResultResponse types = iSupplierService.types(1, 1000, ids);
+            AssertsUtil.isTrue(!types.isSuccess(), types.getMessage());
+            ids = JSONObject.toJSONString(JSONObject.parseArray(JSONObject.toJSONString(types.getData()), SupplierType.class).stream().map(SupplierType::getId).collect(Collectors.toList()));
         }
         ResultResponse suppliers = iSupplierService.suppliers(currentPage, pageSize, categoryId, statusId, params, ids);
         if (!suppliers.isSuccess()) {
@@ -136,6 +141,17 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
     @Override
     public ResultResponse saveSupplier(SupplierVo supplierVo, String token) {
         CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
+        ResultResponse fields = iSupplierService.fields(1, 100);
+        AssertsUtil.isTrue(!fields.isSuccess(), fields.getMessage());
+        List<SupplierField> supplierFields = JSONObject.parseArray(JSONObject.toJSONString(JSONObject.parseObject(JSONObject.toJSONString(fields.getData()), PageResultResponse.class)), SupplierField.class);
+        List<Map<String, Object>> collect = supplierFields.stream().map(supplierField -> {
+            Map<String, Object> field = new HashMap<>(3);
+            field.put(supplierField.getFieldName(), "");
+            field.put(supplierField.getField(), "");
+            field.put(supplierField.getFieldType(), "");
+            return field;
+        }).collect(Collectors.toList());
+        supplierVo.setProperties(JSONObject.toJSONString(collect));
         supplierVo.setUpdateById(Integer.valueOf(String.valueOf(credentialsResponse.getId())));
         supplierVo.setUpdateByName(credentialsResponse.getUpdateByName());
         return iSupplierService.saveSupplier(supplierVo);
@@ -154,6 +170,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
         return iSupplierService.deleteSupplier(id);
     }
 
+
     @Override
     public ResultResponse supplier(Integer id) {
         ResultResponse resultResponse = iSupplierService.supplier(id);
@@ -169,7 +186,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
 
     @Override
     public ResultResponse types(Integer currentPage, Integer pageSize) {
-        ResultResponse resultResponse = iSupplierService.types(currentPage, pageSize);
+        ResultResponse resultResponse = iSupplierService.types(currentPage, pageSize, null);
         if (!resultResponse.isSuccess()) {
             return resultResponse;
         }
@@ -189,6 +206,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
         CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
         supplierTypeVo.setUpdateBy(String.valueOf(credentialsResponse.getId()));
         supplierTypeVo.setUpdateName(credentialsResponse.getUpdateByName());
+
         return iSupplierService.saveType(supplierTypeVo);
     }
 
@@ -218,7 +236,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
     }
 
     private CredentialsResponse getCredentialsResponse(RedisTemplate<String, Object> redisTemplate, String token) {
-        Object o = redisTemplate.opsForHash().get(token,"userMsg");
+        Object o = redisTemplate.opsForHash().get(token, "userMsg");
         AssertsUtil.isTrue(o == null, "请登录");
         return JSONObject.parseObject(JSONObject.toJSONString(o), CredentialsResponse.class);
     }

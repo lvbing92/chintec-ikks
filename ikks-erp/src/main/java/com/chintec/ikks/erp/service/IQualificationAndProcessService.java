@@ -39,7 +39,7 @@ public interface IQualificationAndProcessService {
      * @param pageSize    条数
      * @return ResultResponse 分页结果
      */
-    ResultResponse qualifications(Integer currentPage, Integer pageSize, Integer categoryId);
+    ResultResponse qualifications(Integer currentPage, Integer pageSize, Integer categoryId, String token);
 
     /**
      * 详情
@@ -47,7 +47,7 @@ public interface IQualificationAndProcessService {
      * @param id 主键
      * @return ResultResponse
      */
-    ResultResponse qualification(Integer id);
+    ResultResponse qualification(Integer id, String token);
 
     /**
      * 详情
@@ -56,4 +56,15 @@ public interface IQualificationAndProcessService {
      * @return ResultResponse
      */
     ResultResponse deleteQualification(Integer id);
+
+    ResultResponse saveQualificationSupplier(String qualificationSupplierVo, String token);
+
+    ResultResponse updateQualificationSupplier(String qualificationSupplierVo, String token);
+
+    ResultResponse deleteQualificationSupplier(Integer id);
+
+    ResultResponse qualificationSupplier(Integer id);
+
+    ResultResponse qualificationSuppliers(Integer qualificationSupplierId, Integer supplierId);
+
 }

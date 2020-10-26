@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author jeff·tang
@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class QualificationResponse  {
+public class QualificationResponse {
 
 
     /**
@@ -52,9 +52,9 @@ public class QualificationResponse  {
     private String updateTime;
 
     /**
-     * 操作人id
+     * 文件数
      */
-    private Integer updateBy;
+    private Integer count;
 
     /**
      * 操作人name

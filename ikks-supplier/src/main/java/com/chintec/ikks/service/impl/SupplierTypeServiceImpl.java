@@ -1,5 +1,6 @@
 package com.chintec.ikks.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -31,8 +32,11 @@ import java.util.concurrent.ThreadLocalRandom;
 public class SupplierTypeServiceImpl extends ServiceImpl<SupplierTypeMapper, SupplierType> implements ISupplierTypeService {
 
     @Override
-    public ResultResponse types(Integer currentPage, Integer pageSiz) {
-        IPage<SupplierType> page = this.page(new Page<>(currentPage, pageSiz), new QueryWrapper<SupplierType>().lambda().eq(SupplierType::getIsDeleted, 1));
+    public ResultResponse types(Integer currentPage, Integer pageSiz, String ids) {
+        IPage<SupplierType> page = this.page(new Page<>(currentPage, pageSiz), new QueryWrapper<SupplierType>()
+                .lambda()
+                .in(!StringUtils.isEmpty(ids), SupplierType::getFlowId, JSONObject.parseArray(ids, Integer.class))
+                .eq(SupplierType::getIsDeleted, 1));
         PageResultResponse<SupplierType> pageResultResponse = new PageResultResponse<>(page.getTotal(), currentPage, pageSiz);
         pageResultResponse.setResults(page.getRecords());
         pageResultResponse.setTotalPages(page.getPages());

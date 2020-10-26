@@ -50,20 +50,53 @@ public class QualificationController {
     }
 
     @GetMapping("/qualifications")
-    @ApiOperation(value = "资质文档-查询")
-    public ResultResponse qualifications(@RequestParam Integer currentPage, @RequestParam(required = false, defaultValue = "10") Integer pageSize, @RequestParam(required = false, defaultValue = "0") Integer categoryId) {
-        return iQualificationAndProcessService.qualifications(currentPage, pageSize, categoryId);
+    @ApiOperation(value = "资质文档-查询(包含供应商端和平台端)")
+    public ResultResponse qualifications(@RequestParam Integer currentPage,
+                                         @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                                         @RequestParam(required = false, defaultValue = "0") Integer categoryId,
+                                         HttpServletRequest request) {
+        return iQualificationAndProcessService.qualifications(currentPage, pageSize, categoryId, request.getHeader("access_token"));
     }
 
     @GetMapping("/qualification/{id}")
     @ApiOperation(value = "资质文档-详情")
-    public ResultResponse qualification(@PathVariable Integer id) {
-        return iQualificationAndProcessService.qualification(id);
+    public ResultResponse qualification(@PathVariable Integer id, HttpServletRequest request) {
+        return iQualificationAndProcessService.qualification(id, request.getHeader("access_token"));
     }
 
     @DeleteMapping("/qualification/{id}")
     @ApiOperation(value = "资质文档-删除")
     public ResultResponse deleteQualification(@PathVariable Integer id) {
         return iQualificationAndProcessService.deleteQualification(id);
+    }
+
+    @PostMapping("/qualification/supplier")
+    @ApiOperation(value = "供应商资质文档-保存(供应商端)")
+    public ResultResponse saveQualificationSupplier(String qualificationSupplierVo, HttpServletRequest request) {
+        return iQualificationAndProcessService.saveQualificationSupplier(qualificationSupplierVo, request.getHeader("access_token"));
+    }
+
+    @PutMapping("/qualification/supplier")
+    @ApiOperation(value = "供应商资质文档-修改(供应商端)")
+    public ResultResponse updateQualificationSupplier(String qualificationSupplierVo, HttpServletRequest request) {
+        return iQualificationAndProcessService.updateQualificationSupplier(qualificationSupplierVo, request.getHeader("access_token"));
+    }
+
+    @DeleteMapping("/qualification/supplier/{id}")
+    @ApiOperation(value = "供应商资质文档-删除(供应商端)")
+    public ResultResponse deleteQualificationSupplier(@PathVariable Integer id) {
+        return iQualificationAndProcessService.deleteQualificationSupplier(id);
+    }
+
+    @GetMapping("/qualification/supplier/{id}")
+    @ApiOperation(value = "供应商资质文档-详情(供应商端)")
+    public ResultResponse qualificationSupplier(@PathVariable Integer id) {
+        return iQualificationAndProcessService.qualificationSupplier(id);
+    }
+
+    @GetMapping("/qualification/suppliers")
+    @ApiOperation(value = "供应商资质文档-列表(供应商端)")
+    public ResultResponse qualificationSuppliers(Integer qualificationSupplierId, Integer supplierId) {
+        return iQualificationAndProcessService.qualificationSuppliers(qualificationSupplierId, supplierId);
     }
 }

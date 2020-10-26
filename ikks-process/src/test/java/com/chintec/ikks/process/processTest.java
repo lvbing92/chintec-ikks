@@ -80,7 +80,7 @@ class processTest {
     void startProcessTest() {
         FlowTaskVo flowTaskVo = new FlowTaskVo();
         flowTaskVo.setFollowInfoId(6);
-        flowTaskVo.setModuleId(4);
+        flowTaskVo.setTaskId(4);
         flowTaskVo.setName("测试流程任务");
         flowTaskVo.setStatus(NodeStateEnum.PENDING.getCode().toString());
         ResultResponse task = iFlowTaskService.createTask(flowTaskVo);

@@ -55,7 +55,9 @@ public interface ISupplierService {
     ResultResponse supplier(@PathVariable Integer id);
 
     @GetMapping("/supplierTypes")
-    ResultResponse types(@RequestParam Integer currentPage, @RequestParam(required = false, defaultValue = "10") Integer pageSize);
+    ResultResponse types(@RequestParam Integer currentPage,
+                         @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                         @RequestParam(required = false) String ids);
 
     @PostMapping("/supplierType")
     ResultResponse saveType(@Valid @RequestBody SupplierTypeVo supplierTypeVo);

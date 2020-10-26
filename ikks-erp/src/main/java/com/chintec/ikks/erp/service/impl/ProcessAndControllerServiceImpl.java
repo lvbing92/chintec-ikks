@@ -1,11 +1,30 @@
 package com.chintec.ikks.erp.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.chintec.ikks.common.entity.Qualification;
+import com.chintec.ikks.common.entity.Supplier;
+import com.chintec.ikks.common.entity.SupplierType;
+import com.chintec.ikks.common.entity.response.CredentialsResponse;
+import com.chintec.ikks.common.entity.response.DepartTaskResponse;
+import com.chintec.ikks.common.entity.response.FlowTaskStatusResponse;
 import com.chintec.ikks.common.entity.vo.FlowInfoVo;
+import com.chintec.ikks.common.entity.vo.FlowTaskVo;
+import com.chintec.ikks.common.enums.NodeStateEnum;
+import com.chintec.ikks.common.util.AssertsUtil;
+import com.chintec.ikks.common.util.PageResultResponse;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.erp.feign.IFlowInfoService;
+import com.chintec.ikks.erp.feign.IFlowTaskService;
+import com.chintec.ikks.erp.feign.IQualificationService;
+import com.chintec.ikks.erp.feign.ISupplierService;
 import com.chintec.ikks.erp.service.IProcessAndControllerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Jeff·Tang
@@ -16,9 +35,82 @@ import org.springframework.stereotype.Service;
 public class ProcessAndControllerServiceImpl implements IProcessAndControllerService {
     @Autowired
     private IFlowInfoService iFlowInfoService;
+    @Autowired
+    private IFlowTaskService iFlowTaskService;
+    @Autowired
+    private ISupplierService iSupplierService;
+    @Autowired
+    private IQualificationService iQualificationService;
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public ResultResponse createProcess(FlowInfoVo flowInfoVo) {
         return iFlowInfoService.createFlowNode(flowInfoVo);
+    }
+
+    @Override
+    public ResultResponse startProcess(String token, Integer supplierId) {
+        ResultResponse resultResponse = iSupplierService.supplier(supplierId);
+        AssertsUtil.isTrue(!resultResponse.isSuccess(), resultResponse.getMessage());
+        Supplier supplier = JSONObject.parseObject(JSONObject.toJSONString(resultResponse.getData()), Supplier.class);
+        FlowTaskVo flowTaskVo = new FlowTaskVo();
+        flowTaskVo.setTaskId(supplierId);
+        flowTaskVo.setName(supplier.getCompanyName());
+        flowTaskVo.setStatus(NodeStateEnum.PENDING.getCode().toString());
+        ResultResponse type = iSupplierService.type(supplier.getCategoryId());
+        AssertsUtil.isTrue(!type.isSuccess(), type.getMessage());
+        SupplierType supplierType = JSONObject.parseObject(JSONObject.toJSONString(resultResponse.getData()), SupplierType.class);
+        flowTaskVo.setFollowInfoId(supplierType.getFlowId());
+        ResultResponse task = iFlowTaskService.createTask(flowTaskVo);
+        AssertsUtil.isTrue(!task.isSuccess(), task.getMessage());
+        return ResultResponse.successResponse("操作成功");
+    }
+
+    @Override
+    public ResultResponse passFlowNode(String token, Integer flowTaskStatusId, Integer code) {
+        return iFlowTaskService.passFlowNode(flowTaskStatusId, code);
+    }
+
+    @Override
+    public ResultResponse refuseFlowNode(String token, Integer flowTaskStatusId) {
+        return iFlowTaskService.refuseFlowNode(flowTaskStatusId);
+    }
+
+    @Override
+    public ResultResponse taskStatus(String token, Integer currentPage, Integer pageSize, Integer statusId, String params) {
+        CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
+        ResultResponse resultResponse = iFlowTaskService.flowTaskStatus(Integer.valueOf(String.valueOf(credentialsResponse.getId())), currentPage, pageSize, statusId, params);
+        AssertsUtil.isTrue(!resultResponse.isSuccess(), resultResponse.getMessage());
+        PageResultResponse pageResultResponse = JSONObject.parseObject(JSONObject.toJSONString(resultResponse), PageResultResponse.class);
+        List<DepartTaskResponse> collect = JSONObject.parseArray(JSONObject.toJSONString(pageResultResponse.getResults()), FlowTaskStatusResponse.class)
+                .stream()
+                .map(s -> {
+                    DepartTaskResponse departTaskResponse = new DepartTaskResponse();
+                    ResultResponse qualificationResult = iQualificationService.qualification(s.getId());
+                    AssertsUtil.isTrue(!qualificationResult.isSuccess(), qualificationResult.getMessage());
+                    Qualification qualification = JSONObject.parseObject(JSONObject.toJSONString(qualificationResult.getData()), Qualification.class);
+                    departTaskResponse.setName(qualification.getQualificationName());
+                    ResultResponse typeResult = iSupplierService.type(qualification.getCategoryId());
+                    AssertsUtil.isTrue(!typeResult.isSuccess(), typeResult.getMessage());
+                    SupplierType supplierType = JSONObject.parseObject(JSONObject.toJSONString(typeResult.getData()), SupplierType.class);
+                    departTaskResponse.setCategoryName(supplierType.getTypeName());
+                    ResultResponse supplierResult = iSupplierService.supplier(s.getTaskId());
+                    AssertsUtil.isTrue(!supplierResult.isSuccess(), supplierResult.getMessage());
+                    Supplier supplier = JSONObject.parseObject(JSONObject.toJSONString(supplierResult.getData()), Supplier.class);
+                    departTaskResponse.setCompanyName(supplier.getCompanyName());
+                    departTaskResponse.setId(s.getId());
+                    departTaskResponse.setStatus(s.getStatus());
+                    return departTaskResponse;
+                }).collect(Collectors.toList());
+        pageResultResponse.setResults(collect);
+        return ResultResponse.successResponse(pageResultResponse);
+    }
+
+
+    private CredentialsResponse getCredentialsResponse(RedisTemplate<String, Object> redisTemplate, String token) {
+        Object o = redisTemplate.opsForHash().get(token, "userMsg");
+        AssertsUtil.isTrue(o == null, "请登录");
+        return JSONObject.parseObject(JSONObject.toJSONString(o), CredentialsResponse.class);
     }
 }

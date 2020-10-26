@@ -1,7 +1,7 @@
 package com.chintec.ikks.message.service;
 
+import com.chintec.ikks.common.entity.dto.MailSendDTO;
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.message.entity.dto.MailSendDTO;
 
 import java.util.Map;
 

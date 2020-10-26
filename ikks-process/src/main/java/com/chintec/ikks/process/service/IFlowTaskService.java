@@ -2,6 +2,7 @@ package com.chintec.ikks.process.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.chintec.ikks.common.entity.FlowTask;
+import com.chintec.ikks.common.entity.vo.FlowTaskStatusVo;
 import com.chintec.ikks.common.entity.vo.FlowTaskVo;
 import com.chintec.ikks.common.util.ResultResponse;
 
@@ -22,5 +23,10 @@ public interface IFlowTaskService extends IService<FlowTask> {
      */
     ResultResponse createTask(FlowTaskVo flowTaskVo);
 
-    ResultResponse tasks( Integer userId);
+    ResultResponse tasks(Integer userId);
+
+    ResultResponse updateTask(FlowTaskStatusVo flowTaskStatusVo);
+
+    ResultResponse getFlowStatus(Integer qualificationId, Integer supplierId,Integer userId);
+
 }

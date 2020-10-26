@@ -29,9 +29,11 @@ public class SupplierTypeController {
     private ISupplierTypeService iSupplierTypeService;
 
     @GetMapping("/supplierTypes")
-    public ResultResponse types(@RequestParam Integer currentPage, @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+    public ResultResponse types(@RequestParam Integer currentPage,
+                                @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                                @RequestParam(required = false) String ids) {
         log.info("list currentPage:{} ,pageSize:{}", currentPage, pageSize);
-        return iSupplierTypeService.types(currentPage, pageSize);
+        return iSupplierTypeService.types(currentPage, pageSize,ids);
     }
 
     @PostMapping("/supplierType")

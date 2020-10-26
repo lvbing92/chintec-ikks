@@ -79,6 +79,10 @@ public class FlowTaskStatus extends Model<FlowTaskStatus> {
      * 驳回节点
      */
     private Integer rejectNode;
+    /**
+     * 是否被展示 0 是 1不是
+     */
+    private Integer isViewed;
 
     @Override
     protected Serializable pkVal() {

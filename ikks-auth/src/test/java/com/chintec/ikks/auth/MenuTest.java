@@ -9,13 +9,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.concurrent.CyclicBarrier;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author rubin·lv
@@ -49,6 +49,8 @@ public class MenuTest {
         Method encode = bCryptPasswordEncoderClass.getMethod("encode", CharSequence.class);
         Object invoke = encode.invoke(o, "123456");
         System.out.println(invoke);
+        HashMap<String,Object> map = new HashMap<>();
+        Set<Map.Entry<String, Object>> entries = map.entrySet();
     }
 
 }

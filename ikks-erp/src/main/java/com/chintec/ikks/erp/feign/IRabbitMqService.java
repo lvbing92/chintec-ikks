@@ -1,4 +1,4 @@
-package com.chintec.ikks.feign;
+package com.chintec.ikks.erp.feign;
 
 import com.chintec.ikks.common.entity.po.MessageReq;
 import com.chintec.ikks.common.util.ResultResponse;

@@ -6,6 +6,7 @@ import com.chintec.ikks.common.entity.FlowNode;
 import com.chintec.ikks.common.entity.FlowTask;
 import com.chintec.ikks.common.entity.FlowTaskStatus;
 import com.chintec.ikks.common.entity.po.FlowTaskStatusPo;
+import com.chintec.ikks.common.entity.vo.FlowTaskStatusVo;
 import com.chintec.ikks.common.entity.vo.FlowTaskVo;
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;
 import com.chintec.ikks.common.enums.NodeStateEnum;
@@ -13,6 +14,7 @@ import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.process.event.SendEvent;
 import com.chintec.ikks.process.mapper.FlowTaskMapper;
+import com.chintec.ikks.process.service.IFlowInfoService;
 import com.chintec.ikks.process.service.IFlowNodeService;
 import com.chintec.ikks.process.service.IFlowTaskService;
 import com.chintec.ikks.process.service.IFlowTaskStatusService;
@@ -30,7 +32,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * <p>
@@ -44,6 +45,8 @@ import java.util.stream.Stream;
 public class FlowTaskServiceImpl extends ServiceImpl<FlowTaskMapper, FlowTask> implements IFlowTaskService {
     @Autowired
     private IFlowNodeService iFlowNodeService;
+    @Autowired
+    private IFlowInfoService iflowInfoService;
 
     @Autowired
     private IFlowTaskStatusService iFlowTaskStatusService;
@@ -67,12 +70,34 @@ public class FlowTaskServiceImpl extends ServiceImpl<FlowTaskMapper, FlowTask> i
     @Override
     public ResultResponse tasks(Integer userId) {
         List<FlowTaskStatus> flowTaskStatusList = iFlowTaskStatusService.list(new QueryWrapper<FlowTaskStatus>().lambda()
-                .eq(FlowTaskStatus::getAssignee, userId));
+                .eq(FlowTaskStatus::getAssignee, userId)
+                .eq(FlowTaskStatus::getIsViewed, 1));
         List<Integer> collect = flowTaskStatusList.stream().map(FlowTaskStatus::getTaskId).collect(Collectors.toList());
-        List<FlowTask> flowTasks = this.list(new QueryWrapper<FlowTask>().lambda().in(!CollectionUtils.isEmpty(collect), FlowTask::getId, collect));
+        List<FlowTask> flowTasks = this.list(new QueryWrapper<FlowTask>()
+                .lambda()
+                .in(!CollectionUtils.isEmpty(collect), FlowTask::getId, collect));
         return ResultResponse.successResponse(flowTasks);
-
     }
+
+    @Override
+    public ResultResponse updateTask(FlowTaskStatusVo flowTaskStatusVo) {
+        FlowTaskStatus byId = iFlowTaskStatusService.getById(flowTaskStatusVo.getId());
+        AssertsUtil.isTrue(byId == null, "process exception:  执行的计划不存在");
+        assert byId != null;
+        byId.setIsViewed(flowTaskStatusVo.getIsViewed());
+        AssertsUtil.isTrue(!iFlowTaskStatusService.saveOrUpdate(byId), "process exception: 流程执行更改失败");
+        return ResultResponse.successResponse();
+    }
+
+    @Override
+    public ResultResponse getFlowStatus(Integer qualificationId, Integer flowInfoId, Integer userId) {
+        FlowNode one = iFlowNodeService.getOne(new QueryWrapper<FlowNode>().lambda()
+                .eq(FlowNode::getQualificationId, qualificationId)
+                .eq(FlowNode::getOwnerId, userId)
+                .eq(FlowNode::getFlowInformationId, flowInfoId));
+        return null;
+    }
+
 
     private ResultResponse saveTaskNodeStatus(Integer flowId, Integer flowTaskId) {
         AssertsUtil.isTrue(!iFlowTaskStatusService.saveBatch(iFlowNodeService
@@ -95,6 +120,7 @@ public class FlowTaskServiceImpl extends ServiceImpl<FlowTaskMapper, FlowTask> i
                     flowTaskStatus.setCreateTime(LocalDateTime.now());
                     flowTaskStatus.setNodeExc(flowNode.getNodeExc());
                     flowTaskStatus.setRejectNode(flowNode.getRejectNode());
+                    flowTaskStatus.setIsViewed(0);
                     return flowTaskStatus;
                 }).collect(Collectors.toList())), "创建任务失败");
         //初始化任务,开始第一个节点任务

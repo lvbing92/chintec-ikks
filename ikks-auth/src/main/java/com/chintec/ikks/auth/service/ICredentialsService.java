@@ -6,8 +6,6 @@ import com.chintec.ikks.common.entity.vo.CredentialsRequest;
 import com.chintec.ikks.common.util.ResultResponse;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.lang.reflect.InvocationTargetException;
-
 /**
  * <p>
  * 服务类

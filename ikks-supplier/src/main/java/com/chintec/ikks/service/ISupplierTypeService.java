@@ -20,7 +20,7 @@ public interface ISupplierTypeService extends IService<SupplierType> {
      * @param pageSiz 页码
      * @return ResultResponse
      */
-    ResultResponse types(Integer current, Integer pageSiz);
+    ResultResponse types(Integer current, Integer pageSiz,String ids);
 
     /**
      * 创建
