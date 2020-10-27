@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,7 @@ public class FlowInfoController {
 
     @PostMapping("/process")
     @ApiOperation("流程控制管理---创建流程")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResultResponse createFlowInfo(@Valid FlowInfoVo flowInfoVo, BindingResult result) {
         log.info("创建流程:{}",flowInfoVo);
         if (result.hasErrors()) {

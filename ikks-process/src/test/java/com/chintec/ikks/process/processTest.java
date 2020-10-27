@@ -151,15 +151,17 @@ class processTest {
 
     @Test
     void copyOnWriteArrayList() {
-        List<Integer> copyOnWriteArrayList = new CopyOnWriteArrayList<>();
-        log.info("开始copy:{}", copyOnWriteArrayList);
-        long l = System.currentTimeMillis();
-        IntStream.rangeClosed(1, 100).parallel().forEach(copyOnWriteArrayList::add);
-        long l1 = System.currentTimeMillis();
-        log.info("结束copy  耗时:{}", l1 - l);
-        copyOnWriteArrayList.forEach(System.out::println);
-        long l2 = System.currentTimeMillis();
-        log.info("结束遍历  耗时:{}", l2 - l1);
+//        List<Integer> copyOnWriteArrayList = new CopyOnWriteArrayList<>();
+//        log.info("开始copy:{}", copyOnWriteArrayList);
+//        long l = System.currentTimeMillis();
+//        IntStream.rangeClosed(1, 100).parallel().forEach(copyOnWriteArrayList::add);
+//        long l1 = System.currentTimeMillis();
+//        log.info("结束copy  耗时:{}", l1 - l);
+//        copyOnWriteArrayList.forEach(System.out::println);
+//        long l2 = System.currentTimeMillis();
+//        log.info("结束遍历  耗时:{}", l2 - l1);
+        redisTemplate.opsForHash().put("1", "123", 12312);
+        System.out.println(redisTemplate.opsForHash().get("1", "123"));
     }
 
     private ConcurrentHashMap<String, Long> getData(int count) {

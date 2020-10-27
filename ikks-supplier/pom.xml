@@ -134,7 +134,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <mainClass>com.chintec.ikks.process.ProcessApplication</mainClass>
+          <mainClass>com.chintec.ikks.SupplierApplication</mainClass>
         </configuration>
         <executions>
           <execution>

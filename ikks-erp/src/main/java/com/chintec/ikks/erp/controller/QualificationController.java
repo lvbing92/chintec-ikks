@@ -79,6 +79,7 @@ public class QualificationController {
 
     @PostMapping("/qualification/supplier")
     @ApiOperation(value = "供应商资质文档-保存(供应商端)")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResultResponse saveQualificationSupplier(String qualificationSupplierVo, HttpServletRequest request) {
         log.info("资质文档-保存客户资质文档属性:{}", qualificationSupplierVo);
         return iQualificationAndProcessService.saveQualificationSupplier(qualificationSupplierVo, request.getHeader("access_token"));
