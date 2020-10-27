@@ -6,6 +6,7 @@ import com.chintec.ikks.erp.feign.IDepartmentService;
 import com.chintec.ikks.erp.service.IProcessAndControllerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping(value = "v1")
+@Slf4j
 @Api(value = "auth", tags = "部门管理")
 public class DepartmentController {
     @Autowired
@@ -83,9 +85,10 @@ public class DepartmentController {
     @GetMapping("/department/tasks")
     @ApiOperation("部门---流程任务信息")
     public ResultResponse tasks(@RequestParam Integer currentPage,
-                                @RequestParam(required = false, defaultValue = "0") Integer pageSize,
+                                @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                                 @RequestParam(required = false, defaultValue = "0") Integer statusId,
                                 @RequestParam(required = false) String params, HttpServletRequest request) {
+        log.info("department tasks:{}", pageSize);
         return iProcessAndControllerService.taskStatus(request.getHeader("access_token"), currentPage, pageSize, statusId, params);
     }
 }

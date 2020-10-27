@@ -50,7 +50,7 @@ public class NodeEventFunction {
         List<Integer> integers = JSONObject.parseArray(node.getProveNodes(), Integer.class);
         List<FlowTaskStatus> collect = null;
         //查看该节点的前置节点完成情况,过滤出进行中的
-        if ("1".equals(node.getNodeExc())) {
+        if ("1".equals(node.getNodeExc()) || "3".equals(node.getNodeExc())) {
             collect = iFlowTaskStatusService.list(new QueryWrapper<FlowTaskStatus>()
                     .lambda()
                     .in(FlowTaskStatus::getNodeId, integers)

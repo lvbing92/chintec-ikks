@@ -18,6 +18,7 @@ import com.chintec.ikks.erp.feign.IFlowTaskService;
 import com.chintec.ikks.erp.feign.IQualificationService;
 import com.chintec.ikks.erp.feign.ISupplierService;
 import com.chintec.ikks.erp.service.IProcessAndControllerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
  * @date 2020/10/21 14:02
  */
 @Service
+@Slf4j
 public class ProcessAndControllerServiceImpl implements IProcessAndControllerService {
     @Autowired
     private IFlowInfoService iFlowInfoService;
@@ -46,11 +48,13 @@ public class ProcessAndControllerServiceImpl implements IProcessAndControllerSer
 
     @Override
     public ResultResponse createProcess(FlowInfoVo flowInfoVo) {
+        log.info("创建流程:{}", flowInfoVo);
         return iFlowInfoService.createFlowNode(flowInfoVo);
     }
 
     @Override
     public ResultResponse startProcess(String token, Integer supplierId) {
+        log.info("startProcess   客户id:{}", supplierId + "开启流程");
         ResultResponse resultResponse = iSupplierService.supplier(supplierId);
         AssertsUtil.isTrue(!resultResponse.isSuccess(), resultResponse.getMessage());
         Supplier supplier = JSONObject.parseObject(JSONObject.toJSONString(resultResponse.getData()), Supplier.class);
@@ -69,11 +73,13 @@ public class ProcessAndControllerServiceImpl implements IProcessAndControllerSer
 
     @Override
     public ResultResponse passFlowNode(String token, Integer flowTaskStatusId, Integer code) {
+        log.info("pass:{},token:{},code:{}", flowTaskStatusId, token, code);
         return iFlowTaskService.passFlowNode(flowTaskStatusId, code);
     }
 
     @Override
     public ResultResponse refuseFlowNode(String token, Integer flowTaskStatusId) {
+        log.info("refuse:{}", flowTaskStatusId);
         return iFlowTaskService.refuseFlowNode(flowTaskStatusId);
     }
 
@@ -101,6 +107,7 @@ public class ProcessAndControllerServiceImpl implements IProcessAndControllerSer
                     departTaskResponse.setCompanyName(supplier.getCompanyName());
                     departTaskResponse.setId(s.getId());
                     departTaskResponse.setStatus(s.getStatus());
+                    log.info("departTaskResponse:{}", departTaskResponse);
                     return departTaskResponse;
                 }).collect(Collectors.toList());
         pageResultResponse.setResults(collect);
@@ -110,6 +117,7 @@ public class ProcessAndControllerServiceImpl implements IProcessAndControllerSer
 
     private CredentialsResponse getCredentialsResponse(RedisTemplate<String, Object> redisTemplate, String token) {
         Object o = redisTemplate.opsForHash().get(token, "userMsg");
+        log.info("用户信息:{}", o);
         AssertsUtil.isTrue(o == null, "请登录");
         return JSONObject.parseObject(JSONObject.toJSONString(o), CredentialsResponse.class);
     }

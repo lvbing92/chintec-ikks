@@ -5,6 +5,7 @@ import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.erp.service.IProcessAndControllerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/v1")
 @Api(value = "flowInfo", tags = {"流程控制以及管理"})
+@Slf4j
 public class FlowInfoController {
     @Autowired
     private IProcessAndControllerService iProcessAndControllerService;
@@ -31,6 +33,7 @@ public class FlowInfoController {
     @PostMapping("/process")
     @ApiOperation("流程控制管理---创建流程")
     public ResultResponse createFlowInfo(@Valid FlowInfoVo flowInfoVo, BindingResult result) {
+        log.info("创建流程:{}",flowInfoVo);
         if (result.hasErrors()) {
             return ResultResponse.failResponse(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
@@ -40,6 +43,7 @@ public class FlowInfoController {
     @GetMapping("/process/start")
     @ApiOperation("流程控制管理---开启任务流程")
     public ResultResponse startFlow(Integer supplierId, HttpServletRequest request) {
+        log.info("开启流程:{}",supplierId);
         return iProcessAndControllerService.startProcess(request.getHeader("access_token"), supplierId);
     }
 
