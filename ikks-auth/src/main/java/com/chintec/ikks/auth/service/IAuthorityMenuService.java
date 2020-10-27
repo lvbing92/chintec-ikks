@@ -18,14 +18,14 @@ public interface IAuthorityMenuService extends IService<AuthorityMenu> {
     /**
      * 根据角色Id查询菜单Id
      */
-    List<Long> getMenuIByRoleId(Long roleId);
+    List<Integer> getMenuIByRoleId(Integer roleId);
 
     /**
      * 删除
      *
      * @param roleId 角色Id
      */
-    void deleteByRoleId(Long roleId);
+    void deleteByRoleId(Integer roleId);
     /**
      * 删除
      *

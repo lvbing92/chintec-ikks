@@ -22,8 +22,8 @@ public class CredentialsAuthorities extends Model<CredentialsAuthorities> {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "用户Id")
-    private Long credentialsId;
+    private Integer credentialsId;
 
     @ApiModelProperty(value = "角色Id")
-    private Long authoritiesId;
+    private Integer authoritiesId;
 }

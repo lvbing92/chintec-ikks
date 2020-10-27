@@ -155,6 +155,7 @@ public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority
         addAuthMenu.setMenuName(menuRequest.getMenuName());
         addAuthMenu.setMenuIcon(menuRequest.getIcon());
         addAuthMenu.setParentId(menuRequest.getParentId());
+        addAuthMenu.setUrl(menuRequest.getUrl());
         boolean flag = iAuthorityMenuService.save(addAuthMenu);
         AssertsUtil.isTrue(!flag, "添加角菜单关系失败!");
 
@@ -211,7 +212,7 @@ public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority
      * @return ResultResponse
      */
     @Override
-    public ResultResponse queryRole(Long id) {
+    public ResultResponse queryRole(Integer id) {
         AuthorityResponse authorityResponse = new AuthorityResponse();
         //查寻角色
         Authority authority = this.getById(id);
@@ -235,7 +236,7 @@ public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority
     }
 
     @Override
-    public ResultResponse deleteRole(Long id) {
+    public ResultResponse deleteRole(Integer id) {
         //查询用户
         Authority authority = this.getOne(new QueryWrapper<Authority>().lambda().eq(Authority::getId, id));
         authority.setEnabled(false);

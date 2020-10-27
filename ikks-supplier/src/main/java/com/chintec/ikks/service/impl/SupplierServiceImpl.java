@@ -76,20 +76,20 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
     @Override
     @Transactional
     public ResultResponse saveSupplier(SupplierVo supplierVo) {
+        Supplier supplier = new Supplier();
+        BeanUtils.copyProperties(supplierVo, supplier);
+        supplier.setComCreateDate(LocalDateTime.ofEpochSecond(Long.parseLong(supplierVo.getComCreateDate()), 0, ZoneOffset.UTC));
+        supplier.setIsDeleted(1);
+        supplier.setIsAuthenticated(1);
+        saveAndUpdate(supplier);
         Credentials credentials = new Credentials();
+        credentials.setUserId(supplier.getId());
         credentials.setName(supplierVo.getContactEmail());
         credentials.setPassword(supplierVo.getPassword());
         credentials.setUserType("3");
         credentials.setEnabled(true);
         boolean flag = iCredentialsService.addLoginMsg(credentials);
         AssertsUtil.isTrue(!flag, "创建供应商失败");
-        Supplier supplier = new Supplier();
-        BeanUtils.copyProperties(supplierVo, supplier);
-        supplier.setComCreateDate(LocalDateTime.ofEpochSecond(Long.parseLong(supplierVo.getComCreateDate()), 0, ZoneOffset.UTC));
-        supplier.setIsDeleted(1);
-        supplier.setIsAuthenticated(1);
-        supplier.setLoginId(credentials.getId());
-        saveAndUpdate(supplier);
         return ResultResponse.successResponse("创建供应商成功");
     }
 

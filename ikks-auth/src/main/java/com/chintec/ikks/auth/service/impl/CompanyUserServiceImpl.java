@@ -95,29 +95,27 @@ public class CompanyUserServiceImpl extends ServiceImpl<CompanyUserMapper, Compa
         boolean flag;
         CompanyUser companyUser = new CompanyUser();
         if (StringUtils.isEmpty(companyUserRequest.getId())) {
-            //保存当前人员到登陆客户表
-            Credentials credentials = new Credentials();
-            credentials.setName(companyUser.getEmail());
-            credentials.setPassword(companyUser.getPassword());
-            credentials.setUserType("2");
-            credentials.setEnabled(true);
-            flag = iCredentialsService.addLoginMsg(credentials);
-
             BeanUtils.copyProperties(companyUserRequest, companyUser);
             //根据用户名和邮箱查询当前人员是否已存在
             CompanyUser isHave = this.getOne(new QueryWrapper<CompanyUser>().lambda()
                     .eq(CompanyUser::getUserName, companyUserRequest.getUserName())
                     .eq(CompanyUser::getEmail, companyUserRequest.getEmail()));
             AssertsUtil.isTrue(!ObjectUtils.isEmpty(isHave), "当前人员已存在!");
-            companyUser.setLoginId(credentials.getId());
             companyUser.setCreateTime(LocalDateTime.now());
             companyUser.setPassword(EncryptionUtil.passWordEnCode(companyUserRequest.getPassword(), BCryptPasswordEncoder.class));
-            flag &= this.save(companyUser);
+            flag = this.save(companyUser);
             //保存公司人员角色信息
             UserAuthorities userAuthorities = new UserAuthorities();
             userAuthorities.setCompanyUserId(companyUser.getId());
             userAuthorities.setAuthorityId(companyUserRequest.getRoleId());
             flag &= iUserAuthoritiesService.save(userAuthorities);
+            //保存当前人员到登陆客户表
+            Credentials credentials = new Credentials();
+            credentials.setName(companyUser.getEmail());
+            credentials.setPassword(companyUser.getPassword());
+            credentials.setUserType("2");
+            credentials.setEnabled(true);
+            flag &= iCredentialsService.addLoginMsg(credentials);
             if (!flag) {
                 return ResultResponse.successResponse("保存公司人员信息失败!");
             }
@@ -126,7 +124,7 @@ public class CompanyUserServiceImpl extends ServiceImpl<CompanyUserMapper, Compa
             CompanyUser currentCompanyUser = this.getById(companyUserRequest.getId());
 
             BeanUtils.copyProperties(companyUserRequest, currentCompanyUser);
-            currentCompanyUser.setPassword(EncryptionUtil.passWordEnCode(companyUserRequest.getPassword(),BCryptPasswordEncoder.class));
+            currentCompanyUser.setPassword(EncryptionUtil.passWordEnCode(companyUserRequest.getPassword(), BCryptPasswordEncoder.class));
             currentCompanyUser.setUpdateTime(LocalDateTime.now());
             flag = this.updateById(currentCompanyUser);
             //更新角色信息
@@ -139,11 +137,15 @@ public class CompanyUserServiceImpl extends ServiceImpl<CompanyUserMapper, Compa
             flag &= iUserAuthoritiesService.save(userAuthorities);
 
             //更新登录信息表
-            Credentials credentials = new Credentials();
-            credentials.setId(currentCompanyUser.getLoginId());
+            //查寻登录信息根据Id和邮箱
+            Credentials credentials =iCredentialsService.getOne(new QueryWrapper<Credentials>().lambda()
+                    .eq(Credentials::getUserId,currentCompanyUser.getId())
+                    .eq(Credentials::getName,currentCompanyUser.getEmail()));
             credentials.setName(currentCompanyUser.getEmail());
             credentials.setPassword(currentCompanyUser.getPassword());
-            flag &= iCredentialsService.updateById(credentials);
+            flag &= iCredentialsService.update(credentials,new QueryWrapper<Credentials>().lambda()
+                    .eq(Credentials::getUserId,currentCompanyUser.getId())
+                    .eq(Credentials::getName,currentCompanyUser.getEmail()));
             if (!flag) {
                 return ResultResponse.successResponse("更新公司人员信息失败!");
             }

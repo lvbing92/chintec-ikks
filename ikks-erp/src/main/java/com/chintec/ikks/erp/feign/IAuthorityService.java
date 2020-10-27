@@ -81,7 +81,7 @@ public interface IAuthorityService {
      */
     @ApiOperation(value = "角色详情")
     @GetMapping("/role/{id}")
-    ResultResponse queryRole(@PathVariable Long id);
+    ResultResponse queryRole(@PathVariable Integer id);
 
     /**
      * 删除角色
@@ -91,5 +91,5 @@ public interface IAuthorityService {
      */
     @ApiOperation(value = "删除角色")
     @DeleteMapping("/role/{id}")
-    ResultResponse deleteRole(@PathVariable Long id);
+    ResultResponse deleteRole(@PathVariable Integer id);
 }

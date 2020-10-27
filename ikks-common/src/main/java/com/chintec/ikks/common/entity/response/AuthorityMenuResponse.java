@@ -14,22 +14,26 @@ public class AuthorityMenuResponse {
     /**
      * 角色Id
      */
-    private Long authorityId;
+    private Integer authorityId;
+    /**
+     * 菜单Id
+     */
+    private Integer menuId;
 
     /**
      * 角色名称
      */
-    private String authority;
+//    private String authority;
 
-    /**
-     * 菜单Id
-     */
-    private Long menuId;
     /**
      * 父菜单Id
      */
-    private Long parentId;
+    private Integer parentId;
 
+    /**
+     * 菜单url
+     */
+    private String url;
     /**
      * 菜单名称
      *

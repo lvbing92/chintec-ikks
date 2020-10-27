@@ -73,7 +73,7 @@ public interface IAuthorityService extends IService<Authority> {
      * @param id 角色Id
      * @return ResultResponse
      */
-    ResultResponse queryRole(Long id);
+    ResultResponse queryRole(Integer id);
 
     /**
      * 删除角色
@@ -81,5 +81,5 @@ public interface IAuthorityService extends IService<Authority> {
      * @param id 角色Id
      * @return ResultResponse
      */
-    ResultResponse deleteRole(Long id);
+    ResultResponse deleteRole(Integer id);
 }

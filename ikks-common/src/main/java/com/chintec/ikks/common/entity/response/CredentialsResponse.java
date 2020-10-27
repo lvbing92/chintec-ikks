@@ -22,7 +22,7 @@ public class CredentialsResponse extends Credentials {
     /**
      * 用户Id
      */
-    private Long id;
+    private Integer id;
 
     @ApiModelProperty(value = "是否可用")
     private Boolean enabled;
@@ -43,7 +43,7 @@ public class CredentialsResponse extends Credentials {
     private String userType;
 
     @ApiModelProperty(value = "角色Id")
-    private Long roleId;
+    private Integer roleId;
 
     @ApiModelProperty(value = "角色等级")
     private String level;

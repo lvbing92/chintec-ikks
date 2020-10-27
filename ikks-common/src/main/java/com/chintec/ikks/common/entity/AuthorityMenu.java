@@ -25,16 +25,16 @@ public class AuthorityMenu extends Model<AuthorityMenu> {
     /**
      * 角色Id
      */
-    private Long authorityId;
+    private Integer authorityId;
 
     /**
      * 菜单Id
      */
-    private Long menuId;
+    private Integer menuId;
     /**
      * 父菜单Id
      */
-    private Long parentId;
+    private Integer parentId;
 
     /**
      * 菜单名称
@@ -45,6 +45,10 @@ public class AuthorityMenu extends Model<AuthorityMenu> {
      * 菜单icon
      */
     private String menuIcon;
+    /**
+     * 菜单地址
+     */
+    private String url;
 
     @Override
     protected Serializable pkVal() {

@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 public class AuthorityResponse {
 
-    private Long id;
+    private Integer id;
     /**
      * 角色名称
      */
