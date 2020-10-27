@@ -3,6 +3,7 @@ package com.chintec.ikks.erp.controller;
 
 import com.chintec.ikks.common.entity.vo.CredentialsRequest;
 import com.chintec.ikks.common.util.ResultResponse;
+import com.chintec.ikks.erp.annotation.PermissionAnnotation;
 import com.chintec.ikks.erp.feign.ICredentialsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +35,7 @@ public class AuthController {
      * */
     @ApiOperation(value = "查询用户列表")
     @GetMapping("/users")
+    @PermissionAnnotation(code = "/users")
     public ResultResponse getUserList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                       @RequestParam(value = "currentPage", required = true) Integer currentPage,
                                       @RequestParam(value = "role", required = false) String role,
@@ -50,6 +52,7 @@ public class AuthController {
      */
     @ApiOperation(value = "新增用户")
     @PostMapping("/user/add")
+    @PermissionAnnotation(code = "/user/add")
     public ResultResponse addUser(CredentialsRequest credentialsRequest) {
 
         return iCredentialsService.addUser(credentialsRequest);
@@ -62,6 +65,7 @@ public class AuthController {
      */
     @ApiOperation(value = "更新客户")
     @PutMapping("/user/update")
+    @PermissionAnnotation(code = "/user/update")
     public ResultResponse updateUser(CredentialsRequest credentialsRequest) {
 
         return iCredentialsService.updateUser(credentialsRequest);
@@ -75,6 +79,7 @@ public class AuthController {
      */
     @ApiOperation(value = "用户详情")
     @GetMapping("/user/{id}")
+    @PermissionAnnotation(code = "/user")
     public ResultResponse queryUser(@PathVariable Integer id) {
         return iCredentialsService.queryUser(id);
     }
@@ -86,6 +91,7 @@ public class AuthController {
      */
     @ApiOperation(value = "删除用户")
     @DeleteMapping("/user/{id}")
+    @PermissionAnnotation(code = "/user")
     public ResultResponse deleteUser(@PathVariable Integer id) {
         return iCredentialsService.deleteUser(id);
     }
@@ -99,6 +105,7 @@ public class AuthController {
      */
     @ApiOperation(value = "获取角色和菜单信息")
     @PostMapping(value = "/user/roleAndMenu")
+    @PermissionAnnotation(code = "/user/roleAndMenu")
     public ResultResponse getRoleAndMenu(@RequestParam(value = "token") String token){
         return iCredentialsService.getRoleAndMenu(token);
     }

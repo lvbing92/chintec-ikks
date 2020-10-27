@@ -2,6 +2,7 @@ package com.chintec.ikks.erp.controller;
 
 import com.chintec.ikks.common.entity.vo.CompanyUserRequest;
 import com.chintec.ikks.common.util.ResultResponse;
+import com.chintec.ikks.erp.annotation.PermissionAnnotation;
 import com.chintec.ikks.erp.feign.ICompanyUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +33,7 @@ public class CompanyUserController {
      */
     @ApiOperation(value = "查询公司用户列表")
     @GetMapping("/companyUsers")
+    @PermissionAnnotation(code ="/companyUsers")
     public ResultResponse getCompanyUserList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                              @RequestParam(value = "currentPage", required = true) Integer currentPage,
                                              @RequestParam(value = "searchValue", required = false) String searchValue,
@@ -48,6 +50,7 @@ public class CompanyUserController {
      */
     @ApiOperation(value = "新增公司用户")
     @PostMapping("/companyUser/add")
+    @PermissionAnnotation(code ="/companyUser/add")
     public ResultResponse addCompanyUser(CompanyUserRequest companyUserRequest) {
 
         return iCompanyUserService.addCompanyUser(companyUserRequest);
@@ -74,6 +77,7 @@ public class CompanyUserController {
      */
     @ApiOperation(value = "公司用户详情")
     @GetMapping("/companyUsers/{id}")
+    @PermissionAnnotation(code ="/companyUsers")
     public ResultResponse queryCompanyUser(@PathVariable Integer id) {
         return iCompanyUserService.queryCompanyUser(id);
     }
@@ -85,6 +89,7 @@ public class CompanyUserController {
      */
     @ApiOperation(value = "删除公司用户")
     @DeleteMapping("/companyUsers/{id}")
+    @PermissionAnnotation(code ="/companyUsers")
     public ResultResponse deleteCompanyUser(@PathVariable Integer id) {
         return iCompanyUserService.deleteCompanyUser(id);
     }

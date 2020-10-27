@@ -2,6 +2,7 @@ package com.chintec.ikks.erp.controller;
 
 import com.chintec.ikks.common.entity.vo.DepartmentRequest;
 import com.chintec.ikks.common.util.ResultResponse;
+import com.chintec.ikks.erp.annotation.PermissionAnnotation;
 import com.chintec.ikks.erp.feign.IDepartmentService;
 import com.chintec.ikks.erp.service.IProcessAndControllerService;
 import io.swagger.annotations.Api;
@@ -38,6 +39,7 @@ public class DepartmentController {
      */
     @ApiOperation(value = "查询部门列表")
     @GetMapping("/departments")
+    @PermissionAnnotation(code ="/departments")
     public ResultResponse getDepartmentList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                             @RequestParam(value = "currentPage") Integer currentPage,
                                             @RequestParam(value = "searchValue", required = false) String searchValue,
@@ -53,6 +55,7 @@ public class DepartmentController {
      */
     @ApiOperation(value = "部门新增")
     @PostMapping("/department/add")
+    @PermissionAnnotation(code ="/department/add")
     public ResultResponse addDepartment(DepartmentRequest departmentRequest) {
 
         return iDepartmentService.addDepartment(departmentRequest);
@@ -66,6 +69,7 @@ public class DepartmentController {
      */
     @ApiOperation(value = "部门详情")
     @GetMapping("/department/{id}")
+    @PermissionAnnotation(code ="/department")
     public ResultResponse queryDepartment(@PathVariable Integer id) {
         return iDepartmentService.queryDepartment(id);
     }
@@ -78,12 +82,14 @@ public class DepartmentController {
      */
     @ApiOperation(value = "删除部门")
     @DeleteMapping("/department/{id}")
+    @PermissionAnnotation(code ="/department")
     public ResultResponse deleteDepartment(@PathVariable Integer id) {
         return iDepartmentService.deleteDepartment(id);
     }
 
     @GetMapping("/department/tasks")
     @ApiOperation("部门---流程任务信息")
+    @PermissionAnnotation(code ="/department/tasks")
     public ResultResponse tasks(@RequestParam Integer currentPage,
                                 @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                                 @RequestParam(required = false, defaultValue = "0") Integer statusId,

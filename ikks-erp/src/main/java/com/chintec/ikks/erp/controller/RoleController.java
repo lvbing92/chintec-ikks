@@ -3,6 +3,7 @@ package com.chintec.ikks.erp.controller;
 import com.chintec.ikks.common.entity.vo.AuthorityRequest;
 import com.chintec.ikks.common.entity.vo.MenuRequest;
 import com.chintec.ikks.common.util.ResultResponse;
+import com.chintec.ikks.erp.annotation.PermissionAnnotation;
 import com.chintec.ikks.erp.feign.IAuthorityService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,6 +30,7 @@ public class RoleController {
      */
     @ApiOperation(value = "查询角色列表")
     @GetMapping("/roles")
+    @PermissionAnnotation(code ="/roles")
     public ResultResponse getUserList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                       @RequestParam(value = "currentPage", required = true) Integer currentPage,
                                       @RequestParam(value = "searchValue", required = false) String searchValue,
@@ -43,11 +45,11 @@ public class RoleController {
      */
     @ApiOperation(value = "新增角色")
     @PostMapping("/role/add")
+    @PermissionAnnotation(code ="/role/add")
     public ResultResponse addRole(AuthorityRequest authorityRequest) {
 
         return iAuthorityService.addRole(authorityRequest);
     }
-
 
     /**
      * 新增角色菜单数据
@@ -57,6 +59,7 @@ public class RoleController {
      */
     @ApiOperation(value = "新增角色菜单")
     @PostMapping("/role/addMenu")
+    @PermissionAnnotation(code ="/role/addMenu")
     public ResultResponse addRoleMenu(MenuRequest menuRequest) {
         return iAuthorityService.addRoleMenu(menuRequest);
     }
@@ -69,6 +72,7 @@ public class RoleController {
      */
     @ApiOperation(value = "更新角色")
     @PutMapping("/role/update")
+    @PermissionAnnotation(code ="/role/update")
     public ResultResponse updateRole(AuthorityRequest authorityRequest) {
 
         return iAuthorityService.updateRole(authorityRequest);
@@ -82,6 +86,7 @@ public class RoleController {
      */
     @ApiOperation(value = "编辑角色菜单")
     @PostMapping("/role/updateMenu")
+    @PermissionAnnotation(code ="/role/updateMenu")
     public ResultResponse updateRoleMenu(MenuRequest menuRequest) {
         return iAuthorityService.updateRoleMenu(menuRequest);
     }
@@ -94,6 +99,7 @@ public class RoleController {
      */
     @ApiOperation(value = "角色详情")
     @GetMapping("/role/{id}")
+    @PermissionAnnotation(code ="/role")
     public ResultResponse queryRole(@PathVariable Integer id) {
 
         return iAuthorityService.queryRole(id);
@@ -107,6 +113,7 @@ public class RoleController {
      */
     @ApiOperation(value = "删除角色")
     @DeleteMapping("/role/{id}")
+    @PermissionAnnotation(code ="/role")
     public ResultResponse deleteRole(@PathVariable Integer id) {
         return iAuthorityService.deleteRole(id);
     }
