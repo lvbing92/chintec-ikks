@@ -39,7 +39,7 @@ public class DepartmentController {
      */
     @ApiOperation(value = "查询部门列表")
     @GetMapping("/departments")
-    @PermissionAnnotation(code ="/departments")
+    @PermissionAnnotation(code ="2010")
     public ResultResponse getDepartmentList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                             @RequestParam(value = "currentPage") Integer currentPage,
                                             @RequestParam(value = "searchValue", required = false) String searchValue,
@@ -55,7 +55,7 @@ public class DepartmentController {
      */
     @ApiOperation(value = "部门新增")
     @PostMapping("/department/add")
-    @PermissionAnnotation(code ="/department/add")
+    @PermissionAnnotation(code ="2010")
     public ResultResponse addDepartment(DepartmentRequest departmentRequest) {
 
         return iDepartmentService.addDepartment(departmentRequest);
@@ -69,7 +69,7 @@ public class DepartmentController {
      */
     @ApiOperation(value = "部门详情")
     @GetMapping("/department/{id}")
-    @PermissionAnnotation(code ="/department")
+    @PermissionAnnotation(code ="2010")
     public ResultResponse queryDepartment(@PathVariable Integer id) {
         return iDepartmentService.queryDepartment(id);
     }
@@ -82,14 +82,14 @@ public class DepartmentController {
      */
     @ApiOperation(value = "删除部门")
     @DeleteMapping("/department/{id}")
-    @PermissionAnnotation(code ="/department")
+    @PermissionAnnotation(code ="2010")
     public ResultResponse deleteDepartment(@PathVariable Integer id) {
         return iDepartmentService.deleteDepartment(id);
     }
 
     @GetMapping("/department/tasks")
     @ApiOperation("部门---流程任务信息")
-    @PermissionAnnotation(code ="/department/tasks")
+    @PermissionAnnotation(code ="2010")
     public ResultResponse tasks(@RequestParam Integer currentPage,
                                 @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                                 @RequestParam(required = false, defaultValue = "0") Integer statusId,

@@ -1,22 +1,14 @@
 package com.chintec.ikks.erp.conifg;
 
-import com.alibaba.fastjson.JSONObject;
-import com.chintec.ikks.common.entity.response.AuthorityMenuResponse;
-import com.chintec.ikks.common.entity.response.CredentialsResponse;
-import com.chintec.ikks.common.util.AssertsUtil;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * @author Jeff·Tang

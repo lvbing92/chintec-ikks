@@ -24,6 +24,9 @@ public class CredentialsResponse extends Credentials {
      */
     private Integer id;
 
+    @ApiModelProperty(value = "用户Id")
+    private Integer userId;
+
     @ApiModelProperty(value = "是否可用")
     private Boolean enabled;
 

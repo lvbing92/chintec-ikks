@@ -24,11 +24,6 @@ public class MenuResponse {
     private String menuName;
 
     /**
-     * 客户命名菜单名称
-     */
-    private String userMenuName;
-
-    /**
      * url
      */
     private String url;

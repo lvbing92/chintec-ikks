@@ -35,7 +35,7 @@ public class FlowInfoController {
     @PostMapping("/process")
     @ApiOperation("流程控制管理---创建流程")
     @ResponseStatus(HttpStatus.CREATED)
-    @PermissionAnnotation(code ="/process")
+    @PermissionAnnotation(code ="2003")
     public ResultResponse createFlowInfo(@Valid FlowInfoVo flowInfoVo, BindingResult result) {
         log.info("创建流程:{}",flowInfoVo);
         if (result.hasErrors()) {
@@ -46,7 +46,7 @@ public class FlowInfoController {
 
     @GetMapping("/process/start")
     @ApiOperation("流程控制管理---开启任务流程")
-    @PermissionAnnotation(code ="/process/start")
+    @PermissionAnnotation(code ="2003")
     public ResultResponse startFlow(Integer supplierId, HttpServletRequest request) {
         log.info("开启流程:{}",supplierId);
         return iProcessAndControllerService.startProcess(request.getHeader("access_token"), supplierId);
@@ -54,14 +54,14 @@ public class FlowInfoController {
 
     @PutMapping("/process/pass/{flowTaskStatusId}/{code}")
     @ApiOperation("流程控制管理---审核通过")
-    @PermissionAnnotation(code ="/process/pass")
+    @PermissionAnnotation(code ="2003")
     public ResultResponse passFlowNode(@PathVariable("flowTaskStatusId") Integer flowTaskStatusId, @PathVariable("code") Integer code, HttpServletRequest request) {
         return iProcessAndControllerService.passFlowNode(request.getHeader("access_token"), flowTaskStatusId, code);
     }
 
     @DeleteMapping("/process/refuse/{flowTaskStatusId}")
     @ApiOperation("流程控制管理---审核拒绝")
-    @PermissionAnnotation(code ="/process/refuse")
+    @PermissionAnnotation(code ="2003")
     public ResultResponse refuseFlowNode(@PathVariable Integer flowTaskStatusId, HttpServletRequest request) {
         return iProcessAndControllerService.refuseFlowNode(request.getHeader("access_token"), flowTaskStatusId);
     }

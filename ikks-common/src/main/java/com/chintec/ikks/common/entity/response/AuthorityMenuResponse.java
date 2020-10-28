@@ -44,6 +44,10 @@ public class AuthorityMenuResponse implements Serializable {
      * 菜单icon
      */
     private String menuIcon;
+    /**
+     * 菜单编码
+     */
+    private String menuCode;
 
 
     private List<AuthorityMenuResponse> childList;
