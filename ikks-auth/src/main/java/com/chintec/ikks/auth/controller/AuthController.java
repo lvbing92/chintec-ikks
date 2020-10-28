@@ -68,7 +68,7 @@ public class AuthController {
      */
     @ApiOperation(value = "添加增用户")
     @PostMapping("/user/addLoginMsg")
-    public boolean addLoginMsg(Credentials credentials) {
+    public boolean addLoginMsg(@RequestBody Credentials credentials) {
         return iCredentialsService.addLoginMsg(credentials);
     }
 
