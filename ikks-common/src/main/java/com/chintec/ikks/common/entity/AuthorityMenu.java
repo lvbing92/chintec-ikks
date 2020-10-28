@@ -49,6 +49,10 @@ public class AuthorityMenu extends Model<AuthorityMenu> {
      * 菜单地址
      */
     private String url;
+    /**
+     * 菜单编码
+     */
+    private String menuCode;
 
     @Override
     protected Serializable pkVal() {

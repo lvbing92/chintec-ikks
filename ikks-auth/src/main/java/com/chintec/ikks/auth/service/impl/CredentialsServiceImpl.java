@@ -187,14 +187,16 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
             AssertsUtil.isTrue(ObjectUtils.isEmpty(companyUser), "当前客户不存在!");
             userMsg.setId(companyUser.getId());
             userMsg.setName(companyUser.getUserName());
+            userMsg.setUserId(companyUser.getId());
             UserAuthorities userAuthorities = iUserAuthoritiesService.getOne(new QueryWrapper<UserAuthorities>()
                     .lambda().eq(UserAuthorities::getCompanyUserId, companyUser.getId()));
             roleId = userAuthorities.getAuthorityId();
         } else if ("3".equals(credentials.getUserType())) {
             ResultResponse response = iSupplierService.supplier(credentials.getUserId());
             Supplier supplier = JSONObject.parseObject(JSONObject.toJSON(response.getData()).toString(), Supplier.class);
-            userMsg.setId(supplier.getId());
+//            userMsg.setId(supplier.getId());
             userMsg.setName(supplier.getCompanyName());
+            userMsg.setUserId(supplier.getId());
             //保存到redis
             redisTemplate.opsForHash().put(token, "userMsg", userMsg);
             redisTemplate.expire(token, 30, TimeUnit.MINUTES);

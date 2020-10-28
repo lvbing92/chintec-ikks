@@ -1,7 +1,6 @@
 package com.chintec.ikks.erp.controller;
 
 import com.chintec.ikks.common.util.ResultResponse;
-import com.chintec.ikks.erp.annotation.PermissionAnnotation;
 import com.chintec.ikks.erp.feign.IPasswordFedService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,7 +36,6 @@ public class UserLoginController {
      */
     @ApiOperation(value = "BackOffice登出")
     @GetMapping(value = "/logout", produces = "application/json;charset=utf-8")
-    @PermissionAnnotation(code = "/logout")
     public ResultResponse logout(@RequestHeader(value = "access_token") String token){
         return iPasswordFedService.logout(token);
     }
@@ -53,7 +51,6 @@ public class UserLoginController {
     @ApiOperation(value = "BackOffice登录")
     @GetMapping(value = "/login", produces = "application/json;charset=utf-8")
     @ResponseStatus(HttpStatus.OK)
-    @PermissionAnnotation(code = "/login")
     public ResultResponse login(@RequestParam String userName,@RequestParam String passWord) {
         return iPasswordFedService.userLogin(userName,passWord);
     }
@@ -68,7 +65,6 @@ public class UserLoginController {
     @ApiOperation(value = "客户端登录")
     @GetMapping(value = "/userLogin", produces = "application/json;charset=utf-8")
     @ResponseStatus(HttpStatus.OK)
-    @PermissionAnnotation(code = "/userLogin")
     public ResultResponse companyUserLogin(@RequestParam String email,@RequestParam String passWord) {
         return iPasswordFedService.companyUserLogin(email,passWord);
     }
