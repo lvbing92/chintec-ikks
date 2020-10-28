@@ -143,7 +143,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
         CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
         ResultResponse fields = iSupplierService.fields(1, 100);
         AssertsUtil.isTrue(!fields.isSuccess(), fields.getMessage());
-        List<SupplierField> supplierFields = JSONObject.parseArray(JSONObject.toJSONString(JSONObject.parseObject(JSONObject.toJSONString(fields.getData()), PageResultResponse.class)), SupplierField.class);
+        List<SupplierField> supplierFields = JSONObject.parseArray(JSONObject.toJSONString(JSONObject.parseObject(JSONObject.toJSONString(fields.getData()), PageResultResponse.class).getResults()), SupplierField.class);
         List<Map<String, Object>> collect = supplierFields.stream().map(supplierField -> {
             Map<String, Object> field = new HashMap<>(3);
             field.put(supplierField.getFieldName(), "");
