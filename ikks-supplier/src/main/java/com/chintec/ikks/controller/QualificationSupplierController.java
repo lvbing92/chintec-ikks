@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,7 +27,7 @@ public class QualificationSupplierController {
     private IQualificationSupplierService iQualificationSupplierService;
 
     @PutMapping("qualificationSupplier")
-    public ResultResponse updateQualificationSupplier(@RequestBody List<QualificationSupplierVo> qualificationSupplierVos, BindingResult result) {
+    public ResultResponse updateQualificationSupplier(@RequestBody @Valid List<QualificationSupplierVo> qualificationSupplierVos, BindingResult result) {
         if (result.hasErrors()) {
             return ResultResponse.failResponse(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }
@@ -34,7 +35,7 @@ public class QualificationSupplierController {
     }
 
     @PostMapping("qualificationSupplier")
-    public ResultResponse saveQualificationSupplier(@RequestBody List<QualificationSupplierVo> qualificationSupplierVos, BindingResult result) {
+    public ResultResponse saveQualificationSupplier(@RequestBody @Valid List<QualificationSupplierVo> qualificationSupplierVos, BindingResult result) {
         if (result.hasErrors()) {
             return ResultResponse.failResponse(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
         }

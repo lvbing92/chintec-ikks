@@ -1,5 +1,6 @@
 package com.chintec.ikks.process;
 
+import com.alibaba.fastjson.JSONObject;
 import com.chintec.ikks.common.entity.FlowTaskStatus;
 import com.chintec.ikks.common.entity.po.FlowTaskStatusPo;
 import com.chintec.ikks.common.entity.po.MessageReq;
@@ -20,6 +21,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -160,8 +163,13 @@ class processTest {
 //        copyOnWriteArrayList.forEach(System.out::println);
 //        long l2 = System.currentTimeMillis();
 //        log.info("结束遍历  耗时:{}", l2 - l1);
-        redisTemplate.opsForHash().put("1", "123", 12312);
-        System.out.println(redisTemplate.opsForHash().get("1", "123"));
+//        redisTemplate.opsForHash().put("1", "123", 12312);
+//        System.out.println(redisTemplate.opsForHash().get("1", "123"));
+//        BigDecimal a = new BigDecimal(0.1);
+//        BigDecimal b= new BigDecimal(0.25);
+//        System.out.println(a.multiply(b,new MathContext(3)));
+     //System.out.println(redisTemplate.delete("5ec1c45d-4cf4-4d21-aedd-3cc1d779cff8"));
+        System.out.println(redisTemplate.opsForHash().get("5ec1c45d-4cf4-4d21-aedd-3cc1d779cff8", "userMsg"));
     }
 
     private ConcurrentHashMap<String, Long> getData(int count) {

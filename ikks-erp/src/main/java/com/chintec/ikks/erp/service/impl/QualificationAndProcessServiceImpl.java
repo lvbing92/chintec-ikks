@@ -121,6 +121,7 @@ public class QualificationAndProcessServiceImpl implements IQualificationAndProc
         BeanUtils.copyProperties(qualification, qualificationResponse);
         CredentialsResponse user = (CredentialsResponse) getUser(redisTemplate, token, null, null);
         if ("3".equals(user.getLevel())) {
+            //todo
             ResultResponse resultResponse = iQualificationSupplierService.totalSupplierQualification(qualification.getId(), null);
             AssertsUtil.isTrue(!resultResponse.isSuccess(), resultResponse.getMessage());
             qualificationResponse.setCount(JSONObject.parseObject(JSONObject.toJSONString(resultResponse.getData()), SupplierFunctionPo.class).getCount());
