@@ -2,6 +2,7 @@ package com.chintec.ikks.erp.controller;
 
 import com.chintec.ikks.common.entity.Menu;
 import com.chintec.ikks.common.util.ResultResponse;
+import com.chintec.ikks.erp.annotation.PermissionAnnotation;
 import com.chintec.ikks.erp.feign.IMenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +28,7 @@ public class MenuController {
      */
     @ApiOperation(value = "查询菜单列表")
     @GetMapping("/menus")
+    @PermissionAnnotation(code ="/menus")
     public ResultResponse getUserList() {
         return iMenuService.getMenuList();
     }
@@ -39,6 +41,7 @@ public class MenuController {
      */
     @ApiOperation(value = "新增或修改菜单")
     @PostMapping("/menu/save")
+    @PermissionAnnotation(code ="/menu/save")
     public ResultResponse addOrUpdateMenu(Menu menu) {
 
         return iMenuService.addOrUpdateMenu(menu);
@@ -52,6 +55,7 @@ public class MenuController {
      */
     @ApiOperation(value = "菜单详情")
     @GetMapping("/menu/{id}")
+    @PermissionAnnotation(code ="/menu")
     public ResultResponse queryUser(@PathVariable Integer id) {
         return iMenuService.queryMenu(id);
     }
@@ -64,6 +68,7 @@ public class MenuController {
      */
     @ApiOperation(value = "删除菜单")
     @DeleteMapping("/menu/{id}")
+    @PermissionAnnotation(code ="/menu")
     public ResultResponse deleteUser(@PathVariable Integer id) {
         return iMenuService.deleteMenu(id);
     }

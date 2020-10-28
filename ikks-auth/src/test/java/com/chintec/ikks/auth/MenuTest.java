@@ -31,8 +31,8 @@ public class MenuTest {
 
     @Test
     void queryMenuList() {
-        ResultResponse res = iAuthorityService.queryRole(4L);
-        System.out.println(res);
+//        ResultResponse res = iAuthorityService.queryRole(4L);
+//        System.out.println(res);
 //        System.out.println(iMenuService.getMenuList("1"));
     }
 

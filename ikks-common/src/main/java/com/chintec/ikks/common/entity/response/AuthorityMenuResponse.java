@@ -2,6 +2,7 @@ package com.chintec.ikks.common.entity.response;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  * @date 2020/10/19 17:48
  */
 @Data
-public class AuthorityMenuResponse {
+public class AuthorityMenuResponse implements Serializable {
     /**
      * 角色Id
      */

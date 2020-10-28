@@ -94,7 +94,6 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
                 .eq(Credentials::getName, credentialsRequest.getName())
                 .eq(Credentials::getCompanyName, credentialsRequest.getCompanyName()));
         if (ObjectUtils.isEmpty(user)) {
-            BCryptPasswordEncoder b = new BCryptPasswordEncoder();
             Credentials credentials = new Credentials();
             BeanUtils.copyProperties(credentialsRequest, credentials);
             credentials.setPassword(EncryptionUtil.passWordEnCode(credentialsRequest.getPassword(), BCryptPasswordEncoder.class));
@@ -196,6 +195,10 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
             Supplier supplier = JSONObject.parseObject(JSONObject.toJSON(response.getData()).toString(), Supplier.class);
             userMsg.setId(supplier.getId());
             userMsg.setName(supplier.getCompanyName());
+            //保存到redis
+            redisTemplate.opsForHash().put(token, "userMsg", userMsg);
+            redisTemplate.expire(token, 30, TimeUnit.MINUTES);
+            return ResultResponse.successResponse("查询成功", userMsg);
         } else {
             BeanUtils.copyProperties(credentials, userMsg);
             //查询用户角色关系
@@ -203,6 +206,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
                     .eq(CredentialsAuthorities::getCredentialsId, credentials.getId()));
             AssertsUtil.isTrue(ObjectUtils.isEmpty(one), "用户和角色关系为空!");
             roleId = Integer.valueOf(one.getAuthoritiesId().toString());
+
         }
         //查询角色信息
         Authority authority = iAuthorityService.getOne(new QueryWrapper<Authority>().lambda().eq(Authority::getId, roleId));
