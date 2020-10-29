@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    environment {
-        SERVER_IP = "${env.GIT_BRANCH == "182.92.65.228"}"
-    }
     tools{
         maven  "maven"
     }
