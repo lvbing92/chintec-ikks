@@ -3,7 +3,9 @@ pipeline {
     environment {
         SERVER_IP = "${env.GIT_BRANCH == "182.92.65.228"}"
     }
-
+    tools{
+        maven  "maven"
+    }
     stages {
         stage('pull') {
                 steps {
