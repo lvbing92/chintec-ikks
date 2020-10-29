@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage("pull project"){
             steps{
-                 git branch: "master", CredentialsId: 'ce5a2f05-3707-4534-9cfa-82718a59273b', url: 'https://github.com/lvbing92/chintec-ikks.git' 
+                 git branch: "master", credentialsId: 'ce5a2f05-3707-4534-9cfa-82718a59273b', url: 'https://github.com/lvbing92/chintec-ikks.git' 
             }
         }
         stage('docker') {
