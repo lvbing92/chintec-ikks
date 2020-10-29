@@ -77,6 +77,9 @@ public class SupplierServiceImpl extends ServiceImpl<SupplierMapper, Supplier> i
     @Transactional
     public ResultResponse saveSupplier(SupplierVo supplierVo) {
         Supplier supplier = new Supplier();
+        Supplier one = this.getOne(new QueryWrapper<Supplier>().lambda()
+                .eq(Supplier::getContactEmail, supplierVo.getContactEmail()).eq(Supplier::getIsDeleted, 1));
+        AssertsUtil.isTrue(one != null, "该公司已经存在");
         BeanUtils.copyProperties(supplierVo, supplier);
         supplier.setComCreateDate(LocalDateTime.ofEpochSecond(Long.parseLong(supplierVo.getComCreateDate()), 0, ZoneOffset.UTC));
         supplier.setIsDeleted(1);

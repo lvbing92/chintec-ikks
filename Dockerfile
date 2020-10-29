@@ -1,9 +1,26 @@
-FROM java:11
-VOLUME /tmp
-ENV TZ=Asia/Shanghai
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-ADD service.jar /usr/share/myservice/myservice.jar
-RUN bash -c 'touch /usr/share/myservice/myservice.jar'
-ADD arthas-boot.jar /arthas-boot.jar
-ENTRYPOINT java  -Xms512m   -Xmx1024m  -Xmn256m   -Xss256k   -XX:SurvivorRatio=8  -jar  /usr/share/myservice/myservice.jar
-EXPOSE 8088
+FROM alpine:3.11
+
+ARG TZONE
+ENV TZONE="${TZONE:-Asia/Shanghai}"
+
+# Timezone
+RUN apk add --no-cache tzdata && \
+    cp /usr/share/zoneinfo/${TZONE} /etc/localtime && \
+    echo "${TZONE}" > /etc/timezone && \
+    apk del tzdata && \
+    date
+
+RUN apk add --no-cache \
+      openjdk11
+
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint
+RUN chmod +x /usr/local/bin/entrypoint
+
+WORKDIR /app
+
+ARG JAR_PATH
+ENV JAR_PATH="${JAR_PATH}"
+
+COPY ${JAR_PATH} /app/app.jar
+
+ENTRYPOINT [ "entrypoint" ]

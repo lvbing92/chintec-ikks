@@ -148,7 +148,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
             Map<String, Object> field = new HashMap<>(3);
             field.put(supplierField.getFieldName(), "");
             field.put(supplierField.getField(), "");
-            field.put(supplierField.getFieldType(), "");
+            field.put("type", supplierField.getFieldType());
             return field;
         }).collect(Collectors.toList());
         supplierVo.setProperties(JSONObject.toJSONString(collect));

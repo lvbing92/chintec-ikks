@@ -1,0 +1,42 @@
+version: "3.7"
+services:
+  auth:
+    image: ikks-auth:latest
+    networks:
+      - internal
+    restart: unless-stopped
+    command: ${PROFILE:-dev}
+
+  erp:
+    image: ikks-erp:latest
+    networks:
+      - internal
+      - external
+    restart: unless-stopped
+    command: ${PROFILE:-dev}
+
+  process:
+    image: ikks-process:latest
+    networks:
+      - internal
+      - external
+    restart: unless-stopped
+    command: ${PROFILE:-dev}
+  supplier:
+    image: ikks-supplier:latest
+    networks:
+      - internal
+      - external
+    restart: unless-stopped
+    command: ${PROFILE:-dev}
+
+  mq:
+    image: ikks-rabbitmq:latest
+    networks:
+      - internal
+    restart: unless-stopped
+    command: ${PROFILE:-dev}
+networks:
+  internal:
+    attachable: true
+  external:

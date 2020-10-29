@@ -44,10 +44,7 @@ public class GlobalExceptionCapture {
      */
     @ExceptionHandler(RuntimeException.class)
     public ResultResponse runtimeException(RuntimeException e) {
-        String message = "网络错误，请重试！！！";
-        if (e != null) {
-            log.error(e.getMessage());
-        }
-        return ResultResponse.failResponse(message);
+        log.error(e.getMessage());
+        return ResultResponse.failResponse(e.getMessage());
     }
 }

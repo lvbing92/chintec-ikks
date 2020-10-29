@@ -50,6 +50,6 @@ public class EncryptionUtil {
             log.info("re  e:{}", e.getMessage());
             return null;
         }
-        return JSONObject.toJSONString(invoke);
+        return invoke + "";
     }
 }
