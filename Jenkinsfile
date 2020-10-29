@@ -5,12 +5,14 @@ pipeline {
     }
 
     stages {
-        stage('Deploy') {
+        stage("pull project"){
+            steps{
+                 git branch: "master", CredentialsId: 'ce5a2f05-3707-4534-9cfa-82718a59273b', url: 'https://github.com/lvbing92/chintec-ikks.git' 
+            }
+        }
+        stage('docker') {
             steps {
-                script {
-                    withCredentials(
-                        git CredentialsId: 'ce5a2f05-3707-4534-9cfa-82718a59273b', url: 'https://github.com/lvbing92/chintec-ikks.git'
-                    ) {
+               
                       sh """
                         SSH_OPTS="-i ${DEPLOY_KEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
                         ssh \${SSH_OPTS} ${DEPLOY_KEY_USR}@${env.SERVER_IP} 'cd chintec-ikks/; docker run --rm -v \$(pwd):/data alpine:3.11 chmod -R 777 /data'
@@ -20,8 +22,8 @@ pipeline {
                         ssh \${SSH_OPTS} ${DEPLOY_KEY_USR}@${env.SERVER_IP} "docker run --rm --network chintec-ikks_internal jeremygarigliet/waitfor -t 90 erp:80"
                         ssh \${SSH_OPTS} ${DEPLOY_KEY_USR}@${env.SERVER_IP} "cd chintec-ikks/; docker-compose kill -s HUP proxy"
                       """
-                    }
-                }
+                    
+           
             }
         }
     }
