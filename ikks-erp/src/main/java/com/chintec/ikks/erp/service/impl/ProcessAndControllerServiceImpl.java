@@ -93,10 +93,11 @@ public class ProcessAndControllerServiceImpl implements IProcessAndControllerSer
                 .stream()
                 .map(s -> {
                     DepartTaskResponse departTaskResponse = new DepartTaskResponse();
-                    ResultResponse qualificationResult = iQualificationService.qualification(s.getId());
+                    ResultResponse qualificationResult = iQualificationService.qualification(s.getQualificationId());
                     AssertsUtil.isTrue(!qualificationResult.isSuccess(), qualificationResult.getMessage());
                     Qualification qualification = JSONObject.parseObject(JSONObject.toJSONString(qualificationResult.getData()), Qualification.class);
                     departTaskResponse.setName(qualification.getQualificationName());
+                    departTaskResponse.setQualificationId(s.getQualificationId());
                     ResultResponse typeResult = iSupplierService.type(qualification.getCategoryId());
                     AssertsUtil.isTrue(!typeResult.isSuccess(), typeResult.getMessage());
                     SupplierType supplierType = JSONObject.parseObject(JSONObject.toJSONString(typeResult.getData()), SupplierType.class);
@@ -105,6 +106,7 @@ public class ProcessAndControllerServiceImpl implements IProcessAndControllerSer
                     AssertsUtil.isTrue(!supplierResult.isSuccess(), supplierResult.getMessage());
                     Supplier supplier = JSONObject.parseObject(JSONObject.toJSONString(supplierResult.getData()), Supplier.class);
                     departTaskResponse.setCompanyName(supplier.getCompanyName());
+                    departTaskResponse.setNodeId(s.getNodeId());
                     departTaskResponse.setId(s.getId());
                     departTaskResponse.setStatus(s.getStatus());
                     log.info("departTaskResponse:{}", departTaskResponse);

@@ -72,7 +72,7 @@ public class QualificationSupplierServiceImpl extends ServiceImpl<QualificationS
     public ResultResponse supplierQualifications(Integer qualificationId, Integer supplierId) {
         return ResultResponse.successResponse(this.list(new QueryWrapper<QualificationSupplier>()
                 .lambda()
-                .eq(QualificationSupplier::getQualificationId, qualificationId)
+                .eq(!StringUtils.isEmpty(qualificationId), QualificationSupplier::getQualificationId, qualificationId)
                 .eq(QualificationSupplier::getSupplierId, supplierId)
                 .eq(QualificationSupplier::getIsDeleted, 1)
                 .orderByDesc(QualificationSupplier::getCreateTime)));

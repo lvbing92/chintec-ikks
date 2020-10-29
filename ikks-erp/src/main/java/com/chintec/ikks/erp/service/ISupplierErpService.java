@@ -40,7 +40,7 @@ public interface ISupplierErpService {
     ResultResponse deleteSupplier(Integer id);
 
 
-    ResultResponse supplier(Integer id);
+    ResultResponse supplier(Integer id, Integer qualificationId);
 
 
     ResultResponse types(Integer currentPage, Integer pageSize);

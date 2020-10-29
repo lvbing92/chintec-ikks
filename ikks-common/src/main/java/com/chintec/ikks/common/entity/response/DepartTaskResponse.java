@@ -19,4 +19,8 @@ public class DepartTaskResponse {
     private String categoryName;
 
     private String status;
+
+    private Integer nodeId;
+
+    private Integer qualificationId;
 }

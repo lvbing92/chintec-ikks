@@ -43,7 +43,7 @@ public class QualificationSupplierController {
     }
 
     @GetMapping("qualificationSuppliers")
-    public ResultResponse qualificationSuppliers(@RequestParam Integer qualificationSupplierId, @RequestParam Integer supplierId) {
+    public ResultResponse qualificationSuppliers(@RequestParam(required = false) Integer qualificationSupplierId, @RequestParam Integer supplierId) {
         return iQualificationSupplierService.supplierQualifications(qualificationSupplierId, supplierId);
     }
 

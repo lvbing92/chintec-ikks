@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "UpLoad", tags = {"文件上传管理"})
 public class UpLoadController {
     public ResultResponse uploadImage() {
-        return null;
+            return null;
     }
 
     public ResultResponse uploadVideos() {
