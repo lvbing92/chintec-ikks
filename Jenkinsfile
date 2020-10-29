@@ -9,7 +9,7 @@ pipeline {
             steps {
                 script {
                     withCredentials(
-                        git branch: "master", CredentialsId: 'ce5a2f05-3707-4534-9cfa-82718a59273b', url: 'https://github.com/lvbing92/chintec-ikks.git'
+                        git CredentialsId: 'ce5a2f05-3707-4534-9cfa-82718a59273b', url: 'https://github.com/lvbing92/chintec-ikks.git'
                     ) {
                       sh """
                         SSH_OPTS="-i ${DEPLOY_KEY} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
