@@ -71,5 +71,5 @@ public interface IQualificationSupplierService {
      * @return resultResponse 结果类
      */
     @GetMapping("qualificationSupplier/count")
-    ResultResponse totalSupplierQualification(@RequestParam Integer qualificationId, @RequestParam Integer supplierId);
+    ResultResponse totalSupplierQualification(@RequestParam(required = false) Integer qualificationId, @RequestParam Integer supplierId);
 }
