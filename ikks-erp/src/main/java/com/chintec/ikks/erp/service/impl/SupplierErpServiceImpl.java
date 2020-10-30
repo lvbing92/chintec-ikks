@@ -1,7 +1,10 @@
 package com.chintec.ikks.erp.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.chintec.ikks.common.entity.*;
+import com.chintec.ikks.common.entity.FlowTask;
+import com.chintec.ikks.common.entity.Supplier;
+import com.chintec.ikks.common.entity.SupplierField;
+import com.chintec.ikks.common.entity.SupplierType;
 import com.chintec.ikks.common.entity.response.*;
 import com.chintec.ikks.common.entity.vo.SupplierFieldVo;
 import com.chintec.ikks.common.entity.vo.SupplierTypeVo;
@@ -11,11 +14,8 @@ import com.chintec.ikks.common.util.PageResultResponse;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.common.util.TimeUtils;
 import com.chintec.ikks.erp.feign.IFlowTaskService;
-import com.chintec.ikks.erp.feign.IQualificationService;
-import com.chintec.ikks.erp.feign.IQualificationSupplierService;
 import com.chintec.ikks.erp.feign.ISupplierService;
 import com.chintec.ikks.erp.service.ISupplierErpService;
-import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
