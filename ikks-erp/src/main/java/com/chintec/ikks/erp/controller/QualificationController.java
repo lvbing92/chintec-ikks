@@ -36,7 +36,7 @@ public class QualificationController {
     @PostMapping("/qualification")
     @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "资质文档-保存")
-    @PermissionAnnotation(code ="2008")
+    @PermissionAnnotation(code ="200802")
     public ResultResponse saveQualification(@Valid QualificationVo qualificationVo, BindingResult result, HttpServletRequest request) {
         log.info("资质文档-保存:{}", qualificationVo);
         if (result.hasErrors()) {
@@ -47,7 +47,7 @@ public class QualificationController {
 
     @PutMapping("/qualification")
     @ApiOperation(value = "资质文档-修改")
-    @PermissionAnnotation(code ="2008")
+    @PermissionAnnotation(code ="200803")
     public ResultResponse updateQualification(@Valid QualificationVo qualificationVo, BindingResult result, HttpServletRequest request) {
         log.info("资质文档-修改:{}", qualificationVo);
         if (result.hasErrors()) {
@@ -58,7 +58,7 @@ public class QualificationController {
 
     @GetMapping("/qualifications")
     @ApiOperation(value = "资质文档-查询(包含供应商端和平台端)")
-    @PermissionAnnotation(code ="2008")
+    @PermissionAnnotation(code ="200801")
     public ResultResponse qualifications(@RequestParam Integer currentPage,
                                          @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                                          @RequestParam(required = false, defaultValue = "0") Integer categoryId,
@@ -69,7 +69,7 @@ public class QualificationController {
 
     @GetMapping("/qualification/{id}")
     @ApiOperation(value = "资质文档-详情")
-    @PermissionAnnotation(code ="2008")
+    @PermissionAnnotation(code ="200804")
     public ResultResponse qualification(@PathVariable Integer id, HttpServletRequest request) {
         log.info("资质文档-详情:{}", id);
         return iQualificationAndProcessService.qualification(id, request.getHeader("access_token"));
@@ -77,7 +77,7 @@ public class QualificationController {
 
     @DeleteMapping("/qualification/{id}")
     @ApiOperation(value = "资质文档-删除")
-    @PermissionAnnotation(code ="2008")
+    @PermissionAnnotation(code ="200805")
     public ResultResponse deleteQualification(@PathVariable Integer id) {
         log.info("资质文档-删除:{}", id);
         return iQualificationAndProcessService.deleteQualification(id);
@@ -86,7 +86,7 @@ public class QualificationController {
     @PostMapping("/qualification/supplier")
     @ApiOperation(value = "供应商资质文档-保存(供应商端)")
     @ResponseStatus(HttpStatus.CREATED)
-    @PermissionAnnotation(code ="2008")
+    @PermissionAnnotation(code ="201405")
     public ResultResponse saveQualificationSupplier(String qualificationSupplierVo, HttpServletRequest request) {
         log.info("资质文档-保存客户资质文档属性:{}", qualificationSupplierVo);
         return iQualificationAndProcessService.saveQualificationSupplier(qualificationSupplierVo, request.getHeader("access_token"));
@@ -94,7 +94,7 @@ public class QualificationController {
 
     @PutMapping("/qualification/supplier")
     @ApiOperation(value = "供应商资质文档-修改(供应商端)")
-    @PermissionAnnotation(code ="2008")
+    @PermissionAnnotation(code ="201403")
     public ResultResponse updateQualificationSupplier(String qualificationSupplierVo, HttpServletRequest request) {
         log.info("资质文档-修改客户资质文档属性:{}", qualificationSupplierVo);
         return iQualificationAndProcessService.updateQualificationSupplier(qualificationSupplierVo, request.getHeader("access_token"));
@@ -102,7 +102,7 @@ public class QualificationController {
 
     @DeleteMapping("/qualification/supplier/{id}")
     @ApiOperation(value = "供应商资质文档-删除(供应商端)")
-    @PermissionAnnotation(code ="2008")
+    @PermissionAnnotation(code ="201404")
     public ResultResponse deleteQualificationSupplier(@PathVariable Integer id) {
         log.info("资质文档-删除客户资质文档属性:{}", id);
         return iQualificationAndProcessService.deleteQualificationSupplier(id);
@@ -110,7 +110,7 @@ public class QualificationController {
 
     @GetMapping("/qualification/supplier/{id}")
     @ApiOperation(value = "供应商资质文档-详情(供应商端)")
-    @PermissionAnnotation(code ="2008")
+    @PermissionAnnotation(code ="201402")
     public ResultResponse qualificationSupplier(@PathVariable Integer id) {
         log.info("资质文档-详情客户资质文档属性:{}", id);
         return iQualificationAndProcessService.qualificationSupplier(id);
@@ -118,7 +118,7 @@ public class QualificationController {
 
     @GetMapping("/qualification/suppliers")
     @ApiOperation(value = "供应商资质文档-列表(供应商端)")
-    @PermissionAnnotation(code ="2008")
+    @PermissionAnnotation(code ="201401")
     public ResultResponse qualificationSuppliers(Integer qualificationSupplierId, Integer supplierId) {
         return iQualificationAndProcessService.qualificationSuppliers(qualificationSupplierId, supplierId);
     }

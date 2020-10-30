@@ -35,7 +35,7 @@ public class AuthController {
      * */
     @ApiOperation(value = "查询用户列表")
     @GetMapping("/users")
-    @PermissionAnnotation(code = "2002")
+    @PermissionAnnotation(code = "200201")
     public ResultResponse getUserList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                       @RequestParam(value = "currentPage", required = true) Integer currentPage,
                                       @RequestParam(value = "role", required = false) String role,
@@ -52,7 +52,7 @@ public class AuthController {
      */
     @ApiOperation(value = "新增用户")
     @PostMapping("/user/add")
-    @PermissionAnnotation(code = "2002")
+    @PermissionAnnotation(code = "200202")
     public ResultResponse addUser(CredentialsRequest credentialsRequest) {
 
         return iCredentialsService.addUser(credentialsRequest);
@@ -65,7 +65,7 @@ public class AuthController {
      */
     @ApiOperation(value = "更新客户")
     @PutMapping("/user/update")
-    @PermissionAnnotation(code = "2002")
+    @PermissionAnnotation(code = "200203")
     public ResultResponse updateUser(CredentialsRequest credentialsRequest) {
 
         return iCredentialsService.updateUser(credentialsRequest);
@@ -79,7 +79,7 @@ public class AuthController {
      */
     @ApiOperation(value = "用户详情")
     @GetMapping("/user/{id}")
-    @PermissionAnnotation(code = "2002")
+    @PermissionAnnotation(code = "200204")
     public ResultResponse queryUser(@PathVariable Integer id) {
         return iCredentialsService.queryUser(id);
     }
@@ -91,7 +91,7 @@ public class AuthController {
      */
     @ApiOperation(value = "删除用户")
     @DeleteMapping("/user/{id}")
-    @PermissionAnnotation(code = "2002")
+    @PermissionAnnotation(code = "200205")
     public ResultResponse deleteUser(@PathVariable Integer id) {
         return iCredentialsService.deleteUser(id);
     }

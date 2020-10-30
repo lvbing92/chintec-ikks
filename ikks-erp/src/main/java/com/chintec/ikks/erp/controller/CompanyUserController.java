@@ -33,7 +33,7 @@ public class CompanyUserController {
      */
     @ApiOperation(value = "查询公司用户列表")
     @GetMapping("/companyUsers")
-    @PermissionAnnotation(code ="2010")
+    @PermissionAnnotation(code ="201005")
     public ResultResponse getCompanyUserList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                              @RequestParam(value = "currentPage", required = true) Integer currentPage,
                                              @RequestParam(value = "searchValue", required = false) String searchValue,
@@ -50,7 +50,7 @@ public class CompanyUserController {
      */
     @ApiOperation(value = "新增公司用户")
     @PostMapping("/companyUser/add")
-    @PermissionAnnotation(code ="2010")
+    @PermissionAnnotation(code ="201006")
     public ResultResponse addCompanyUser(CompanyUserRequest companyUserRequest) {
 
         return iCompanyUserService.addCompanyUser(companyUserRequest);
@@ -77,7 +77,7 @@ public class CompanyUserController {
      */
     @ApiOperation(value = "公司用户详情")
     @GetMapping("/companyUsers/{id}")
-    @PermissionAnnotation(code ="2010")
+    @PermissionAnnotation(code ="201007")
     public ResultResponse queryCompanyUser(@PathVariable Integer id) {
         return iCompanyUserService.queryCompanyUser(id);
     }
@@ -89,7 +89,7 @@ public class CompanyUserController {
      */
     @ApiOperation(value = "删除公司用户")
     @DeleteMapping("/companyUsers/{id}")
-    @PermissionAnnotation(code ="2010")
+    @PermissionAnnotation(code ="201008")
     public ResultResponse deleteCompanyUser(@PathVariable Integer id) {
         return iCompanyUserService.deleteCompanyUser(id);
     }

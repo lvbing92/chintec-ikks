@@ -35,7 +35,7 @@ public class FlowInfoController {
     @PostMapping("/process")
     @ApiOperation("流程控制管理---创建流程")
     @ResponseStatus(HttpStatus.CREATED)
-    @PermissionAnnotation(code ="2003")
+    @PermissionAnnotation(code ="200301")
     public ResultResponse createFlowInfo(@Valid FlowInfoVo flowInfoVo, BindingResult result) {
         log.info("创建流程:{}",flowInfoVo);
         if (result.hasErrors()) {
