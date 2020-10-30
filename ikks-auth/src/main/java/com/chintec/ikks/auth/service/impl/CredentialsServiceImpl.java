@@ -27,6 +27,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -58,6 +59,8 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
     private IUserAuthoritiesService iUserAuthoritiesService;
     @Autowired
     private ISupplierService iSupplierService;
+    @Autowired
+    private IMenuFunctionService iMenuFunctionService;
 
     @Override
     public ResultResponse getUserList(Integer pageSize, Integer currentPage, String role, String status, String searchValue, String sorted) {
@@ -99,7 +102,6 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
             credentials.setPassword(EncryptionUtil.passWordEnCode(credentialsRequest.getPassword(), BCryptPasswordEncoder.class));
             credentials.setEnabled(true);
             credentials.setCreateTime(LocalDateTime.now());
-            credentials.setVersion(1);
 
             //添加用户
             boolean creFlag = this.save(credentials);
@@ -225,6 +227,14 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
                 return authorityMenuResponse;
             }).collect(Collectors.toList());
             userMsg.setMenuList(MenuTree.getMenuTrees(collect));
+
+            List<MenuFunction> menuFunctions = new ArrayList<>();
+            authorityMenuList.forEach(authorityMenu -> {
+                List<MenuFunction> list = iMenuFunctionService.list(new QueryWrapper<MenuFunction>()
+                        .lambda().eq(MenuFunction::getMenuId, authorityMenu.getMenuId()));
+                menuFunctions.addAll(list);
+            });
+            redisTemplate.opsForHash().put(token,"menuFunction",menuFunctions);
         }
         //保存到redis
         redisTemplate.opsForHash().put(token, "userMsg", userMsg);

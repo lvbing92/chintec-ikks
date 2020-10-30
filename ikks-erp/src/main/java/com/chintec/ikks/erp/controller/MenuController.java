@@ -28,7 +28,7 @@ public class MenuController {
      */
     @ApiOperation(value = "查询菜单列表")
     @GetMapping("/menus")
-    @PermissionAnnotation(code ="2001")
+    @PermissionAnnotation(code ="200101")
     public ResultResponse getUserList() {
         return iMenuService.getMenuList();
     }
@@ -41,7 +41,7 @@ public class MenuController {
      */
     @ApiOperation(value = "新增或修改菜单")
     @PostMapping("/menu/save")
-    @PermissionAnnotation(code ="2001")
+    @PermissionAnnotation(code ="200102")
     public ResultResponse addOrUpdateMenu(Menu menu) {
 
         return iMenuService.addOrUpdateMenu(menu);
@@ -55,7 +55,7 @@ public class MenuController {
      */
     @ApiOperation(value = "菜单详情")
     @GetMapping("/menu/{id}")
-    @PermissionAnnotation(code ="2001")
+    @PermissionAnnotation(code ="200103")
     public ResultResponse queryUser(@PathVariable Integer id) {
         return iMenuService.queryMenu(id);
     }
@@ -68,7 +68,7 @@ public class MenuController {
      */
     @ApiOperation(value = "删除菜单")
     @DeleteMapping("/menu/{id}")
-    @PermissionAnnotation(code ="2001")
+    @PermissionAnnotation(code ="200104")
     public ResultResponse deleteUser(@PathVariable Integer id) {
         return iMenuService.deleteMenu(id);
     }

@@ -30,7 +30,7 @@ public class RoleController {
      */
     @ApiOperation(value = "查询角色列表")
     @GetMapping("/roles")
-    @PermissionAnnotation(code ="2009")
+    @PermissionAnnotation(code ="200901")
     public ResultResponse getUserList(@RequestParam(value = "pageSize", required = false) Integer pageSize,
                                       @RequestParam(value = "currentPage", required = true) Integer currentPage,
                                       @RequestParam(value = "searchValue", required = false) String searchValue,
@@ -45,7 +45,7 @@ public class RoleController {
      */
     @ApiOperation(value = "新增角色")
     @PostMapping("/role/add")
-    @PermissionAnnotation(code ="2009")
+    @PermissionAnnotation(code ="200902")
     public ResultResponse addRole(AuthorityRequest authorityRequest) {
 
         return iAuthorityService.addRole(authorityRequest);
@@ -59,7 +59,7 @@ public class RoleController {
      */
     @ApiOperation(value = "新增角色菜单")
     @PostMapping("/role/addMenu")
-    @PermissionAnnotation(code ="2009")
+    @PermissionAnnotation(code ="200903")
     public ResultResponse addRoleMenu(MenuRequest menuRequest) {
         return iAuthorityService.addRoleMenu(menuRequest);
     }
@@ -72,7 +72,7 @@ public class RoleController {
      */
     @ApiOperation(value = "更新角色")
     @PutMapping("/role/update")
-    @PermissionAnnotation(code ="2009")
+    @PermissionAnnotation(code ="200904")
     public ResultResponse updateRole(AuthorityRequest authorityRequest) {
 
         return iAuthorityService.updateRole(authorityRequest);
@@ -86,7 +86,7 @@ public class RoleController {
      */
     @ApiOperation(value = "编辑角色菜单")
     @PostMapping("/role/updateMenu")
-    @PermissionAnnotation(code ="2009")
+    @PermissionAnnotation(code ="200905")
     public ResultResponse updateRoleMenu(MenuRequest menuRequest) {
         return iAuthorityService.updateRoleMenu(menuRequest);
     }
@@ -99,7 +99,7 @@ public class RoleController {
      */
     @ApiOperation(value = "角色详情")
     @GetMapping("/role/{id}")
-    @PermissionAnnotation(code ="2009")
+    @PermissionAnnotation(code ="200906")
     public ResultResponse queryRole(@PathVariable Integer id) {
 
         return iAuthorityService.queryRole(id);
@@ -113,7 +113,7 @@ public class RoleController {
      */
     @ApiOperation(value = "删除角色")
     @DeleteMapping("/role/{id}")
-    @PermissionAnnotation(code ="2009")
+    @PermissionAnnotation(code ="200907")
     public ResultResponse deleteRole(@PathVariable Integer id) {
         return iAuthorityService.deleteRole(id);
     }

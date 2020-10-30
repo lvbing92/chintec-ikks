@@ -28,7 +28,6 @@ public class FeignInterceptor implements RequestInterceptor {
         log.info(s);
         if (!s.contains("login") && !s.contains("logout") && !s.contains("userLogin")) {
             String access_token = request.getHeader("access_token");
-
             log.info("token:{}", access_token);
             template.header("Authorization", "Bearer " + access_token);
         }
