@@ -52,7 +52,7 @@ public interface IQualificationSupplierService {
      * @return resultResponse
      */
     @GetMapping("qualificationSuppliers")
-    ResultResponse supplierQualifications(@RequestParam Integer qualificationId, @RequestParam Integer supplierId);
+    ResultResponse supplierQualifications(@RequestParam(required = false) Integer qualificationId, @RequestParam Integer supplierId);
 
     /**
      * 查询一个资质文档详情

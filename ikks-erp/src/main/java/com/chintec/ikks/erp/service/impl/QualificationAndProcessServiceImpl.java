@@ -120,7 +120,7 @@ public class QualificationAndProcessServiceImpl implements IQualificationAndProc
         QualificationResponse qualificationResponse = new QualificationResponse();
         BeanUtils.copyProperties(qualification, qualificationResponse);
         CredentialsResponse user = (CredentialsResponse) getUser(redisTemplate, token, null, null);
-        if ("3".equals(user.getLevel())) {
+        if ("3".equals(user.getUserType())) {
             //todo
             ResultResponse resultResponse = iQualificationSupplierService.totalSupplierQualification(qualification.getId(), null);
             AssertsUtil.isTrue(!resultResponse.isSuccess(), resultResponse.getMessage());

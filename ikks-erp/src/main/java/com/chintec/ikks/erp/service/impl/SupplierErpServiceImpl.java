@@ -101,7 +101,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
         CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
         String ids = null;
         //判断用户所处的级别 是否是部门用户登录
-        if ("2".equals(credentialsResponse.getLevel())) {
+        if ("2".equals(credentialsResponse.getUserType())) {
             ResultResponse tasks = iFlowTaskService.tasks(Integer.valueOf(String.valueOf(credentialsResponse.getId())));
             AssertsUtil.isTrue(!tasks.isSuccess(), tasks.getMessage());
             List<Integer> collect = JSONObject.parseArray(JSONObject.toJSONString(tasks.getData()), FlowTask.class)
