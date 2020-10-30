@@ -1,8 +1,7 @@
 package com.chintec.ikks.erp.proxy;
 
 import com.alibaba.fastjson.JSONObject;
-import com.chintec.ikks.common.entity.response.AuthorityMenuResponse;
-import com.chintec.ikks.common.entity.response.CredentialsResponse;
+import com.chintec.ikks.common.entity.MenuFunction;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.erp.annotation.PermissionAnnotation;
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +19,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author rubin·lv
@@ -42,28 +42,22 @@ public class LimitProxy {
     @Around("init()")
     public Object around(ProceedingJoinPoint pjp) throws Throwable {
         String s = request.getRequestURL().toString();
-        if (!s.contains("login") && !s.contains("logout") && !s.contains("userLogin")&& !s.contains("user/roleAndMenu")) {
+        if (!s.contains("login") && !s.contains("logout") && !s.contains("userLogin") && !s.contains("user/roleAndMenu")) {
             logger.info("环绕通知");
             String access_token = request.getHeader("access_token");
             logger.info(access_token);
             AssertsUtil.noLogin(StringUtils.isEmpty(access_token));
             MethodSignature signature = (MethodSignature) pjp.getSignature();
             String value = signature.getMethod().getDeclaredAnnotation(PermissionAnnotation.class).code();
-            Object object = redisTemplate.opsForHash().get(access_token, "userMsg");
+            Object object = redisTemplate.opsForHash().get(access_token, "menuFunction");
             if (object != null) {
                 //获取用户信息
-                CredentialsResponse credentialsResponse = JSONObject.parseObject(JSONObject.toJSON(object).toString(), CredentialsResponse.class);
-                List<AuthorityMenuResponse> menuList = credentialsResponse.getMenuList();
-                AssertsUtil.noLogin(menuList.size() == 0, "无权限访问!");
-                for (AuthorityMenuResponse authorityMenuResponse : menuList) {
-                    List<AuthorityMenuResponse> childList = authorityMenuResponse.getChildList();
-                    for (AuthorityMenuResponse menuResponse : childList) {
-                        if (value.equals(menuResponse.getMenuCode())){
-                            return pjp.proceed();
-                        }
-                    }
+                List<MenuFunction> menuFunctions = JSONObject.parseArray(JSONObject.toJSONString(object), MenuFunction.class);
+                List<String> collect = menuFunctions.stream().map(MenuFunction::getFunctionCode).collect(Collectors.toList());
+                AssertsUtil.noLogin(menuFunctions.size() == 0, "无权限访问!");
+                if(!collect.contains(value)){
+                    AssertsUtil.noLogin(true);
                 }
-                AssertsUtil.noLogin(true);
             } else {
                 AssertsUtil.noLogin(true);
             }
