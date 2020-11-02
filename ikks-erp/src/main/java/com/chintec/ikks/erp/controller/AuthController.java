@@ -10,6 +10,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author Jeff·Tang
  * @version 1.0
@@ -100,14 +102,14 @@ public class AuthController {
     /**
      * 查询当前登录人角色和菜单信息
      *
-     * @param token 当前登录人token
+     * @param request 请求
      * @return ResultResponse
      */
     @ApiOperation(value = "获取角色和菜单信息")
     @PostMapping(value = "/user/roleAndMenu")
     @PermissionAnnotation(code = "2002")
-    public ResultResponse getRoleAndMenu(@RequestParam(value = "token") String token){
-        return iCredentialsService.getRoleAndMenu(token);
+    public ResultResponse getRoleAndMenu(HttpServletRequest request){
+        return iCredentialsService.getRoleAndMenu(request.getHeader("access_token"));
     }
 
 }

@@ -128,8 +128,8 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
     public boolean addLoginMsg(Credentials credentials) {
         boolean flag;
         credentials.setPassword(EncryptionUtil.passWordEnCode(credentials.getPassword(), BCryptPasswordEncoder.class));
-         flag = this.save(credentials);
-        if("3".equals(credentials.getUserType())){
+        flag = this.save(credentials);
+        if ("3".equals(credentials.getUserType())) {
             //添加用户角色关系表信息
             CredentialsAuthorities credentialsAuthorities = new CredentialsAuthorities();
             credentialsAuthorities.setAuthoritiesId(7);
@@ -205,8 +205,9 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
         } else if ("3".equals(credentials.getUserType())) {
             ResultResponse response = iSupplierService.supplier(credentials.getUserId());
             Supplier supplier = JSONObject.parseObject(JSONObject.toJSON(response.getData()).toString(), Supplier.class);
-            AssertsUtil.isTrue(supplier==null,"查无此供应商!");
+            AssertsUtil.isTrue(supplier == null, "查无此供应商!");
 //            userMsg.setId(supplier.getId());
+            assert supplier != null;
             userMsg.setName(supplier.getCompanyName());
             userMsg.setUserId(supplier.getId());
             CredentialsAuthorities one = iCredentialsAuthoritiesService.getOne(new QueryWrapper<CredentialsAuthorities>().lambda()
@@ -243,7 +244,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
                         .lambda().eq(MenuFunction::getMenuId, authorityMenu.getMenuId()));
                 menuFunctions.addAll(list);
             });
-            redisTemplate.opsForHash().put(token,"menuFunction",menuFunctions);
+            redisTemplate.opsForHash().put(token, "menuFunction", menuFunctions);
         }
         //保存到redis
         redisTemplate.opsForHash().put(token, "userMsg", userMsg);
