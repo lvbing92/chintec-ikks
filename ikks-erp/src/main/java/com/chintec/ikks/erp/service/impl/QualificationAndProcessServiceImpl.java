@@ -133,7 +133,7 @@ public class QualificationAndProcessServiceImpl implements IQualificationAndProc
 
     private Object getUser(RedisTemplate<String, Object> redisTemplate, String token, QualificationVo qualificationVo, QualificationSupplierVo qualificationSupplierVo) {
         Object o = redisTemplate.opsForHash().get(token, "userMsg");
-        AssertsUtil.isTrue(o == null, "请登录");
+        AssertsUtil.noLogin(o == null, "请登录");
         CredentialsResponse credentials = JSONObject.parseObject(JSONObject.toJSONString(o), CredentialsResponse.class);
         if (qualificationVo != null) {
             qualificationVo.setUpdateBy(Integer.valueOf(String.valueOf(credentials.getId())));

@@ -25,7 +25,7 @@ public class UploadFileController {
      * @param file
      * @return
      */
-    @PostMapping("/img_files")
+    @PostMapping("/imgFiles")
     public ResultResponse uploadImg(MultipartFile file) {
         return iUploadFileService.uploadImg2Oss(file);
     }

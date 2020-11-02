@@ -240,7 +240,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
 
     private CredentialsResponse getCredentialsResponse(RedisTemplate<String, Object> redisTemplate, String token) {
         Object o = redisTemplate.opsForHash().get(token, "userMsg");
-        AssertsUtil.isTrue(o == null, "请登录");
+        AssertsUtil.noLogin(o == null, "请登录");
         return JSONObject.parseObject(JSONObject.toJSONString(o), CredentialsResponse.class);
     }
 }

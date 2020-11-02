@@ -120,7 +120,7 @@ public class ProcessAndControllerServiceImpl implements IProcessAndControllerSer
     private CredentialsResponse getCredentialsResponse(RedisTemplate<String, Object> redisTemplate, String token) {
         Object o = redisTemplate.opsForHash().get(token, "userMsg");
         log.info("用户信息:{}", o);
-        AssertsUtil.isTrue(o == null, "请登录");
+        AssertsUtil.noLogin(o == null, "请登录");
         return JSONObject.parseObject(JSONObject.toJSONString(o), CredentialsResponse.class);
     }
 }
