@@ -64,8 +64,6 @@ public class Credentials extends Model<Credentials> {
     @ApiModelProperty(value = "更新人名称")
     private String updateByName;
 
-    @ApiModelProperty(value = "版本号")
-    private Integer version;
 
     @Override
     protected Serializable pkVal() {

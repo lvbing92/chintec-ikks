@@ -33,8 +33,6 @@ public class AuthorityRequest {
     @ApiModelProperty(value = "备注", hidden = true)
     private String remark;
 
-    @ApiModelProperty(value = "角色等级", hidden = true)
-    private String level;
     /**
      * 角色关联的菜单
      */
