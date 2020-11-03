@@ -12,6 +12,7 @@ import com.chintec.ikks.common.entity.*;
 import com.chintec.ikks.common.entity.response.AuthorityMenuResponse;
 import com.chintec.ikks.common.entity.response.CredentialsResponse;
 import com.chintec.ikks.common.entity.vo.CredentialsRequest;
+import com.chintec.ikks.common.enums.UserTypeEnum;
 import com.chintec.ikks.common.util.*;
 import io.netty.util.internal.StringUtil;
 import org.springframework.beans.BeanUtils;
@@ -129,7 +130,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
         boolean flag;
         credentials.setPassword(EncryptionUtil.passWordEnCode(credentials.getPassword(), BCryptPasswordEncoder.class));
         flag = this.save(credentials);
-        if ("3".equals(credentials.getUserType())) {
+        if (UserTypeEnum.THREE.getCode().equals(credentials.getUserType())) {
             //添加用户角色关系表信息
             CredentialsAuthorities credentialsAuthorities = new CredentialsAuthorities();
             credentialsAuthorities.setAuthoritiesId(7);
@@ -192,7 +193,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
         Credentials credentials = getOne(new QueryWrapper<Credentials>().lambda().eq(Credentials::getName, authentication.getName()));
         AssertsUtil.isTrue(ObjectUtils.isEmpty(credentials), "当前用户不存在!");
         Integer roleId;
-        if ("2".equals(credentials.getUserType())) {
+        if (UserTypeEnum.ONE.getCode().equals(credentials.getUserType())) {
             CompanyUser companyUser = iCompanyUserService.getOne(new QueryWrapper<CompanyUser>().lambda()
                     .eq(CompanyUser::getId, credentials.getUserId()));
             AssertsUtil.isTrue(ObjectUtils.isEmpty(companyUser), "当前客户不存在!");
@@ -202,7 +203,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
             UserAuthorities userAuthorities = iUserAuthoritiesService.getOne(new QueryWrapper<UserAuthorities>()
                     .lambda().eq(UserAuthorities::getCompanyUserId, companyUser.getId()));
             roleId = userAuthorities.getAuthorityId();
-        } else if ("3".equals(credentials.getUserType())) {
+        } else if (UserTypeEnum.THREE.getCode().equals(credentials.getUserType())) {
             ResultResponse response = iSupplierService.supplier(credentials.getUserId());
             Supplier supplier = JSONObject.parseObject(JSONObject.toJSON(response.getData()).toString(), Supplier.class);
             AssertsUtil.isTrue(supplier == null, "查无此供应商!");

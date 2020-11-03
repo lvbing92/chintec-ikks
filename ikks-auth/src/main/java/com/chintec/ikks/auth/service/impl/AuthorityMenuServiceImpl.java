@@ -30,10 +30,9 @@ public class AuthorityMenuServiceImpl extends ServiceImpl<AuthorityMenuMapper, A
      */
     @Override
     public List<Integer> getMenuIByRoleId(Integer roleId) {
-        List<Integer> menuIds = this.list(new QueryWrapper<AuthorityMenu>().
+        return this.list(new QueryWrapper<AuthorityMenu>().
                 lambda().eq(AuthorityMenu::getAuthorityId, roleId))
                 .stream().map(AuthorityMenu::getMenuId).collect(Collectors.toList());
-        return menuIds;
 
     }
 

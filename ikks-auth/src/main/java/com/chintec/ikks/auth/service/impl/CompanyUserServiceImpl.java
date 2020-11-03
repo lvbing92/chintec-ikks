@@ -13,6 +13,7 @@ import com.chintec.ikks.common.entity.Credentials;
 import com.chintec.ikks.common.entity.UserAuthorities;
 import com.chintec.ikks.common.entity.response.CompanyUserResponse;
 import com.chintec.ikks.common.entity.vo.CompanyUserRequest;
+import com.chintec.ikks.common.enums.UserTypeEnum;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.EncryptionUtil;
 import com.chintec.ikks.common.util.PageResultResponse;
@@ -113,7 +114,7 @@ public class CompanyUserServiceImpl extends ServiceImpl<CompanyUserMapper, Compa
             Credentials credentials = new Credentials();
             credentials.setName(companyUser.getEmail());
             credentials.setPassword(companyUser.getPassword());
-            credentials.setUserType("2");
+            credentials.setUserType(UserTypeEnum.TWO.getCode());
             credentials.setEnabled(true);
             flag &= iCredentialsService.addLoginMsg(credentials);
             if (!flag) {
