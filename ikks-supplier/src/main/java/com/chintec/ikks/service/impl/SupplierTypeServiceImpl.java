@@ -36,7 +36,8 @@ public class SupplierTypeServiceImpl extends ServiceImpl<SupplierTypeMapper, Sup
         IPage<SupplierType> page = this.page(new Page<>(currentPage, pageSiz), new QueryWrapper<SupplierType>()
                 .lambda()
                 .in(!StringUtils.isEmpty(ids), SupplierType::getFlowId, JSONObject.parseArray(ids, Integer.class))
-                .eq(SupplierType::getIsDeleted, 1));
+                .eq(SupplierType::getIsDeleted, 1)
+                .orderByDesc(SupplierType::getCreateTime));
         PageResultResponse<SupplierType> pageResultResponse = new PageResultResponse<>(page.getTotal(), currentPage, pageSiz);
         pageResultResponse.setResults(page.getRecords());
         pageResultResponse.setTotalPages(page.getPages());
