@@ -18,6 +18,7 @@ import com.chintec.ikks.erp.feign.IFlowTaskService;
 import com.chintec.ikks.erp.feign.IQualificationService;
 import com.chintec.ikks.erp.feign.ISupplierService;
 import com.chintec.ikks.erp.service.IProcessAndControllerService;
+import com.chintec.ikks.erp.service.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -85,7 +86,7 @@ public class ProcessAndControllerServiceImpl implements IProcessAndControllerSer
 
     @Override
     public ResultResponse taskStatus(String token, Integer currentPage, Integer pageSize, Integer statusId, String params) {
-        CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
+        CredentialsResponse credentialsResponse = UserUtils.getCredentialsResponse(redisTemplate, token);
         ResultResponse resultResponse = iFlowTaskService.flowTaskStatus(Integer.valueOf(String.valueOf(credentialsResponse.getId())), currentPage, pageSize, statusId, params);
         AssertsUtil.isTrue(!resultResponse.isSuccess(), resultResponse.getMessage());
         PageResultResponse pageResultResponse = JSONObject.parseObject(JSONObject.toJSONString(resultResponse), PageResultResponse.class);
@@ -116,11 +117,4 @@ public class ProcessAndControllerServiceImpl implements IProcessAndControllerSer
         return ResultResponse.successResponse(pageResultResponse);
     }
 
-
-    private CredentialsResponse getCredentialsResponse(RedisTemplate<String, Object> redisTemplate, String token) {
-        Object o = redisTemplate.opsForHash().get(token, "userMsg");
-        log.info("用户信息:{}", o);
-        AssertsUtil.noLogin(o == null, "请登录");
-        return JSONObject.parseObject(JSONObject.toJSONString(o), CredentialsResponse.class);
-    }
 }
