@@ -17,6 +17,7 @@ import com.chintec.ikks.erp.feign.IFlowTaskService;
 import com.chintec.ikks.erp.feign.IQualificationService;
 import com.chintec.ikks.erp.feign.IQualificationSupplierService;
 import com.chintec.ikks.erp.service.IQualificationAndProcessService;
+import com.chintec.ikks.erp.service.utils.UserUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -45,12 +46,12 @@ public class QualificationAndProcessServiceImpl implements IQualificationAndProc
 
     @Override
     public ResultResponse saveQualification(QualificationVo qualificationVo, String token) {
-        return iQualificationService.saveQualification((QualificationVo) getUser(redisTemplate, token, qualificationVo, null));
+        return iQualificationService.saveQualification((QualificationVo) UserUtils.getUser(redisTemplate, token, qualificationVo, null));
     }
 
     @Override
     public ResultResponse updateQualification(QualificationVo qualificationVo, String token) {
-        return iQualificationService.updateQualification((QualificationVo) getUser(redisTemplate, token, qualificationVo, null));
+        return iQualificationService.updateQualification((QualificationVo) UserUtils.getUser(redisTemplate, token, qualificationVo, null));
     }
 
     @Override
@@ -83,13 +84,13 @@ public class QualificationAndProcessServiceImpl implements IQualificationAndProc
     @Override
     public ResultResponse saveQualificationSupplier(String qualificationSupplierVo, String token) {
         AssertsUtil.isTrue(StringUtils.isEmpty(qualificationSupplierVo), "请传入数据");
-        return iQualificationSupplierService.saveSupplierQualification(JSONObject.parseArray(qualificationSupplierVo, QualificationSupplierVo.class).stream().map(s -> (QualificationSupplierVo) getUser(redisTemplate, token, null, s)).collect(Collectors.toList()));
+        return iQualificationSupplierService.saveSupplierQualification(JSONObject.parseArray(qualificationSupplierVo, QualificationSupplierVo.class).stream().map(s -> (QualificationSupplierVo) UserUtils.getUser(redisTemplate, token, null, s)).collect(Collectors.toList()));
     }
 
     @Override
     public ResultResponse updateQualificationSupplier(String qualificationSupplierVo, String token) {
         AssertsUtil.isTrue(StringUtils.isEmpty(qualificationSupplierVo), "请传入数据");
-        return iQualificationSupplierService.updateSupplierQualification(JSONObject.parseArray(qualificationSupplierVo, QualificationSupplierVo.class).stream().map(s -> (QualificationSupplierVo) getUser(redisTemplate, token, null, s)).collect(Collectors.toList()));
+        return iQualificationSupplierService.updateSupplierQualification(JSONObject.parseArray(qualificationSupplierVo, QualificationSupplierVo.class).stream().map(s -> (QualificationSupplierVo) UserUtils.getUser(redisTemplate, token, null, s)).collect(Collectors.toList()));
     }
 
     @Override
@@ -119,7 +120,7 @@ public class QualificationAndProcessServiceImpl implements IQualificationAndProc
     private QualificationResponse getQualificationResponse(Qualification qualification, String token) {
         QualificationResponse qualificationResponse = new QualificationResponse();
         BeanUtils.copyProperties(qualification, qualificationResponse);
-        CredentialsResponse user = (CredentialsResponse) getUser(redisTemplate, token, null, null);
+        CredentialsResponse user = (CredentialsResponse) UserUtils.getUser(redisTemplate, token, null, null);
         if ("3".equals(user.getUserType())) {
             //todo
             ResultResponse resultResponse = iQualificationSupplierService.totalSupplierQualification(qualification.getId(), null);
@@ -131,20 +132,5 @@ public class QualificationAndProcessServiceImpl implements IQualificationAndProc
         return qualificationResponse;
     }
 
-    private Object getUser(RedisTemplate<String, Object> redisTemplate, String token, QualificationVo qualificationVo, QualificationSupplierVo qualificationSupplierVo) {
-        Object o = redisTemplate.opsForHash().get(token, "userMsg");
-        AssertsUtil.noLogin(o == null, "请登录");
-        CredentialsResponse credentials = JSONObject.parseObject(JSONObject.toJSONString(o), CredentialsResponse.class);
-        if (qualificationVo != null) {
-            qualificationVo.setUpdateBy(Integer.valueOf(String.valueOf(credentials.getId())));
-            qualificationVo.setUpdateName(credentials.getName());
-            return qualificationVo;
-        } else if (qualificationSupplierVo != null) {
-            qualificationSupplierVo.setUpdateBy(Integer.valueOf(String.valueOf(credentials.getId())));
-            qualificationSupplierVo.setUpdateName(credentials.getName());
-            return qualificationSupplierVo;
-        }
-        return credentials;
-    }
 
 }

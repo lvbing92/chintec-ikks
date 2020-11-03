@@ -16,6 +16,7 @@ import com.chintec.ikks.common.util.TimeUtils;
 import com.chintec.ikks.erp.feign.IFlowTaskService;
 import com.chintec.ikks.erp.feign.ISupplierService;
 import com.chintec.ikks.erp.service.ISupplierErpService;
+import com.chintec.ikks.erp.service.utils.UserUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
 
     @Override
     public ResultResponse saveField(SupplierFieldVo supplierFieldVo, String token) {
-        CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
+        CredentialsResponse credentialsResponse = UserUtils.getCredentialsResponse(redisTemplate, token);
         supplierFieldVo.setUpdateById(Integer.valueOf(String.valueOf(credentialsResponse.getId())));
         supplierFieldVo.setUpdateByName(credentialsResponse.getUpdateByName());
         return iSupplierService.saveField(supplierFieldVo);
@@ -56,7 +57,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
 
     @Override
     public ResultResponse updateField(SupplierFieldVo supplierFieldVo, String token) {
-        CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
+        CredentialsResponse credentialsResponse = UserUtils.getCredentialsResponse(redisTemplate, token);
         supplierFieldVo.setUpdateById(Integer.valueOf(String.valueOf(credentialsResponse.getId())));
         supplierFieldVo.setUpdateByName(credentialsResponse.getUpdateByName());
         return iSupplierService.updateField(supplierFieldVo);
@@ -98,7 +99,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
 
     @Override
     public ResultResponse suppliers(Integer currentPage, Integer pageSize, Integer categoryId, Integer statusId, String params, String token) {
-        CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
+        CredentialsResponse credentialsResponse = UserUtils.getCredentialsResponse(redisTemplate, token);
         String ids = null;
         //判断用户所处的级别 是否是部门用户登录
         if ("2".equals(credentialsResponse.getUserType())) {
@@ -139,7 +140,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
 
     @Override
     public ResultResponse saveSupplier(SupplierVo supplierVo, String token) {
-        CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
+        CredentialsResponse credentialsResponse = UserUtils.getCredentialsResponse(redisTemplate, token);
         ResultResponse fields = iSupplierService.fields(1, 100);
         AssertsUtil.isTrue(!fields.isSuccess(), fields.getMessage());
         List<SupplierField> supplierFields = JSONObject.parseArray(JSONObject.toJSONString(JSONObject.parseObject(JSONObject.toJSONString(fields.getData()), PageResultResponse.class).getResults()), SupplierField.class);
@@ -158,7 +159,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
 
     @Override
     public ResultResponse updateSupplier(SupplierVo supplierVo, String token) {
-        CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
+        CredentialsResponse credentialsResponse = UserUtils.getCredentialsResponse(redisTemplate, token);
         supplierVo.setUpdateById(Integer.valueOf(String.valueOf(credentialsResponse.getId())));
         supplierVo.setUpdateByName(credentialsResponse.getUpdateByName());
         return iSupplierService.updateSupplier(supplierVo);
@@ -206,7 +207,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
 
     @Override
     public ResultResponse saveType(SupplierTypeVo supplierTypeVo, String token) {
-        CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
+        CredentialsResponse credentialsResponse = UserUtils.getCredentialsResponse(redisTemplate, token);
         supplierTypeVo.setUpdateBy(String.valueOf(credentialsResponse.getId()));
         supplierTypeVo.setUpdateName(credentialsResponse.getUpdateByName());
 
@@ -215,7 +216,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
 
     @Override
     public ResultResponse updateType(SupplierTypeVo supplierTypeVo, String token) {
-        CredentialsResponse credentialsResponse = getCredentialsResponse(redisTemplate, token);
+        CredentialsResponse credentialsResponse = UserUtils.getCredentialsResponse(redisTemplate, token);
         supplierTypeVo.setUpdateBy(String.valueOf(credentialsResponse.getId()));
         supplierTypeVo.setUpdateName(credentialsResponse.getUpdateByName());
         return iSupplierService.updateType(supplierTypeVo);
@@ -238,9 +239,4 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
         return ResultResponse.successResponse(supplierTypeResponse);
     }
 
-    private CredentialsResponse getCredentialsResponse(RedisTemplate<String, Object> redisTemplate, String token) {
-        Object o = redisTemplate.opsForHash().get(token, "userMsg");
-        AssertsUtil.noLogin(o == null, "请登录");
-        return JSONObject.parseObject(JSONObject.toJSONString(o), CredentialsResponse.class);
-    }
 }
