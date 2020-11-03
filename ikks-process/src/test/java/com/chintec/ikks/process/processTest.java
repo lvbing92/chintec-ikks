@@ -1,6 +1,5 @@
 package com.chintec.ikks.process;
 
-import com.alibaba.fastjson.JSONObject;
 import com.chintec.ikks.common.entity.FlowTaskStatus;
 import com.chintec.ikks.common.entity.po.FlowTaskStatusPo;
 import com.chintec.ikks.common.entity.po.MessageReq;
@@ -21,16 +20,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
 /**

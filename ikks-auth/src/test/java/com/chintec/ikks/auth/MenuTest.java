@@ -4,7 +4,6 @@ package com.chintec.ikks.auth;
 import com.chintec.ikks.auth.service.IAuthorityService;
 import com.chintec.ikks.auth.service.IMenuService;
 import com.chintec.ikks.common.util.EncryptionUtil;
-import com.chintec.ikks.common.util.ResultResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

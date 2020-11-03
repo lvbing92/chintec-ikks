@@ -9,6 +9,7 @@ import com.chintec.ikks.common.entity.response.*;
 import com.chintec.ikks.common.entity.vo.SupplierFieldVo;
 import com.chintec.ikks.common.entity.vo.SupplierTypeVo;
 import com.chintec.ikks.common.entity.vo.SupplierVo;
+import com.chintec.ikks.common.enums.UserTypeEnum;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.PageResultResponse;
 import com.chintec.ikks.common.util.ResultResponse;
@@ -102,7 +103,7 @@ public class SupplierErpServiceImpl implements ISupplierErpService {
         CredentialsResponse credentialsResponse = UserUtils.getCredentialsResponse(redisTemplate, token);
         String ids = null;
         //判断用户所处的级别 是否是部门用户登录
-        if ("2".equals(credentialsResponse.getUserType())) {
+        if (UserTypeEnum.TWO.getCode().equals(credentialsResponse.getUserType())) {
             ResultResponse tasks = iFlowTaskService.tasks(Integer.valueOf(String.valueOf(credentialsResponse.getId())));
             AssertsUtil.isTrue(!tasks.isSuccess(), tasks.getMessage());
             List<Integer> collect = JSONObject.parseArray(JSONObject.toJSONString(tasks.getData()), FlowTask.class)

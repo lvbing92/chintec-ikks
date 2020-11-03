@@ -9,6 +9,7 @@ import com.chintec.ikks.common.entity.response.QualificationResponse;
 import com.chintec.ikks.common.entity.response.QualificationSupplierResponse;
 import com.chintec.ikks.common.entity.vo.QualificationSupplierVo;
 import com.chintec.ikks.common.entity.vo.QualificationVo;
+import com.chintec.ikks.common.enums.UserTypeEnum;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.PageResultResponse;
 import com.chintec.ikks.common.util.ResultResponse;
@@ -121,7 +122,7 @@ public class QualificationAndProcessServiceImpl implements IQualificationAndProc
         QualificationResponse qualificationResponse = new QualificationResponse();
         BeanUtils.copyProperties(qualification, qualificationResponse);
         CredentialsResponse user = (CredentialsResponse) UserUtils.getUser(redisTemplate, token, null, null);
-        if ("3".equals(user.getUserType())) {
+        if (UserTypeEnum.THREE.getCode().equals(user.getUserType())) {
             //todo
             ResultResponse resultResponse = iQualificationSupplierService.totalSupplierQualification(qualification.getId(), null);
             AssertsUtil.isTrue(!resultResponse.isSuccess(), resultResponse.getMessage());
