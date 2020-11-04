@@ -84,10 +84,9 @@ public class UploadFileServiceImpl implements IUploadFileService {
             ObjectMetadata objectMetadata = getObjectMetadata(file);
             // 创建PutObjectRequest对象。
             String fileName = getFileName(file);
-            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName,
+            PutObjectResult putObjectResult = ossClient.putObject(bucketName, fileName,
                     new ByteArrayInputStream(file.getBytes()), objectMetadata);
-            PutObjectResult result = ossClient.putObject(putObjectRequest);
-            log.info("上传结果:{}", result.getETag());
+            log.info("上传结果:{}", putObjectResult.getETag());
             Date expiration = new Date(System.currentTimeMillis() + 3600L * 1000 * 24 * 365 * 10);
             URL url = ossClient.generatePresignedUrl(bucketName, fileName, expiration);
             log.info("上传URL：{}", url);
