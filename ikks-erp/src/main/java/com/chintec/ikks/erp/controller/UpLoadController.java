@@ -4,6 +4,7 @@ import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.erp.feign.IUploadFileService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("v1")
 @Api(value = "UpLoad", tags = {"文件上传管理"})
+@Slf4j
 public class UpLoadController {
     @Autowired
     private IUploadFileService iUploadFileService;
@@ -25,18 +27,21 @@ public class UpLoadController {
     @PostMapping("images")
     @ApiOperation("图片上上传")
     public ResultResponse uploadImage(MultipartFile file) {
+        log.info("file {}", file);
         return iUploadFileService.uploadImg(file);
     }
 
     @PostMapping("videos")
     @ApiOperation("视频/音频上传")
     public ResultResponse uploadVideos(MultipartFile file) {
+        log.info("file {}", file);
         return iUploadFileService.uploadImg(file);
     }
 
     @PostMapping("files")
     @ApiOperation("文件上传")
     public ResultResponse uploadFile(MultipartFile file) {
+        log.info("file {}", file);
         return iUploadFileService.uploadImg(file);
     }
 }
