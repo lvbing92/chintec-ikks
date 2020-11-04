@@ -57,8 +57,8 @@ public class MessageMqListener {
                 case 2:
                     Object mailSendDTO = messageRec.getMailSendDTO();
                     AssertsUtil.isTrue(mailSendDTO == null, "请填写发送的邮件内容");
-                    ResultResponse resultResponse2 = iEmailService.sendSimpleMailMessage(JSONObject.parseObject(JSONObject.toJSONString(mailSendDTO), MailSendDTO.class));
-                    AssertsUtil.isTrue(!resultResponse2.isSuccess(), "邮件发送失败");
+                 //   ResultResponse resultResponse2 = iEmailService.sendSimpleMailMessage(JSONObject.parseObject(JSONObject.toJSONString(mailSendDTO), MailSendDTO.class));
+                  //  AssertsUtil.isTrue(!resultResponse2.isSuccess(), "邮件发送失败");
                     break;
                 default:
                     AssertsUtil.isTrue(true, "无此消息类型");

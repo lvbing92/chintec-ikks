@@ -130,7 +130,7 @@ public class UploadFileServiceImpl implements IUploadFileService {
         }
         if (".jpeg".equalsIgnoreCase(filenameExtension) || ".jpg".equalsIgnoreCase(filenameExtension)
                 || ".png".equalsIgnoreCase(filenameExtension)) {
-            return "image/jpeg";
+            return "image/jpg";
         }
         if (".html".equalsIgnoreCase(filenameExtension)) {
             return "text/html";
@@ -153,6 +153,6 @@ public class UploadFileServiceImpl implements IUploadFileService {
         if (".pdf".equalsIgnoreCase(filenameExtension)) {
             return "application/pdf";
         }
-        return "image/jpeg";
+        return "image/jpg";
     }
 }
