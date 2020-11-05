@@ -20,4 +20,12 @@ public interface IFlowInfoService extends IService<FlowInfo> {
      * @return ResultResponse
      */
     ResultResponse createFlowNode(FlowInfoVo flowInfoVo);
+
+    ResultResponse updateFlowNode(FlowInfoVo flowInfoVo);
+
+    ResultResponse listFlow(Integer currentPage, Integer pageSize);
+
+    ResultResponse one(Integer id);
+
+    ResultResponse delete(Integer id);
 }

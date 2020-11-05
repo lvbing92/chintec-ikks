@@ -15,6 +15,8 @@ import java.util.List;
 @Data
 @ApiModel
 public class FlowInfoVo {
+
+    private Integer id;
     /**
      * 流程名字
      */

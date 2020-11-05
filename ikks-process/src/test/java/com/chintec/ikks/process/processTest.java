@@ -1,5 +1,6 @@
 package com.chintec.ikks.process;
 
+import com.alibaba.fastjson.JSONObject;
 import com.chintec.ikks.common.entity.FlowTaskStatus;
 import com.chintec.ikks.common.entity.po.FlowTaskStatusPo;
 import com.chintec.ikks.common.entity.po.MessageReq;
@@ -17,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
@@ -163,7 +166,7 @@ class processTest {
 //        BigDecimal a = new BigDecimal(0.1);
 //        BigDecimal b= new BigDecimal(0.25);
 //        System.out.println(a.multiply(b,new MathContext(3)));
-     //System.out.println(redisTemplate.delete("5ec1c45d-4cf4-4d21-aedd-3cc1d779cff8"));
+        //System.out.println(redisTemplate.delete("5ec1c45d-4cf4-4d21-aedd-3cc1d779cff8"));
         System.out.println(redisTemplate.opsForHash().get("5ec1c45d-4cf4-4d21-aedd-3cc1d779cff8", "userMsg"));
     }
 
@@ -171,5 +174,18 @@ class processTest {
         return LongStream.rangeClosed(1, count)
                 .boxed()
                 .collect(Collectors.toConcurrentMap(i -> UUID.randomUUID().toString(), Function.identity(), (o1, o2) -> o1, ConcurrentHashMap::new));
+    }
+
+    @Test
+    void implTest() {
+//        ResultResponse one = iFlowInfoService.one(8);
+//        System.out.println(one);
+//        ResultResponse resultResponse = iFlowInfoService.listFlow(1, 10);
+//        System.out.println(JSONObject.toJSONString(resultResponse));
+        redisTemplate.opsForValue().set("呵呵","haha");
+        redisTemplate.expire("呵呵",20,TimeUnit.SECONDS);
+        System.out.println(redisTemplate.opsForValue().get("呵呵"));
+        System.out.println(redisTemplate.getExpire("呵呵"));
+
     }
 }

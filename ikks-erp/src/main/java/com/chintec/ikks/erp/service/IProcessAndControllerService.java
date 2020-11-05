@@ -45,4 +45,12 @@ public interface IProcessAndControllerService {
     ResultResponse refuseFlowNode(String token, Integer flowTaskStatusId);
 
     ResultResponse taskStatus(String token, Integer currentPage, Integer pageSize, Integer statusId, String params);
+
+    ResultResponse update(FlowInfoVo flowInfoVo);
+
+    ResultResponse list(Integer currentPage, Integer pageSize);
+
+    ResultResponse one(Integer id);
+
+    ResultResponse delete(Integer id);
 }

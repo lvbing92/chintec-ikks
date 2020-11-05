@@ -3,8 +3,7 @@ package com.chintec.ikks.erp.feign;
 import com.chintec.ikks.common.entity.vo.FlowInfoVo;
 import com.chintec.ikks.common.util.ResultResponse;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -24,4 +23,16 @@ public interface IFlowInfoService {
      */
     @PostMapping("/process")
     ResultResponse createFlowNode(@RequestBody FlowInfoVo flowInfoVo);
+
+    @PutMapping("process")
+    ResultResponse update(@RequestBody FlowInfoVo flowInfoVo);
+
+    @GetMapping("process")
+    ResultResponse list(@RequestParam Integer currentPage, @RequestParam(required = false, defaultValue = "0") Integer pageSize);
+
+    @GetMapping("process/{id}")
+    ResultResponse one(@PathVariable Integer id);
+
+    @DeleteMapping("process/{id}")
+    ResultResponse delete(@PathVariable Integer id);
 }

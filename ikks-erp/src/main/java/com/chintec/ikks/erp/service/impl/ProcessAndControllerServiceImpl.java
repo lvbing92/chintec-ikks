@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -115,6 +116,30 @@ public class ProcessAndControllerServiceImpl implements IProcessAndControllerSer
                 }).collect(Collectors.toList());
         pageResultResponse.setResults(collect);
         return ResultResponse.successResponse(pageResultResponse);
+    }
+
+
+
+    @Override
+    public ResultResponse update(FlowInfoVo flowInfoVo) {
+        return iFlowInfoService.update(flowInfoVo);
+    }
+
+
+    @Override
+    public ResultResponse list(Integer currentPage, Integer pageSize) {
+        return iFlowInfoService.list(currentPage,pageSize);
+    }
+
+
+    @Override
+    public ResultResponse one(Integer id) {
+        return iFlowInfoService.one(id);
+    }
+
+    @Override
+    public ResultResponse delete(Integer id) {
+        return iFlowInfoService.delete(id);
     }
 
 }

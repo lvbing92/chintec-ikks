@@ -16,6 +16,7 @@ import java.util.List;
 @ApiModel
 public class FlowNodeVo {
 
+    private Integer id;
     /**
      * 节点名称
      */
