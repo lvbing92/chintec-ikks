@@ -21,12 +21,33 @@ public class UploadFileController {
     /**
      * 保存视频
      *
+     * @param file
+     * @return
+     */
+    @PostMapping("/img")
+    public ResultResponse uploadImg(MultipartFile file) {
+        return iUploadFileService.uploadImg2Oss(file,2);
+    }
+
+    /**
+     * 保存视频
      *
      * @param file
      * @return
      */
-    @PostMapping("/imgFiles")
-    public ResultResponse uploadImg(MultipartFile file) {
-        return iUploadFileService.uploadImg2Oss(file);
+    @PostMapping("/files")
+    public ResultResponse uploadFile(MultipartFile file) {
+        return iUploadFileService.uploadImg2Oss(file,1);
+    }
+
+    /**
+     * 保存视频
+     *
+     * @param file
+     * @return
+     */
+    @PostMapping("/video")
+    public ResultResponse uploadVideo(MultipartFile file) {
+        return iUploadFileService.uploadImg2Oss(file,3);
     }
 }

@@ -10,6 +10,7 @@ import com.aliyun.oss.model.PutObjectRequest;
 import com.aliyun.oss.model.PutObjectResult;
 import com.chintec.ikks.common.entity.BlobUpload;
 import com.chintec.ikks.common.enums.CommonCodeEnum;
+import com.chintec.ikks.common.enums.FileTypeEnum;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.message.service.IUploadFileService;
 import org.apache.logging.log4j.LogManager;
@@ -38,8 +39,14 @@ public class UploadFileServiceImpl implements IUploadFileService {
     @Value("${spring.oos.accessKeySecret}")
     private String accessKeySecret;
 
-    @Value("${spring.oos.bucketName}")
     private String bucketName;
+
+    @Value("${spring.oos.bucketNameVideo}")
+    private String bucketNameVideo;
+    @Value("${spring.oos.bucketNameImg}")
+    private String bucketNameImg;
+    @Value("${spring.oos.bucketNameFile}")
+    private String bucketNameFile;
 
     /**
      * 得到阿里云的容器
@@ -74,8 +81,8 @@ public class UploadFileServiceImpl implements IUploadFileService {
      * @return
      */
     @Override
-    public ResultResponse uploadImg2Oss(MultipartFile file) {
-
+    public ResultResponse uploadImg2Oss(MultipartFile file, Integer type) {
+        bucketName = getBucketName(type);
         OSS ossClient = getContainer();
         // 设置存储空间的访问权限为public。
         ossClient.setBucketAcl(bucketName, CannedAccessControlList.PublicRead);
@@ -153,5 +160,17 @@ public class UploadFileServiceImpl implements IUploadFileService {
             return "application/pdf";
         }
         return "image/jpg";
+    }
+
+
+    private String getBucketName(Integer type) {
+        if (FileTypeEnum.FILE_TYPE_ENUM.getCode().equals(type)) {
+            return bucketNameFile;
+        } else if (FileTypeEnum.IMG_TYPE_ENUM.getCode().equals(type)) {
+            return bucketNameImg;
+        } else if (FileTypeEnum.VIDEO_TYPE_ENUM.getCode().equals(type)) {
+            return bucketNameVideo;
+        }
+        return null;
     }
 }

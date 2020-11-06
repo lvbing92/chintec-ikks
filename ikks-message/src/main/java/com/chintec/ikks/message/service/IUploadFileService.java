@@ -17,5 +17,5 @@ public interface IUploadFileService {
      * @param file
      * @return
      */
-    ResultResponse uploadImg2Oss(MultipartFile file);
+    ResultResponse uploadImg2Oss(MultipartFile file, Integer type);
 }
