@@ -1,5 +1,6 @@
 package com.chintec.ikks.erp.controller;
 
+import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.erp.feign.IUploadFileService;
 import io.swagger.annotations.Api;
@@ -27,21 +28,24 @@ public class UpLoadController {
     @PostMapping("images")
     @ApiOperation("图片上上传")
     public ResultResponse uploadImage(MultipartFile file) {
-        log.info("file {}", file);
+        log.info("file size {}", file.getSize());
+        AssertsUtil.isTrue(file.getSize() > 1024 * 1024 * 10, "图片过大,超出尺寸");
         return iUploadFileService.uploadImg(file);
     }
 
     @PostMapping("videos")
     @ApiOperation("视频/音频上传")
     public ResultResponse uploadVideos(MultipartFile file) {
-        log.info("file {}", file);
+        log.info("file size {}", file.getSize());
+        AssertsUtil.isTrue(file.getSize() > 1024 * 1024 * 29, "视频过大,超出尺寸");
         return iUploadFileService.uploadImg(file);
     }
 
     @PostMapping("files")
     @ApiOperation("文件上传")
     public ResultResponse uploadFile(MultipartFile file) {
-        log.info("file {}", file);
+        log.info("file size {}", file.getSize());
+        AssertsUtil.isTrue(file.getSize() > 1024 * 1024 * 10, "文件过大,超出尺寸");
         return iUploadFileService.uploadImg(file);
     }
 }
