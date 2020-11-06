@@ -48,7 +48,9 @@ public class KeyExpiredListener implements MessageListener {
         log.info("剩余的数据 size: {}", stringObjectObjectHashOperations.size("mq"));
         Map<Object, Object> mq = stringObjectObjectHashOperations.entries("mq");
         mq.forEach((s, v) -> {
-            log.info("剩余的数据: {}:{},剩余时效:{}", s, v, redisTemplate.getExpire(String.valueOf(s)));
+            Long expire = redisTemplate.getExpire(String.valueOf(s));
+            if (expire > 0)
+                log.info("剩余的数据: {}:{},剩余时效:{}", s, v, expire);
         });
         log.info("=============================================");
     }

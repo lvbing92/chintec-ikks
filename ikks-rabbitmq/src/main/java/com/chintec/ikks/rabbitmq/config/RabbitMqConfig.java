@@ -150,7 +150,6 @@ public class RabbitMqConfig {
 
     @Bean
     @Scope("prototype")
-    @Lookup
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
         template.setMandatory(true);
