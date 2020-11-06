@@ -51,7 +51,7 @@ public class RabbitMqConfig {
     }
 
     /**
-     * 声明消息队列并绑定到死信交换机
+     * 即时消费队列声明
      */
 
     @Bean("messageQueue")
@@ -61,7 +61,7 @@ public class RabbitMqConfig {
 
 
     /**
-     * 通过路由key链接Exchange和Queue
+     * 通过路由key链接delayExchange和delayQueue
      *
      * @param exchange 交换机
      * @param queue    队列

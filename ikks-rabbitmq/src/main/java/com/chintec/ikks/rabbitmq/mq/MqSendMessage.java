@@ -5,7 +5,6 @@ import com.chintec.ikks.common.entity.po.MessageReq;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.MqVariableUtil;
 import com.chintec.ikks.common.util.ResultResponse;
-import io.netty.util.internal.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
@@ -13,6 +12,7 @@ import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -29,6 +29,8 @@ public class MqSendMessage {
     @Autowired
     public  RabbitTemplate rabbitTemplate;
 
+
+
     /**
      * 延迟消息发送
      *
@@ -38,11 +40,12 @@ public class MqSendMessage {
     public  ResultResponse delaySend(MessageReq msg, String timeMills) {
 
         MessageProperties messageProperties = new MessageProperties();
-        if (!StringUtil.isNullOrEmpty(timeMills)) {
+        if (!StringUtils.isEmpty(timeMills)) {
             messageProperties.setExpiration(timeMills);
         }
         messageProperties.setCorrelationId(Arrays.toString(UUID.randomUUID().toString().getBytes()));
         Message message = new Message(JSONObject.toJSONBytes(msg), messageProperties);
+        log.info("message {}",message);
         rabbitTemplate.setReturnCallback((backMessage, replyCode, replyText, exchange, routingKey) -> {
             log.info("被退回的消息为：{}", backMessage);
             log.info("replyCode：{}", replyCode);
@@ -50,7 +53,7 @@ public class MqSendMessage {
             log.info("exchange：{}", exchange);
             log.info("routingKey：{}", routingKey);
         });
-        rabbitTemplate.convertAndSend(MqVariableUtil.DELAY_EXCHANGE_NAME, MqVariableUtil.DELAY_QUEUE_ROUTING_KEY, message);
+        rabbitTemplate.convertAndSend(MqVariableUtil.DELAY_EXCHANGE_NAME, MqVariableUtil.DELAY_ROUTING_KEY, message);
         confirmCallback();
         return ResultResponse.successResponse();
     }

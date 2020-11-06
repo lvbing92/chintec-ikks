@@ -57,7 +57,7 @@ public class QualificationController {
     }
 
     @GetMapping("/qualifications")
-    @ApiOperation(value = "资质文档-查询(包含供应商端和平台端)")
+    @ApiOperation(value = "资质文档-查询(包含供应商端和客户端)")
     @PermissionAnnotation(code ="200801")
     public ResultResponse qualifications(@RequestParam Integer currentPage,
                                          @RequestParam(required = false, defaultValue = "10") Integer pageSize,

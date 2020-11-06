@@ -42,7 +42,9 @@ public class LimitProxy {
     @Around("init()")
     public Object around(ProceedingJoinPoint pjp) throws Throwable {
         String s = request.getRequestURL().toString();
-        if (!s.contains("login") && !s.contains("logout") && !s.contains("userLogin") && !s.contains("user/roleAndMenu")) {
+        if (!s.contains("login") && !s.contains("logout") && !s.contains("userLogin")
+                && !s.contains("user/roleAndMenu") && !s.contains("images")
+                && !s.contains("videos") && !s.contains("files")) {
             logger.info("环绕通知");
             String access_token = request.getHeader("access_token");
             logger.info(access_token);
@@ -55,7 +57,7 @@ public class LimitProxy {
                 List<MenuFunction> menuFunctions = JSONObject.parseArray(JSONObject.toJSONString(object), MenuFunction.class);
                 List<String> collect = menuFunctions.stream().map(MenuFunction::getFunctionCode).collect(Collectors.toList());
                 AssertsUtil.noLogin(menuFunctions.size() == 0, "无权限访问!");
-                if(!collect.contains(value)){
+                if (!collect.contains(value)) {
                     AssertsUtil.noLogin(true);
                 }
             } else {
