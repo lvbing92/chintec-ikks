@@ -38,7 +38,7 @@ public class UpLoadController {
     public ResultResponse uploadVideos(MultipartFile file) {
         log.info("file size {}", file.getSize());
         AssertsUtil.isTrue(file.getSize() > 1024 * 1024 * 29, "视频过大,超出尺寸");
-        return iUploadFileService.uploadImg(file);
+        return iUploadFileService.uploadVideo(file);
     }
 
     @PostMapping("files")
@@ -46,6 +46,6 @@ public class UpLoadController {
     public ResultResponse uploadFile(MultipartFile file) {
         log.info("file size {}", file.getSize());
         AssertsUtil.isTrue(file.getSize() > 1024 * 1024 * 10, "文件过大,超出尺寸");
-        return iUploadFileService.uploadImg(file);
+        return iUploadFileService.uploadFile(file);
     }
 }

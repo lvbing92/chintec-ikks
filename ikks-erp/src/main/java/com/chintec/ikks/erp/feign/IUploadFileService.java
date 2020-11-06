@@ -12,6 +12,31 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @FeignClient(value = "ikks-message", path = "/v1")
 public interface IUploadFileService {
-    @PostMapping(value = "/imgFiles",consumes = "multipart/form-data")
-   ResultResponse uploadImg(MultipartFile file);
+
+    /**
+     * 保存图片
+     *
+     * @param file
+     * @return
+     */
+    @PostMapping(value = "/img", consumes = "multipart/form-data")
+    ResultResponse uploadImg(MultipartFile file);
+
+    /**
+     * 保存文件
+     *
+     * @param file
+     * @return
+     */
+    @PostMapping(value = "/files", consumes = "multipart/form-data")
+    ResultResponse uploadFile(MultipartFile file);
+
+    /**
+     * 保存视频
+     *
+     * @param file
+     * @return
+     */
+    @PostMapping(value = "/video", consumes = "multipart/form-data")
+    ResultResponse uploadVideo(MultipartFile file);
 }

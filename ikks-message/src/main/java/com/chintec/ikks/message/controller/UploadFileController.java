@@ -1,5 +1,6 @@
 package com.chintec.ikks.message.controller;
 
+import com.chintec.ikks.common.enums.FileTypeEnum;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.message.service.IUploadFileService;
 import io.swagger.annotations.Api;
@@ -19,25 +20,25 @@ public class UploadFileController {
     private IUploadFileService iUploadFileService;
 
     /**
-     * 保存视频
+     * 保存图片
      *
      * @param file
      * @return
      */
     @PostMapping("/img")
     public ResultResponse uploadImg(MultipartFile file) {
-        return iUploadFileService.uploadImg2Oss(file,2);
+        return iUploadFileService.uploadImg2Oss(file, FileTypeEnum.IMG_TYPE_ENUM.getCode());
     }
 
     /**
-     * 保存视频
+     * 保存文件
      *
      * @param file
      * @return
      */
     @PostMapping("/files")
     public ResultResponse uploadFile(MultipartFile file) {
-        return iUploadFileService.uploadImg2Oss(file,1);
+        return iUploadFileService.uploadImg2Oss(file, FileTypeEnum.FILE_TYPE_ENUM.getCode());
     }
 
     /**
@@ -48,6 +49,6 @@ public class UploadFileController {
      */
     @PostMapping("/video")
     public ResultResponse uploadVideo(MultipartFile file) {
-        return iUploadFileService.uploadImg2Oss(file,3);
+        return iUploadFileService.uploadImg2Oss(file, FileTypeEnum.VIDEO_TYPE_ENUM.getCode());
     }
 }
