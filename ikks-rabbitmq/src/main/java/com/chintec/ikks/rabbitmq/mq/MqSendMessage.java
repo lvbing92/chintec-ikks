@@ -54,7 +54,7 @@ public class MqSendMessage {
             log.info("routingKey：{}", routingKey);
         });
         rabbitTemplate.convertAndSend(MqVariableUtil.DELAY_EXCHANGE_NAME, MqVariableUtil.DELAY_ROUTING_KEY, message);
-        confirmCallback();
+      //  confirmCallback();
         return ResultResponse.successResponse();
     }
 
@@ -102,7 +102,7 @@ public class MqSendMessage {
         /*
         确认回调机制当 ack为false的时候会再次向mq发送消息
          */
-        confirmCallback();
+        //confirmCallback();
         return ResultResponse.successResponse();
     }
 
