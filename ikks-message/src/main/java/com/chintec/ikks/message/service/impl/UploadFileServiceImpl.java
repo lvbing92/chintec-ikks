@@ -6,7 +6,6 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.CannedAccessControlList;
 import com.aliyun.oss.model.ObjectMetadata;
-import com.aliyun.oss.model.PutObjectRequest;
 import com.aliyun.oss.model.PutObjectResult;
 import com.chintec.ikks.common.entity.BlobUpload;
 import com.chintec.ikks.common.enums.CommonCodeEnum;

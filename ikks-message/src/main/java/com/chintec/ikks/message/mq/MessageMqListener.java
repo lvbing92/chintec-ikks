@@ -2,7 +2,6 @@ package com.chintec.ikks.message.mq;
 
 import com.alibaba.fastjson.JSONObject;
 import com.chintec.ikks.common.entity.MessageRec;
-import com.chintec.ikks.common.entity.dto.MailSendDTO;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.message.service.IEmailService;

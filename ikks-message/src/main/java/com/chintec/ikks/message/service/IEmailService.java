@@ -1,10 +1,5 @@
 package com.chintec.ikks.message.service;
 
-import com.chintec.ikks.common.entity.dto.MailSendDTO;
-import com.chintec.ikks.common.util.ResultResponse;
-
-import java.util.Map;
-
 /**
  * 此接口提供邮件发送
  *

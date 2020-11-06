@@ -1,22 +1,8 @@
 package com.chintec.ikks.message.service.impl;
 
-import com.chintec.ikks.common.entity.dto.MailSendDTO;
-import com.chintec.ikks.common.enums.CommonCodeEnum;
-import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.message.service.IEmailService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import java.io.File;
-import java.util.Map;
 
 /**
  * @author Jeff·Tang

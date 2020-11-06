@@ -1,11 +1,8 @@
 package com.chintec.ikks.common.entity.response;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.chintec.ikks.common.entity.FlowNode;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
