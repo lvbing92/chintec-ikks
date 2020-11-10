@@ -18,4 +18,7 @@ public interface IUploadFileService {
      * @return
      */
     ResultResponse uploadImg2Oss(MultipartFile file, Integer type);
+
+
+    ResultResponse uploadImgOssToken(Integer type);
 }

@@ -5,9 +5,7 @@ import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.message.service.IUploadFileService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -50,5 +48,10 @@ public class UploadFileController {
     @PostMapping("/video")
     public ResultResponse uploadVideo(MultipartFile file) {
         return iUploadFileService.uploadImg2Oss(file, FileTypeEnum.VIDEO_TYPE_ENUM.getCode());
+    }
+
+    @GetMapping("/token/{type}")
+    public ResultResponse getUploadSSTtoKen(@PathVariable Integer type) {
+        return iUploadFileService.uploadImgOssToken(type);
     }
 }

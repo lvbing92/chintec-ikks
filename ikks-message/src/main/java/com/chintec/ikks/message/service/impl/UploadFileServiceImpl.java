@@ -1,12 +1,17 @@
 package com.chintec.ikks.message.service.impl;
 
-import com.aliyun.oss.ClientException;
+
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
-import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.CannedAccessControlList;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.http.MethodType;
+import com.aliyuncs.profile.DefaultProfile;
+import com.aliyuncs.profile.IClientProfile;
+import com.aliyuncs.sts.model.v20150401.AssumeRoleRequest;
+import com.aliyuncs.sts.model.v20150401.AssumeRoleResponse;
 import com.chintec.ikks.common.entity.BlobUpload;
 import com.chintec.ikks.common.enums.CommonCodeEnum;
 import com.chintec.ikks.common.enums.FileTypeEnum;
@@ -18,60 +23,36 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class UploadFileServiceImpl implements IUploadFileService {
 
     private static final Logger log = LogManager.getLogger(UploadFileServiceImpl.class);
 
-    @Value("${spring.oos.endpoint}")
+    @Value("${spring.oss.endpoint}")
     private String endpoint;
 
-    @Value("${spring.oos.accessKeyId}")
+    @Value("${spring.oss.accessKeyId}")
     private String accessKeyId;
 
-    @Value("${spring.oos.accessKeySecret}")
+    @Value("${spring.oss.accessKeySecret}")
     private String accessKeySecret;
+
+    @Resource
+    private OSS ossClient;
 
     private String bucketName;
 
-    @Value("${spring.oos.bucketNameVideo}")
+    @Value("${spring.oss.bucketNameVideo}")
     private String bucketNameVideo;
-    @Value("${spring.oos.bucketNameImg}")
+    @Value("${spring.oss.bucketNameImg}")
     private String bucketNameImg;
-    @Value("${spring.oos.bucketNameFile}")
+    @Value("${spring.oss.bucketNameFile}")
     private String bucketNameFile;
-
-    /**
-     * 得到阿里云的容器
-     */
-    private OSS getContainer() {
-
-        OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
-
-        try {
-
-            if (ossClient.doesBucketExist(bucketName)) {
-                System.out.println("您已经创建Bucket：" + bucketName + "。");
-            } else {
-                System.out.println("您的Bucket不存在，创建Bucket：" + bucketName + "。");
-                // 创建Bucket。
-                ossClient.createBucket(bucketName);
-            }
-        } catch (OSSException oe) {
-            oe.printStackTrace();
-        } catch (ClientException ce) {
-            ce.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ossClient;
-    }
 
     /**
      * 上传图片
@@ -82,7 +63,6 @@ public class UploadFileServiceImpl implements IUploadFileService {
     @Override
     public ResultResponse uploadImg2Oss(MultipartFile file, Integer type) {
         bucketName = getBucketName(type);
-        OSS ossClient = getContainer();
         // 设置存储空间的访问权限为public。
         ossClient.setBucketAcl(bucketName, CannedAccessControlList.PublicRead);
         try {
@@ -105,6 +85,50 @@ public class UploadFileServiceImpl implements IUploadFileService {
             ossClient.shutdown();
         }
         return ResultResponse.failResponse(CommonCodeEnum.COMMON_FALSE_CODE.getCode(), "上传图片失败");
+    }
+
+    @Override
+    public ResultResponse uploadImgOssToken(Integer type) {
+        String roleArn = "acs:ram::1106804457081196:role/ramosstest";
+        String roleSessionName = "web";
+        String policy = "{\n" +
+                "    \"Version\": \"1\", \n" +
+                "    \"Statement\": [\n" +
+                "        {\n" +
+                "            \"Action\": [\n" +
+                "                \"oss:*\"\n" +
+                "            ], \n" +
+                "            \"Resource\": [\n" +
+                "                \"acs:oss:*:*:*\" \n" +
+                "            ], \n" +
+                "            \"Effect\": \"Allow\"\n" +
+                "        }\n" +
+                "    ]\n" +
+                "}";
+        try {
+            // 添加endpoint（直接使用STS endpoint，前两个参数留空，无需添加region ID）
+            DefaultProfile.addEndpoint("", "", "Sts", endpoint);
+            // 构造default profile（参数留空，无需添加region ID）
+            IClientProfile profile = DefaultProfile.getProfile("", accessKeyId, accessKeySecret);
+            // 用profile构造client
+            DefaultAcsClient client = new DefaultAcsClient(profile);
+            final AssumeRoleRequest request = new AssumeRoleRequest();
+            request.setMethod(MethodType.POST);
+            request.setRoleArn(roleArn);
+            request.setRoleSessionName(roleSessionName);
+            // 若policy为空，则用户将获得该角色下所有权限
+            request.setPolicy(policy);
+            // 设置凭证有效时间
+            request.setDurationSeconds(1000L);
+            final AssumeRoleResponse response = client.getAcsResponse(request);
+            Map<String, Object> result = new HashMap<>(2);
+            result.put("credentials", response.getCredentials());
+            result.put("bucket", getBucketName(type));
+            return ResultResponse.successResponse(result);
+        } catch (com.aliyuncs.exceptions.ClientException e) {
+            e.printStackTrace();
+        }
+        return ResultResponse.failResponse("获取失败");
     }
 
     private String getFileName(MultipartFile file) {

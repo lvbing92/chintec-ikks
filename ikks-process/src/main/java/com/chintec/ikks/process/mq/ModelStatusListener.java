@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.chintec.ikks.common.entity.FlowTaskStatus;
 import com.chintec.ikks.common.entity.po.FlowTaskStatusPo;
 import com.chintec.ikks.common.entity.po.MessageReq;
+import com.chintec.ikks.common.enums.ModelResultEnum;
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.process.event.SendEvent;
@@ -41,14 +42,14 @@ public class ModelStatusListener {
         FlowTaskStatusPo flowTaskStatusPo = JSONObject.parseObject(JSONObject.toJSONString(messageReq.getMessageMsg()), FlowTaskStatusPo.class);
         FlowTaskStatus flowTaskStatus = flowTaskStatusPo.getData();
         try {
-            if ("1".equals(flowTaskStatus.getHandleStatus())) {
+            if ((ModelResultEnum.RESULT_PASS.getCode() + "").equals(flowTaskStatus.getHandleStatus())) {
                 org.springframework.messaging.Message<NodeStateChangeEnum> flowTaskStatusM = MessageBuilder.withPayload(NodeStateChangeEnum.PASS).setHeader("flowTaskStatusPo", flowTaskStatusPo).build();
                 log.info("进入通过::{}", flowTaskStatus);
                 sendEvent.sendEvents(flowTaskStatusM, flowTaskStatusPo);
-            } else if ("0".equals(flowTaskStatus.getHandleStatus())) {
+            } else if ((ModelResultEnum.RESULT_REFUSE.getCode() + "").equals(flowTaskStatus.getHandleStatus())) {
                 log.info("进入驳回::{}", flowTaskStatus);
                 org.springframework.messaging.Message<NodeStateChangeEnum> flowTaskStatusM = MessageBuilder.withPayload(NodeStateChangeEnum.REFUSE).setHeader("flowTaskStatusPo", flowTaskStatusPo).build();
-               sendEvent.sendEvents(flowTaskStatusM, flowTaskStatusPo);
+                sendEvent.sendEvents(flowTaskStatusM, flowTaskStatusPo);
             } else {
                 AssertsUtil.isTrue(true, "任务操作类型不存在");
             }
