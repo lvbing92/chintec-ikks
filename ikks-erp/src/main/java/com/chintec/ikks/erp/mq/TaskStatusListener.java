@@ -1,5 +1,13 @@
 package com.chintec.ikks.erp.mq;
 
+import com.alibaba.fastjson.JSONObject;
+import com.chintec.ikks.common.entity.FlowTaskStatus;
+import com.chintec.ikks.common.entity.po.FlowTaskStatusPo;
+import com.chintec.ikks.common.entity.po.MessageReq;
+import com.chintec.ikks.common.entity.vo.CompanyUserRequest;
+import com.chintec.ikks.common.entity.vo.FlowTaskStatusVo;
+import com.chintec.ikks.common.util.AssertsUtil;
+import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.erp.feign.ICompanyUserService;
 import com.chintec.ikks.erp.feign.IFlowTaskService;
 import com.chintec.ikks.erp.feign.IRabbitMqService;
@@ -35,18 +43,18 @@ public class TaskStatusListener {
     public void taskStatusListener(Message message, @Headers Map<String, Object> headers, Channel channel) throws IOException {
         log.info(" start taskStatusListener :{}", message);
         try {
-//        MessageReq messageReq = JSONObject.parseObject(new String(message.getBody()), MessageReq.class);
-//        FlowTaskStatusPo flowTaskStatusPo = JSONObject.parseObject(JSONObject.toJSONString(messageReq.getMessageMsg()), FlowTaskStatusPo.class);
-//        FlowTaskStatus data = flowTaskStatusPo.getData();
-//        FlowTaskStatusVo flowTaskStatusVo = new FlowTaskStatusVo();
-//        flowTaskStatusVo.setId(data.getId());
-//        flowTaskStatusVo.setIsViewed(1);
-//        ResultResponse resultResponse = iFlowTaskService.updateTask(flowTaskStatusVo);
-//        AssertsUtil.isTrue(!resultResponse.isSuccess(), resultResponse.getMessage());
-//        log.info(" end taskStatusListener :{}", resultResponse.getMessage());
-//        ResultResponse queryCompanyUser = iCompanyUserService.queryCompanyUser(data.getAssignee());
-//        AssertsUtil.isTrue(!queryCompanyUser.isSuccess(), queryCompanyUser.getMessage());
-            //  CompanyUserRequest companyUserRequest = JSONObject.parseObject(JSONObject.toJSONString(queryCompanyUser.getData()), CompanyUserRequest.class);
+            MessageReq messageReq = JSONObject.parseObject(new String(message.getBody()), MessageReq.class);
+            FlowTaskStatusPo flowTaskStatusPo = JSONObject.parseObject(JSONObject.toJSONString(messageReq.getMessageMsg()), FlowTaskStatusPo.class);
+            FlowTaskStatus data = flowTaskStatusPo.getData();
+            FlowTaskStatusVo flowTaskStatusVo = new FlowTaskStatusVo();
+            flowTaskStatusVo.setId(data.getId());
+            flowTaskStatusVo.setIsViewed(1);
+            ResultResponse resultResponse = iFlowTaskService.updateTask(flowTaskStatusVo);
+            AssertsUtil.isTrue(!resultResponse.isSuccess(), resultResponse.getMessage());
+            log.info(" end taskStatusListener :{}", resultResponse.getMessage());
+            ResultResponse queryCompanyUser = iCompanyUserService.queryCompanyUser(data.getAssignee());
+            AssertsUtil.isTrue(!queryCompanyUser.isSuccess(), queryCompanyUser.getMessage());
+            CompanyUserRequest companyUserRequest = JSONObject.parseObject(JSONObject.toJSONString(queryCompanyUser.getData()), CompanyUserRequest.class);
             //TODO 发送邮件给用户
             //消息手动去签到
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
