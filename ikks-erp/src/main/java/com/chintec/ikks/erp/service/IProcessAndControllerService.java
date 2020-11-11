@@ -27,7 +27,7 @@ public interface IProcessAndControllerService {
     ResultResponse startProcess(String token, Integer supplierId);
 
     /**
-     * 开始节点审核
+     * 通过节点审核
      *
      * @param token
      * @param flowTaskStatusId

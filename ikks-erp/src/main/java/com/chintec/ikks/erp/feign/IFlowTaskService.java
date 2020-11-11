@@ -42,7 +42,7 @@ public interface IFlowTaskService {
     ResultResponse flowTaskStatus(@PathVariable Integer id);
 
     /**
-     * 开始节点审核
+     * 通过节点审核
      *
      * @param flowTaskStatusId
      * @return

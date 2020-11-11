@@ -106,16 +106,13 @@ public class MqSendMessage {
         return ResultResponse.successResponse();
     }
 
-    private void confirmCallback(){
-        rabbitTemplate.setConfirmCallback(new RabbitTemplate.ConfirmCallback() {
-            @Override
-            public void confirm(CorrelationData correlationData, boolean ack, String cause) {
-                log.info("Ack status : " + ack);
-                log.info("Cause content : " + cause);
-                AssertsUtil.isTrue(!ack, "消息发送失败" + cause);
-                if (ack) {
-                    log.info("消息成功发送");
-                }
+    private void confirmCallback() {
+        rabbitTemplate.setConfirmCallback((correlationData, ack, cause) -> {
+            log.info("Ack status : " + ack);
+            log.info("Cause content : " + cause);
+            AssertsUtil.isTrue(!ack, "消息发送失败" + cause);
+            if (ack) {
+                log.info("消息成功发送");
             }
         });
     }

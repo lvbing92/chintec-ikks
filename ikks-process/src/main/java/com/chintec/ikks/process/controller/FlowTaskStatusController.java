@@ -35,10 +35,10 @@ public class FlowTaskStatusController {
     }
 
     /**
-     * 开始节点审核
+     * 通过节点
      *
-     * @param flowTaskStatusId
-     * @return
+     * @param flowTaskStatusId  id
+     * @return re
      */
     @GetMapping("flowTaskStatus/pass/{flowTaskStatusId}/{statusCode}")
     public ResultResponse passFlowNode(@PathVariable("flowTaskStatusId") Integer flowTaskStatusId, @PathVariable("statusCode") Integer statusCode) {
@@ -48,8 +48,8 @@ public class FlowTaskStatusController {
     /**
      * 拒绝节点审核
      *
-     * @param flowTaskStatusId
-     * @return ResultResponse
+     * @param flowTaskStatusId id
+     * @return ResultResponse re
      */
     @GetMapping("flowTaskStatus/refuse/{flowTaskStatusId}")
     public ResultResponse refuseFlowNode(@PathVariable Integer flowTaskStatusId) {
