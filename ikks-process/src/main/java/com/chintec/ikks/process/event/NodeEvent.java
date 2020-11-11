@@ -28,6 +28,7 @@ import java.util.List;
  * 事件类
  * 根绝@OnTransition注解来实现对应的状态驱动
  * 分为:进行中事件 通过事件 和 拒绝事件三个方法
+ *
  * @author Jeff·Tang
  * @version 1.0
  * @date 2020/9/22 14:23
@@ -65,10 +66,10 @@ public class NodeEvent {
         //更新任务状态
         flowTaskStatus.setStatusId(flowTaskStatusPo.getId());
         NodeEventFunction.updateTaskStatus(flowTaskStatus, NodeStateEnum.GOING.getCode().toString(), iFlowTaskStatusService);
-        NodeEventFunction.sendMessage(flowTaskStatusPo, iRabbitMqService);
+        NodeEventFunction.autoFinishTask(flowTaskStatusPo, iFlowNodeService, iFlowTaskService, iRabbitMqService, iFlowTaskStatusService);
     }
 
-    /**
+     /**
      * 通过事件
      *
      * @param message 消息

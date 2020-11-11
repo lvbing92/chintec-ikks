@@ -10,6 +10,7 @@ import com.chintec.ikks.common.entity.po.MessageReq;
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;
 import com.chintec.ikks.common.enums.NodeStateEnum;
 import com.chintec.ikks.common.util.AssertsUtil;
+import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.process.event.SendEvent;
 import com.chintec.ikks.process.feign.IRabbitMqService;
 import com.chintec.ikks.process.service.IFlowNodeService;
@@ -127,5 +128,20 @@ public class NodeEventFunction {
 
         Boolean delete = redisTemplate.delete(id);
         AssertsUtil.isTrue(!(delete == null ? false : delete), "删除失败任务缓存失败");
+    }
+
+
+    public static void autoFinishTask(FlowTaskStatusPo flowTaskStatusPo, IFlowNodeService iFlowNodeService, IFlowTaskService iFlowTaskService, IRabbitMqService iRabbitMqService, IFlowTaskStatusService iFlowTaskStatusService) {
+        FlowTaskStatus data = flowTaskStatusPo.getData();
+        FlowTask byId = iFlowTaskService.getById(data.getTaskId());
+        FlowNode one = iFlowNodeService.getOne(new QueryWrapper<FlowNode>()
+                .lambda()
+                .eq(FlowNode::getFlowInformationId, byId.getFollowInfoId())
+                .eq(FlowNode::getNodeId, data.getNodeId()));
+        if ("2".equals(one.getNodeRunMode())) {
+            ResultResponse resultResponse = iFlowTaskStatusService.passFlowNode(data.getTaskId(), Integer.parseInt(flowTaskStatusPo.getNodeIds().get(0).getStatus()));
+        } else {
+            sendMessage(flowTaskStatusPo, iRabbitMqService);
+        }
     }
 }
