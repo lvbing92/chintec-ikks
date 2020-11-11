@@ -107,7 +107,6 @@
     </dependency>
 
     <dependency>
-    <dependency>
       <groupId>com.chintec.ikks.common</groupId>
       <artifactId>ikks-common</artifactId>
       <version>1.0-SNAPSHOT</version>
