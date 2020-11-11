@@ -140,6 +140,7 @@ public class NodeEventFunction {
                 .eq(FlowNode::getNodeId, data.getNodeId()));
         if ("2".equals(one.getNodeRunMode())) {
             ResultResponse resultResponse = iFlowTaskStatusService.passFlowNode(data.getTaskId(), Integer.parseInt(flowTaskStatusPo.getNodeIds().get(0).getStatus()));
+            AssertsUtil.isTrue(!resultResponse.isSuccess(), resultResponse.getMessage());
         } else {
             sendMessage(flowTaskStatusPo, iRabbitMqService);
         }
