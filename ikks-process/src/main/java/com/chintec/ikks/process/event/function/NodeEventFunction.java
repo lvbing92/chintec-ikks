@@ -7,8 +7,11 @@ import com.chintec.ikks.common.entity.FlowTask;
 import com.chintec.ikks.common.entity.FlowTaskStatus;
 import com.chintec.ikks.common.entity.po.FlowTaskStatusPo;
 import com.chintec.ikks.common.entity.po.MessageReq;
+import com.chintec.ikks.common.entity.vo.NodeFunctionVo;
+import com.chintec.ikks.common.enums.AutoEnum;
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;
 import com.chintec.ikks.common.enums.NodeStateEnum;
+import com.chintec.ikks.common.enums.NodeTypeEnum;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.process.event.SendEvent;
@@ -51,7 +54,7 @@ public class NodeEventFunction {
         List<Integer> integers = JSONObject.parseArray(node.getProveNodes(), Integer.class);
         List<FlowTaskStatus> collect = null;
         //查看该节点的前置节点完成情况,过滤出进行中的
-        if ("1".equals(node.getNodeExc()) || "3".equals(node.getNodeExc())) {
+        if ((NodeTypeEnum.NODE_TYPE_ENUM_EXC_MORE.getCode() + "").equals(node.getNodeExc())) {
             collect = iFlowTaskStatusService.list(new QueryWrapper<FlowTaskStatus>()
                     .lambda()
                     .in(FlowTaskStatus::getNodeId, integers)
@@ -64,7 +67,7 @@ public class NodeEventFunction {
         if (CollectionUtils.isEmpty(collect)) {
             flowTaskStatusPo.setTime(StringUtils.isEmpty(node.getDelayTime()) ? "" : node.getDelayTime() * 3600 * 1000 + "");
             flowTaskStatusPo.setName(node.getNodeName());
-            flowTaskStatusPo.setIsFinish(StringUtils.isEmpty(node.getNodeType()) ? 2 : Integer.parseInt(node.getNodeType()));
+            flowTaskStatusPo.setIsFinish(StringUtils.isEmpty(node.getNodeType()) ? NodeTypeEnum.NODE_TYPE_ENUM_NORMAL.getCode() : Integer.parseInt(node.getNodeType()));
             flowTaskStatusPo.setStatus(NodeStateEnum.PENDING);
             FlowTaskStatus one = iFlowTaskStatusService.getOne(new QueryWrapper<FlowTaskStatus>()
                     .lambda()
@@ -130,7 +133,17 @@ public class NodeEventFunction {
         AssertsUtil.isTrue(!(delete == null ? false : delete), "删除失败任务缓存失败");
     }
 
-
+    /**
+     * 自动完成任务和手动完成任务
+     * 自动完成任务的时候 要求每一个节点的下一个节点是唯一的
+     * 并且上一个节点也是惟一的 否则会报 参数错误
+     *
+     * @param flowTaskStatusPo       流程信息类
+     * @param iFlowNodeService       流程节点 service
+     * @param iFlowTaskService       流程任务 service
+     * @param iRabbitMqService       mqservice
+     * @param iFlowTaskStatusService 流程任务状态 service
+     */
     public static void autoFinishTask(FlowTaskStatusPo flowTaskStatusPo, IFlowNodeService iFlowNodeService, IFlowTaskService iFlowTaskService, IRabbitMqService iRabbitMqService, IFlowTaskStatusService iFlowTaskStatusService) {
         FlowTaskStatus data = flowTaskStatusPo.getData();
         FlowTask byId = iFlowTaskService.getById(data.getTaskId());
@@ -138,11 +151,19 @@ public class NodeEventFunction {
                 .lambda()
                 .eq(FlowNode::getFlowInformationId, byId.getFollowInfoId())
                 .eq(FlowNode::getNodeId, data.getNodeId()));
-        if ("2".equals(one.getNodeRunMode())) {
-            ResultResponse resultResponse = iFlowTaskStatusService.passFlowNode(data.getTaskId(), Integer.parseInt(flowTaskStatusPo.getNodeIds().get(0).getStatus()));
+        if ((AutoEnum.AUTO_ENUM_YES.getCode() + "").equals(one.getNodeRunMode())) {
+            List<NodeFunctionVo> nodeIds = flowTaskStatusPo.getNodeIds();
+            AssertsUtil.isTrue(nodeIds.size() > 0, "自动完成任务流程失败,请确认下一个流程节点的唯一性");
+            ResultResponse resultResponse = iFlowTaskStatusService
+                    .passFlowNode(data.getTaskId(),
+                            Integer.parseInt(nodeIds
+                                    .get(0)
+                                    .getStatus()));
             AssertsUtil.isTrue(!resultResponse.isSuccess(), resultResponse.getMessage());
-        } else {
+        } else if ((AutoEnum.AUTO_ENUM_NO.getCode() + "").equals(one.getNodeRunMode())) {
             sendMessage(flowTaskStatusPo, iRabbitMqService);
+        } else {
+            AssertsUtil.isTrue(true, "不存在的操作类型,请确定是自动集成还是人工");
         }
     }
 }

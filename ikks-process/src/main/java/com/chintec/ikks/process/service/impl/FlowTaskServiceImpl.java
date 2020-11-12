@@ -10,6 +10,7 @@ import com.chintec.ikks.common.entity.vo.FlowTaskStatusVo;
 import com.chintec.ikks.common.entity.vo.FlowTaskVo;
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;
 import com.chintec.ikks.common.enums.NodeStateEnum;
+import com.chintec.ikks.common.enums.NodeTypeEnum;
 import com.chintec.ikks.common.util.AssertsUtil;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.process.event.SendEvent;
@@ -18,6 +19,7 @@ import com.chintec.ikks.process.service.IFlowInfoService;
 import com.chintec.ikks.process.service.IFlowNodeService;
 import com.chintec.ikks.process.service.IFlowTaskService;
 import com.chintec.ikks.process.service.IFlowTaskStatusService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
@@ -42,6 +44,7 @@ import java.util.stream.Collectors;
  * @since 2020-09-24
  */
 @Service
+@Slf4j
 public class FlowTaskServiceImpl extends ServiceImpl<FlowTaskMapper, FlowTask> implements IFlowTaskService {
     @Autowired
     private IFlowNodeService iFlowNodeService;
@@ -81,6 +84,7 @@ public class FlowTaskServiceImpl extends ServiceImpl<FlowTaskMapper, FlowTask> i
 
     @Override
     public ResultResponse updateTask(FlowTaskStatusVo flowTaskStatusVo) {
+        log.info(flowTaskStatusVo.getId() + "");
         FlowTaskStatus byId = iFlowTaskStatusService.getById(flowTaskStatusVo.getId());
         AssertsUtil.isTrue(byId == null, "process exception:  执行的计划不存在");
         assert byId != null;
@@ -139,7 +143,7 @@ public class FlowTaskServiceImpl extends ServiceImpl<FlowTaskMapper, FlowTask> i
         FlowNode one = iFlowNodeService.getOne(new QueryWrapper<FlowNode>()
                 .lambda()
                 .eq(FlowNode::getFlowInformationId, byId.getFollowInfoId())
-                .eq(FlowNode::getNodeType, "1"));
+                .eq(FlowNode::getNodeType, NodeTypeEnum.NODE_TYPE_ENUM_START.getCode() + ""));
         FlowTaskStatus flowTaskStatus = iFlowTaskStatusService.getOne(new QueryWrapper<FlowTaskStatus>()
                 .lambda()
                 .eq(FlowTaskStatus::getNodeId, one.getNodeId())
@@ -150,7 +154,7 @@ public class FlowTaskServiceImpl extends ServiceImpl<FlowTaskMapper, FlowTask> i
         flowTaskStatusPo.setId(flowTaskStatus.getStatusId());
         flowTaskStatusPo.setStatus(NodeStateEnum.PENDING);
         flowTaskStatusPo.setIsFinish(StringUtils.isEmpty(one.getNodeType()) ? 2 : Integer.parseInt(one.getNodeType()));
-        flowTaskStatusPo.setTime(one.getDelayTime() == null ? "" : one.getDelayTime() * 3600 * 1000 + "");
+        flowTaskStatusPo.setTime(one.getDelayTime() == null ? "3000" : one.getDelayTime() * 3600 * 1000 + "");
         Message<NodeStateChangeEnum> flowTaskStatus1 = MessageBuilder.withPayload(NodeStateChangeEnum.GOING).setHeader("flowTaskStatusPo", flowTaskStatusPo).build();
         return sendEvent.sendEvents(flowTaskStatus1, flowTaskStatusPo);
     }

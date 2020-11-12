@@ -69,7 +69,7 @@ public class NodeEvent {
         NodeEventFunction.autoFinishTask(flowTaskStatusPo, iFlowNodeService, iFlowTaskService, iRabbitMqService, iFlowTaskStatusService);
     }
 
-     /**
+    /**
      * 通过事件
      *
      * @param message 消息
@@ -83,6 +83,7 @@ public class NodeEvent {
         NodeEventFunction.updateTaskStatus(flowTaskStatus, NodeStateEnum.PASS.getCode().toString(), iFlowTaskStatusService);
         FlowTask byId = iFlowTaskService.getById(flowTaskStatus.getTaskId());
         List<NodeFunctionVo> nodeIds = flowTaskStatusPo.getNodeIds();
+        logger.info("next :{}", nodeIds);
         if (CollectionUtils.isEmpty(nodeIds)) {
             //没有下一个节点方法直接完成
             logger.info("完成任务,改变任务状态::{}", flowTaskStatusPo.getName());

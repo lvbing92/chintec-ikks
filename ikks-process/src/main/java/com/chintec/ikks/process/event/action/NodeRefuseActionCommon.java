@@ -26,8 +26,8 @@ import java.util.UUID;
  * 同样的一个action 公共的方法
  * 用于解耦的
  * 提供了两个action'方法
- * 一个拒绝后 直接完成
- * 一个拒绝后 返回规定的节点的方法
+ *  execute 拒绝后 直接完成
+ * executeReturn 拒绝后 返回规定的节点的方法
  *
  * @author Jeff·Tang
  * @version 1.0

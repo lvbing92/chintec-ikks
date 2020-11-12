@@ -22,14 +22,27 @@ public class FeignInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate template) {
-        RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
-        HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
-        String s = request.getRequestURL().toString();
-        log.info(s);
-        if (!s.contains("login") && !s.contains("logout") && !s.contains("userLogin")) {
-            String access_token = request.getHeader("access_token");
-            log.info("token:{}", access_token);
-            template.header("Authorization", "Bearer " + access_token);
+        RequestAttributes requestAttributes = getRequestAttributesSafely();
+        if (!(requestAttributes instanceof NonWebRequestAttributes)) {
+            HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
+            RequestContextHolder.setRequestAttributes(requestAttributes, true);
+            String s = request.getRequestURL().toString();
+            log.info(s);
+            if (!s.contains("login") && !s.contains("logout") && !s.contains("userLogin")) {
+                String access_token = request.getHeader("access_token");
+                log.info("token:{}", access_token);
+                template.header("Authorization", "Bearer " + access_token);
+            }
         }
+    }
+
+    public RequestAttributes getRequestAttributesSafely() {
+        RequestAttributes requestAttributes = null;
+        try {
+            requestAttributes = RequestContextHolder.currentRequestAttributes();
+        } catch (IllegalStateException e) {
+            requestAttributes = new NonWebRequestAttributes();
+        }
+        return requestAttributes;
     }
 }
