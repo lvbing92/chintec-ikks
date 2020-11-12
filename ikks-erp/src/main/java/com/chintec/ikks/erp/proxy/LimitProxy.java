@@ -44,7 +44,7 @@ public class LimitProxy {
         String s = request.getRequestURL().toString();
         if (!s.contains("login") && !s.contains("logout") && !s.contains("userLogin")
                 && !s.contains("user/roleAndMenu") && !s.contains("images")
-                && !s.contains("videos") && !s.contains("files")) {
+                && !s.contains("videos") && !s.contains("files") && !s.contains("/userRegister")) {
             logger.info("环绕通知");
             String access_token = request.getHeader("access_token");
             logger.info(access_token);

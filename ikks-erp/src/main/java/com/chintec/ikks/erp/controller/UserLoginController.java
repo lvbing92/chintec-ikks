@@ -1,6 +1,9 @@
 package com.chintec.ikks.erp.controller;
 
+import com.chintec.ikks.common.entity.vo.CredentialsRequest;
 import com.chintec.ikks.common.util.ResultResponse;
+import com.chintec.ikks.erp.annotation.PermissionAnnotation;
+import com.chintec.ikks.erp.feign.ICredentialsService;
 import com.chintec.ikks.erp.feign.IPasswordFedService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,9 +23,11 @@ import org.springframework.web.bind.annotation.*;
 @Data
 @Validated
 @RequestMapping("/v1")
-@Api(value = "User Login", tags = {"后台用户登入登出"})
+@Api(value = "User Login", tags = {"用户登入登出"})
 public class UserLoginController {
 
+    @Autowired
+    private ICredentialsService iCredentialsService;
     @Autowired
     private IPasswordFedService iPasswordFedService;
 
@@ -56,7 +61,7 @@ public class UserLoginController {
     }
 
     /**
-     * 登录
+     * 客户端登录
      *
      * @param email 用户名
      * @param passWord 密码
@@ -67,5 +72,15 @@ public class UserLoginController {
     @ResponseStatus(HttpStatus.OK)
     public ResultResponse companyUserLogin(@RequestParam String email,@RequestParam String passWord) {
         return iPasswordFedService.companyUserLogin(email,passWord);
+    }
+    /**
+     * 注册
+     * @param credentialsRequest 客户信息
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "注册")
+    @PostMapping("/userRegister")
+    public ResultResponse addUser(CredentialsRequest credentialsRequest) {
+        return iCredentialsService.addUser(credentialsRequest);
     }
 }
