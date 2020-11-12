@@ -19,12 +19,14 @@ import com.chintec.ikks.process.feign.IRabbitMqService;
 import com.chintec.ikks.process.service.IFlowNodeService;
 import com.chintec.ikks.process.service.IFlowTaskService;
 import com.chintec.ikks.process.service.IFlowTaskStatusService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -37,6 +39,7 @@ import java.util.stream.Collectors;
  * 这个就是公共方法类,没啥很重要的作用
  * 只是提出来,进行解耦的
  */
+@Slf4j
 public class NodeEventFunction {
 
     /**
@@ -151,15 +154,18 @@ public class NodeEventFunction {
                 .lambda()
                 .eq(FlowNode::getFlowInformationId, byId.getFollowInfoId())
                 .eq(FlowNode::getNodeId, data.getNodeId()));
+        flowTaskStatusPo.setIsFinish(Integer.parseInt(one.getNodeType()));
         if ((AutoEnum.AUTO_ENUM_YES.getCode() + "").equals(one.getNodeRunMode())) {
             List<NodeFunctionVo> nodeIds = flowTaskStatusPo.getNodeIds();
-            AssertsUtil.isTrue(nodeIds.size() > 0, "自动完成任务流程失败,请确认下一个流程节点的唯一性");
+            if (!CollectionUtils.isEmpty(nodeIds)) {
+                AssertsUtil.isTrue(nodeIds.size() > 1, "自动完成任务流程失败,请确认下一个流程节点的唯一性");
+            }
+            log.info("flowTaskId:{}", data.getTaskId());
             ResultResponse resultResponse = iFlowTaskStatusService
-                    .passFlowNode(data.getTaskId(),
-                            Integer.parseInt(nodeIds
-                                    .get(0)
-                                    .getStatus()));
+                    .passFlowNode(data.getId(),
+                            Integer.parseInt(CollectionUtils.isEmpty(nodeIds) ? "0" : nodeIds.get(0).getStatus()));
             AssertsUtil.isTrue(!resultResponse.isSuccess(), resultResponse.getMessage());
+
         } else if ((AutoEnum.AUTO_ENUM_NO.getCode() + "").equals(one.getNodeRunMode())) {
             sendMessage(flowTaskStatusPo, iRabbitMqService);
         } else {
