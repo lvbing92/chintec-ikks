@@ -58,6 +58,7 @@ public class NodeEventFunction {
         List<FlowTaskStatus> collect = null;
         //查看该节点的前置节点完成情况,过滤出进行中的
         if ((NodeTypeEnum.NODE_TYPE_ENUM_EXC_MORE.getCode() + "").equals(node.getNodeExc())) {
+            log.info("前置节点过滤 进入 有前置节点的要求");
             collect = iFlowTaskStatusService.list(new QueryWrapper<FlowTaskStatus>()
                     .lambda()
                     .in(FlowTaskStatus::getNodeId, integers)
@@ -68,7 +69,7 @@ public class NodeEventFunction {
         }
         //判断前置节点是否有进行中的 如果没有,开启该节点任务
         if (CollectionUtils.isEmpty(collect)) {
-            flowTaskStatusPo.setTime(StringUtils.isEmpty(node.getDelayTime()) ? "" : node.getDelayTime() * 3600 * 1000 + "");
+            flowTaskStatusPo.setTime(StringUtils.isEmpty(node.getDelayTime()) ? "3000" : node.getDelayTime() * 1000 + "");
             flowTaskStatusPo.setName(node.getNodeName());
             flowTaskStatusPo.setIsFinish(StringUtils.isEmpty(node.getNodeType()) ? NodeTypeEnum.NODE_TYPE_ENUM_NORMAL.getCode() : Integer.parseInt(node.getNodeType()));
             flowTaskStatusPo.setStatus(NodeStateEnum.PENDING);
@@ -120,7 +121,7 @@ public class NodeEventFunction {
         messageReq.setUuid(UUID.randomUUID().toString());
         messageReq.setMessageMsg(flowTaskStatus);
         messageReq.setSuccess(true);
-        iRabbitMqService.sendMsg(messageReq, StringUtils.isEmpty(flowTaskStatus.getTime()) ? "" : flowTaskStatus.getTime());
+        iRabbitMqService.sendMsg(messageReq, StringUtils.isEmpty(flowTaskStatus.getTime()) ? "3000" : flowTaskStatus.getTime());
     }
 
     /**
@@ -131,8 +132,8 @@ public class NodeEventFunction {
      */
     public static void removeTaskMachine(String id, RedisTemplate<String, Object> redisTemplate) {
         //TODO 执行结果记录到 数据库中 然后删除缓存
-
         Boolean delete = redisTemplate.delete(id);
+        log.info("删除数据的数据:{}", redisTemplate.opsForValue().get(id));
         AssertsUtil.isTrue(!(delete == null ? false : delete), "删除失败任务缓存失败");
     }
 

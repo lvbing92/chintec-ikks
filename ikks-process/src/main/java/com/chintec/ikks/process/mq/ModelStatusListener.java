@@ -42,17 +42,9 @@ public class ModelStatusListener {
         FlowTaskStatusPo flowTaskStatusPo = JSONObject.parseObject(JSONObject.toJSONString(messageReq.getMessageMsg()), FlowTaskStatusPo.class);
         FlowTaskStatus flowTaskStatus = flowTaskStatusPo.getData();
         try {
-            if ((ModelResultEnum.RESULT_PASS.getCode() + "").equals(flowTaskStatus.getHandleStatus())) {
-                org.springframework.messaging.Message<NodeStateChangeEnum> flowTaskStatusM = MessageBuilder.withPayload(NodeStateChangeEnum.PASS).setHeader("flowTaskStatusPo", flowTaskStatusPo).build();
-                log.info("进入通过::{}", flowTaskStatus);
-                sendEvent.sendEvents(flowTaskStatusM, flowTaskStatusPo);
-            } else if ((ModelResultEnum.RESULT_REFUSE.getCode() + "").equals(flowTaskStatus.getHandleStatus())) {
-                log.info("进入驳回::{}", flowTaskStatus);
-                org.springframework.messaging.Message<NodeStateChangeEnum> flowTaskStatusM = MessageBuilder.withPayload(NodeStateChangeEnum.REFUSE).setHeader("flowTaskStatusPo", flowTaskStatusPo).build();
-                sendEvent.sendEvents(flowTaskStatusM, flowTaskStatusPo);
-            } else {
-                AssertsUtil.isTrue(true, "任务操作类型不存在");
-            }
+            org.springframework.messaging.Message<NodeStateChangeEnum> flowTaskStatusM = MessageBuilder.withPayload(NodeStateChangeEnum.CHOICE_ONE).setHeader("flowTaskStatusPo", flowTaskStatusPo).build();
+            log.info("进入通过::{}", flowTaskStatus);
+            sendEvent.sendEvents(flowTaskStatusM, flowTaskStatusPo);
             // 手动签收消息,通知mq服务器端删除该消息
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
         } catch (IOException e) {

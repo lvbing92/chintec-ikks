@@ -54,7 +54,7 @@ public class MqSendMessage {
             log.info("routingKey：{}", routingKey);
         });
         rabbitTemplate.convertAndSend(MqVariableUtil.DELAY_EXCHANGE_NAME, MqVariableUtil.DELAY_ROUTING_KEY, message);
-      //  confirmCallback();
+        confirmCallback();
         return ResultResponse.successResponse();
     }
 

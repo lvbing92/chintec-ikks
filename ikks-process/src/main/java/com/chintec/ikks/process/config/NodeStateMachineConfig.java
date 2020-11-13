@@ -3,7 +3,9 @@ package com.chintec.ikks.process.config;
 import com.chintec.ikks.common.entity.po.FlowTaskStatusPo;
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;
 import com.chintec.ikks.common.enums.NodeStateEnum;
+import com.chintec.ikks.process.event.action.NodeChoiceAction;
 import com.chintec.ikks.process.event.action.NodeRefuseActionCommon;
+import com.chintec.ikks.process.event.guard.NodeChoiceGuard;
 import com.chintec.ikks.process.event.guard.NodeReturnChoiceGuard;
 import com.chintec.ikks.process.event.persister.NodeMachinePersister;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,9 @@ public class NodeStateMachineConfig extends StateMachineConfigurerAdapter<NodeSt
     @Autowired
     private NodeRefuseActionCommon nodeRefuseActionCommon;
 
+    @Autowired
+    private NodeChoiceAction nodeChoiceAction;
+
 
     /**
      * 自定义状态机 持久化类
@@ -59,7 +64,8 @@ public class NodeStateMachineConfig extends StateMachineConfigurerAdapter<NodeSt
         states
                 .withStates()
                 .initial(NodeStateEnum.PENDING)
-                .choice(NodeStateEnum.REFUSE)
+                .choice(NodeStateEnum.CHOICE_ONE)
+                .choice(NodeStateEnum.CHOICE_TWO)
                 .states(EnumSet.allOf(NodeStateEnum.class));
     }
 
@@ -79,16 +85,21 @@ public class NodeStateMachineConfig extends StateMachineConfigurerAdapter<NodeSt
                 .and()
                 //going to pass  事件:pass事件
                 .withExternal()
-                .source(NodeStateEnum.GOING).target(NodeStateEnum.PASS)
-                .event(NodeStateChangeEnum.PASS)
+                .source(NodeStateEnum.GOING).target(NodeStateEnum.CHOICE_ONE)
+                .event(NodeStateChangeEnum.CHOICE_ONE)
+                .and()
+                .withChoice()
+                .source(NodeStateEnum.CHOICE_ONE)
+                .first(NodeStateEnum.PASS, new NodeChoiceGuard(), new NodePassAction())
+                .last(NodeStateEnum.REFUSE, new NodeRefuser())
                 .and()
                 //going to refuse  事件:refuse事件
                 .withExternal()
-                .source(NodeStateEnum.GOING).target(NodeStateEnum.REFUSE)
+                .source(NodeStateEnum.GOING).target(NodeStateEnum.CHOICE_TWO)
                 .event(NodeStateChangeEnum.REFUSE)
                 .and()
                 .withChoice()
-                .source(NodeStateEnum.REFUSE)
+                .source(NodeStateEnum.CHOICE_TWO)
                 .first(NodeStateEnum.PENDING, new NodeReturnChoiceGuard(), new NodeReturnChoiceAction())
                 .last(NodeStateEnum.REFUSE_FINISH, new NodeRefuseFinishAction());
     }
@@ -112,6 +123,21 @@ public class NodeStateMachineConfig extends StateMachineConfigurerAdapter<NodeSt
         @Override
         public void execute(StateContext<NodeStateEnum, NodeStateChangeEnum> context) {
             nodeRefuseActionCommon.execute(context);
+        }
+    }
+
+
+    private class NodePassAction implements org.springframework.statemachine.action.Action<NodeStateEnum, NodeStateChangeEnum> {
+        @Override
+        public void execute(StateContext<NodeStateEnum, NodeStateChangeEnum> context) {
+            nodeChoiceAction.pass(context);
+        }
+    }
+
+    private class NodeRefuser implements org.springframework.statemachine.action.Action<NodeStateEnum, NodeStateChangeEnum> {
+        @Override
+        public void execute(StateContext<NodeStateEnum, NodeStateChangeEnum> context) {
+            nodeChoiceAction.refuse(context);
         }
     }
 }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.chintec.ikks.common.entity.po.FlowTaskStatusPo;
 import com.chintec.ikks.common.enums.NodeStateChangeEnum;
 import com.chintec.ikks.common.enums.NodeStateEnum;
+import com.chintec.ikks.process.event.function.NodeEventFunction;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.statemachine.StateMachineContext;
@@ -12,10 +13,11 @@ import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 状态机 持久化类 实现了 StateMachinePersist 接口
- *重写了 write 和read方法
+ * 重写了 write 和read方法
  *
  * @author Jeff·Tang
  * @version 1.0
@@ -42,11 +44,12 @@ public class NodeMachinePersister implements StateMachinePersist<NodeStateEnum, 
         if (o != null) {
             NodeStateEnum nodeStateEnum = JSONObject.parseObject(JSONObject.toJSONString(o), NodeStateEnum.class);
             if (state.getCode() > nodeStateEnum.getCode()) {
-                log.info("更新redis中的状态机:{}", nodeStateEnum);
+                log.info("更新redis中的状态机:{}", state);
                 redisTemplate.opsForValue().set(contextObj.getId(), state);
             }
         } else {
             redisTemplate.opsForValue().set(contextObj.getId(), state);
+            redisTemplate.expire(contextObj.getId(), 30 * 24, TimeUnit.HOURS);
         }
     }
 

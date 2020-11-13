@@ -1,7 +1,10 @@
 package com.chintec.ikks.process.controller;
 
 
+import com.chintec.ikks.common.entity.vo.FlowTaskVo;
+import com.chintec.ikks.common.enums.NodeStateEnum;
 import com.chintec.ikks.common.util.ResultResponse;
+import com.chintec.ikks.process.service.IFlowTaskService;
 import com.chintec.ikks.process.service.IFlowTaskStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 public class FlowTaskStatusController {
     @Autowired
     private IFlowTaskStatusService iFlowTaskStatusService;
+    @Autowired
+    private IFlowTaskService iFlowTaskService;
 
     @GetMapping("flowTaskStatus")
     public ResultResponse flowTaskStatus(@RequestParam Integer userId,
@@ -37,7 +42,7 @@ public class FlowTaskStatusController {
     /**
      * 通过节点
      *
-     * @param flowTaskStatusId  id
+     * @param flowTaskStatusId id
      * @return re
      */
     @GetMapping("flowTaskStatus/pass/{flowTaskStatusId}/{statusCode}")
@@ -54,5 +59,17 @@ public class FlowTaskStatusController {
     @GetMapping("flowTaskStatus/refuse/{flowTaskStatusId}")
     public ResultResponse refuseFlowNode(@PathVariable Integer flowTaskStatusId) {
         return iFlowTaskStatusService.refuseFlowNode(flowTaskStatusId);
+    }
+
+    @GetMapping("test")
+    public ResultResponse testProcess() {
+
+        FlowTaskVo flowTaskVo = new FlowTaskVo();
+        flowTaskVo.setFollowInfoId(6);
+        flowTaskVo.setTaskId(7);
+        flowTaskVo.setName("测试流程任务07");
+        flowTaskVo.setStatus(NodeStateEnum.PENDING.getCode().toString());
+
+        return iFlowTaskService.createTask(flowTaskVo);
     }
 }

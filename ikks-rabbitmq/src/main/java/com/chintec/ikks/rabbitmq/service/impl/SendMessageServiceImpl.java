@@ -4,6 +4,7 @@ import com.chintec.ikks.common.entity.po.MessageReq;
 import com.chintec.ikks.common.util.ResultResponse;
 import com.chintec.ikks.rabbitmq.mq.MqSendMessage;
 import com.chintec.ikks.rabbitmq.service.ISendMessageService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2020/9/17 14:22
  */
 @Service
+@Slf4j
 public class SendMessageServiceImpl implements ISendMessageService {
     @Autowired
     private MqSendMessage mqSendMessage;
@@ -33,8 +35,9 @@ public class SendMessageServiceImpl implements ISendMessageService {
      */
     @Override
     public ResultResponse sendMsg(MessageReq msg, String timeMills) {
+        log.info("进入mq操作");
         if (!StringUtils.isEmpty(timeMills) && !"0".equals(timeMills)) {
-            redisTemplate.opsForValue().set(msg.getUuid(), "延时", Long.parseLong(timeMills), TimeUnit.MILLISECONDS);
+            redisTemplate.opsForValue().set(msg.getUuid(), "延时", Long.parseLong(timeMills), TimeUnit.MICROSECONDS);
             redisTemplate.opsForHash().put("mq", msg.getUuid(), msg);
             return ResultResponse.successResponse();
         }

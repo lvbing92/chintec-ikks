@@ -64,8 +64,10 @@ public class NodeEvent {
         flowTaskStatusPo.setStatus(NodeStateEnum.GOING);
         FlowTaskStatus flowTaskStatus = flowTaskStatusPo.getData();
         //更新任务状态
+        logger.info("更新任务状态");
         flowTaskStatus.setStatusId(flowTaskStatusPo.getId());
         NodeEventFunction.updateTaskStatus(flowTaskStatus, NodeStateEnum.GOING.getCode().toString(), iFlowTaskStatusService);
+        logger.info("自动完成");
         NodeEventFunction.autoFinishTask(flowTaskStatusPo, iFlowNodeService, iFlowTaskService, iRabbitMqService, iFlowTaskStatusService);
     }
 
@@ -74,31 +76,9 @@ public class NodeEvent {
      *
      * @param message 消息
      */
-    @OnTransition(source = "GOING", target = "PASS")
-    public void pass(Message<NodeStateChangeEnum> message) {
-        logger.info("---节点审核通过---节点::{}", message);
-        FlowTaskStatusPo flowTaskStatusPo = JSONObject.parseObject(JSONObject.toJSONString(message.getHeaders().get("flowTaskStatusPo")), FlowTaskStatusPo.class);
-        FlowTaskStatus flowTaskStatus = flowTaskStatusPo.getData();
-        //更新节点任务状态
-        NodeEventFunction.updateTaskStatus(flowTaskStatus, NodeStateEnum.PASS.getCode().toString(), iFlowTaskStatusService);
-        FlowTask byId = iFlowTaskService.getById(flowTaskStatus.getTaskId());
-        List<NodeFunctionVo> nodeIds = flowTaskStatusPo.getNodeIds();
-        logger.info("next :{}", nodeIds);
-        if (CollectionUtils.isEmpty(nodeIds)) {
-            //没有下一个节点方法直接完成
-            logger.info("完成任务,改变任务状态::{}", flowTaskStatusPo.getName());
-            NodeEventFunction.finishTask(byId, NodeStateEnum.PASS.getCode().toString(), flowTaskStatus.getUpdataBy(), iFlowTaskService);
-        } else {
-            //根据上一个任务返回的结果 过滤出符合目标的下一个节点
-            nodeIds.stream()
-                    .filter(nodeFunctionVo -> nodeFunctionVo.getStatus().equals(flowTaskStatusPo.getTaskStatus()))
-                    .forEach(nodeFunctionVo -> {
-                        //有下一个节点进入下一个节点
-                        logger.info("进入下一个节点::{}", nodeFunctionVo.getNextNode());
-                        NodeEventFunction.nextTask(nodeFunctionVo.getNextNode(), byId.getFollowInfoId(), flowTaskStatus.getTaskId(), iFlowTaskStatusService, iFlowNodeService, sendEvent);
-                    });
-        }
-        NodeEventFunction.removeTaskMachine(flowTaskStatusPo.getId(), redisTemplate);
+    @OnTransition(source = "GOING", target = "CHOICE_ONE")
+    public void choiceOne(Message<NodeStateChangeEnum> message) {
+        logger.info("节点选择时间:{}", message);
     }
 
     /**
@@ -106,8 +86,8 @@ public class NodeEvent {
      *
      * @param message 消息
      */
-    @OnTransition(source = "GOING", target = "REFUSE")
-    public void refuse(Message<NodeStateChangeEnum> message) {
+    @OnTransition(source = "REFUSE", target = "CHOICE_TWO")
+    public void choiceTwo(Message<NodeStateChangeEnum> message) {
         logger.info("---节点审核不过---::{}", message);
         FlowTaskStatusPo flowTaskStatusPo = JSONObject.parseObject(JSONObject.toJSONString(message.getHeaders().get("flowTaskStatusPo")), FlowTaskStatusPo.class);
         FlowTaskStatus flowTaskStatus = flowTaskStatusPo.getData();

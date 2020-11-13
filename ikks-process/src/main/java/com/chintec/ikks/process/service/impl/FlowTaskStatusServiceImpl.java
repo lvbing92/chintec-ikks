@@ -17,6 +17,7 @@ import com.chintec.ikks.process.mapper.FlowTaskStatusMapper;
 import com.chintec.ikks.process.service.IFlowNodeService;
 import com.chintec.ikks.process.service.IFlowTaskService;
 import com.chintec.ikks.process.service.IFlowTaskStatusService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
  * @since 2020-09-24
  */
 @Service
+@Slf4j
 public class FlowTaskStatusServiceImpl extends ServiceImpl<FlowTaskStatusMapper, FlowTaskStatus> implements IFlowTaskStatusService {
     @Autowired
     private IFlowNodeService iFlowNodeService;
@@ -73,7 +75,7 @@ public class FlowTaskStatusServiceImpl extends ServiceImpl<FlowTaskStatusMapper,
     }
 
     @Override
-    public ResultResponse passFlowNode( Integer flowTaskStatusId, Integer statusCode) {
+    public ResultResponse passFlowNode(Integer flowTaskStatusId, Integer statusCode) {
         passAndRefuse(flowTaskStatusId, statusCode, 1);
         return ResultResponse.successResponse("操作成功");
     }
@@ -94,7 +96,7 @@ public class FlowTaskStatusServiceImpl extends ServiceImpl<FlowTaskStatusMapper,
         FlowTaskStatusPo flowTaskStatusPo = new FlowTaskStatusPo();
         flowTaskStatusPo.setId(byId.getStatusId());
         flowTaskStatusPo.setName(byId.getName());
-        flowTaskStatusPo.setTime(one.getDelayTime() == null ? "0" : String.valueOf(one.getDelayTime()));
+        flowTaskStatusPo.setTime(one.getDelayTime() == null ? "3000" : String.valueOf(one.getDelayTime() * 1000));
         flowTaskStatusPo.setTaskStatus(statusCode + "");
         flowTaskStatusPo.setData(byId);
         flowTaskStatusPo.setIsFinish(Integer.valueOf(one.getNodeType()));
@@ -102,6 +104,8 @@ public class FlowTaskStatusServiceImpl extends ServiceImpl<FlowTaskStatusMapper,
         MessageReq messageReq = new MessageReq();
         messageReq.setSuccess(true);
         messageReq.setMessageMsg(flowTaskStatusPo);
-        iRabbitMqService.modelMsg(messageReq);
+        log.info("发送消息");
+        ResultResponse resultResponse = iRabbitMqService.modelMsg(messageReq);
+        log.info("消息状态:{}", resultResponse);
     }
 }
