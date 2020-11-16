@@ -37,7 +37,7 @@ public class FeignInterceptor implements RequestInterceptor {
     }
 
     public RequestAttributes getRequestAttributesSafely() {
-        RequestAttributes requestAttributes = null;
+        RequestAttributes requestAttributes;
         try {
             requestAttributes = RequestContextHolder.currentRequestAttributes();
         } catch (IllegalStateException e) {
