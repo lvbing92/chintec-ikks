@@ -52,8 +52,10 @@ public class LimitProxy {
             MethodSignature signature = (MethodSignature) pjp.getSignature();
             String value = signature.getMethod().getDeclaredAnnotation(PermissionAnnotation.class).code();
             Object object = redisTemplate.opsForHash().get(access_token, "menuFunction");
+            logger.info("redis: {}", object);
             if (object != null) {
                 //获取用户信息
+                logger.info("获取用户信息: {}", object);
                 List<MenuFunction> menuFunctions = JSONObject.parseArray(JSONObject.toJSONString(object), MenuFunction.class);
                 List<String> collect = menuFunctions.stream().map(MenuFunction::getFunctionCode).collect(Collectors.toList());
                 AssertsUtil.noLogin(menuFunctions.size() == 0, "无权限访问!");
@@ -61,6 +63,7 @@ public class LimitProxy {
                     AssertsUtil.noLogin(true);
                 }
             } else {
+                logger.info("没有权限");
                 AssertsUtil.noLogin(true);
             }
         }

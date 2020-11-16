@@ -78,7 +78,7 @@ public class FlowInfoController {
 
     @GetMapping("process")
     @ApiOperation("流程---列表")
-    public ResultResponse list(@RequestParam Integer currentPage, @RequestParam(required = false, defaultValue = "0") Integer pageSize) {
+    public ResultResponse list(@RequestParam Integer currentPage, @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
         return iProcessAndControllerService.list(currentPage, pageSize);
     }
 
