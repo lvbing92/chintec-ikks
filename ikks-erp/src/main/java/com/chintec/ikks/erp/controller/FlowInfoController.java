@@ -69,6 +69,7 @@ public class FlowInfoController {
 
     @PutMapping("process")
     @ApiOperation("流程---更新")
+    @PermissionAnnotation(code = "200303")
     public ResultResponse update(@Valid FlowInfoVo flowInfoVo, BindingResult result) {
         if (result.hasErrors()) {
             return ResultResponse.failResponse(Objects.requireNonNull(result.getFieldError()).getDefaultMessage());
@@ -78,18 +79,21 @@ public class FlowInfoController {
 
     @GetMapping("process")
     @ApiOperation("流程---列表")
+    @PermissionAnnotation(code = "200302")
     public ResultResponse list(@RequestParam Integer currentPage, @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
         return iProcessAndControllerService.list(currentPage, pageSize);
     }
 
     @GetMapping("process/{id}")
     @ApiOperation("流程---详情")
+    @PermissionAnnotation(code = "200304")
     public ResultResponse one(@PathVariable Integer id) {
         return iProcessAndControllerService.one(id);
     }
 
     @DeleteMapping("process/{id}")
     @ApiOperation("流程---删除")
+    @PermissionAnnotation(code = "200305")
     public ResultResponse delete(@PathVariable Integer id) {
         return iProcessAndControllerService.delete(id);
     }
