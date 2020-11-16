@@ -14,7 +14,7 @@ import java.util.Objects;
 
 /**
  * <p>
- * 前端控制器
+ * 资质文档类型的 前端控制器
  * </p>
  *
  * @author jeff·tang
@@ -26,6 +26,13 @@ public class QualificationController {
     @Autowired
     private IQualificationService iQualificationService;
 
+    /**
+     * 资质文档的创建
+     *
+     * @param qualificationVo
+     * @param result
+     * @return
+     */
     @PostMapping("/qualification")
     @ResponseStatus(HttpStatus.CREATED)
     public ResultResponse saveQualification(@RequestBody @Valid QualificationVo qualificationVo, BindingResult result) {
@@ -35,6 +42,13 @@ public class QualificationController {
         return iQualificationService.saveQualification(qualificationVo);
     }
 
+    /**
+     * 资质文档的修改
+     *
+     * @param qualificationVo
+     * @param result
+     * @return
+     */
     @PutMapping("/qualification")
     public ResultResponse updateQualification(@RequestBody @Valid QualificationVo qualificationVo, BindingResult result) {
         if (result.hasErrors()) {
@@ -43,16 +57,36 @@ public class QualificationController {
         return iQualificationService.updateQualification(qualificationVo);
     }
 
+    /**
+     * 列表
+     *
+     * @param currentPage
+     * @param pageSize
+     * @param categoryId
+     * @return
+     */
     @GetMapping("/qualifications")
     public ResultResponse qualifications(@RequestParam Integer currentPage, @RequestParam(required = false, defaultValue = "10") Integer pageSize, @RequestParam(required = false, defaultValue = "0") Integer categoryId) {
         return iQualificationService.qualifications(currentPage, pageSize, categoryId);
     }
 
+    /**
+     * 详情
+     *
+     * @param id
+     * @return
+     */
     @GetMapping("/qualification/{id}")
     public ResultResponse qualification(@PathVariable Integer id) {
         return iQualificationService.qualification(id);
     }
 
+    /**
+     * 删除
+     *
+     * @param id
+     * @return
+     */
     @DeleteMapping("/qualification/{id}")
     public ResultResponse deleteQualification(@PathVariable Integer id) {
         return iQualificationService.deleteQualification(id);
