@@ -42,6 +42,11 @@ public class NodeChoiceAction {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
+    /**
+     * 审核通过
+     *
+     * @param context 状态机上下文
+     */
     public void pass(StateContext<NodeStateEnum, NodeStateChangeEnum> context) {
         log.info("---节点审核通过---节点::{}", context);
         FlowTaskStatusPo flowTaskStatusPo = JSONObject.parseObject(JSONObject.toJSONString(context.getMessage().getHeaders().get("flowTaskStatusPo")), FlowTaskStatusPo.class);

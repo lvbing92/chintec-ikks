@@ -71,19 +71,19 @@ public class FlowTaskStatusServiceImpl extends ServiceImpl<FlowTaskStatusMapper,
 
     @Override
     public ResultResponse taskStatus(Integer id) {
-        return ResultResponse.successResponse(this.getById(id));
+        return ResultResponse.successResponse("查询当前任务成功!",this.getById(id));
     }
 
     @Override
     public ResultResponse passFlowNode(Integer flowTaskStatusId, Integer statusCode) {
         passAndRefuse(flowTaskStatusId, statusCode, 1);
-        return ResultResponse.successResponse("操作成功");
+        return ResultResponse.successResponse("执行通过成功!");
     }
 
     @Override
     public ResultResponse refuseFlowNode(Integer flowTaskStatusId) {
         passAndRefuse(flowTaskStatusId, 0, 0);
-        return ResultResponse.successResponse("操作成功");
+        return ResultResponse.successResponse("拒绝成功!");
     }
 
     private void passAndRefuse(Integer flowTaskStatusId, Integer statusCode, Integer handleStatus) {

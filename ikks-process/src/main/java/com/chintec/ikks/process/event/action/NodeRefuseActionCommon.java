@@ -48,6 +48,11 @@ public class NodeRefuseActionCommon {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
+    /**
+     * 执行任务
+     *
+     * @param context 状态机上下文
+     */
     public void execute(StateContext<NodeStateEnum, NodeStateChangeEnum> context) {
         //拒绝直接完成任务,改变整个任务状态为完成状态
         log.info("finishAction:{}", context);
@@ -58,6 +63,11 @@ public class NodeRefuseActionCommon {
         NodeEventFunction.removeTaskMachine(flowTaskStatusPo.getId(), redisTemplate);
     }
 
+    /**
+     * 拒绝/驳回
+     *
+     * @param context 状态机上下文
+     */
     public void executeReturn(StateContext<NodeStateEnum, NodeStateChangeEnum> context) {
         //拒绝->驳回后,改变任务状态为待审核,返回上一个节点,改变上一个节点的任务状态为待审核状态
         log.info("returnAction:{}", context);

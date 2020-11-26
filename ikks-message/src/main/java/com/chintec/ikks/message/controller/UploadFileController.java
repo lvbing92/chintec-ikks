@@ -20,8 +20,8 @@ public class UploadFileController {
     /**
      * 保存图片
      *
-     * @param file
-     * @return
+     * @param file 文件
+     * @return ResultResponse
      */
     @PostMapping("/img")
     public ResultResponse uploadImg(MultipartFile file) {
@@ -31,8 +31,8 @@ public class UploadFileController {
     /**
      * 保存文件
      *
-     * @param file
-     * @return
+     * @param file 文件
+     * @return ResultResponse
      */
     @PostMapping("/files")
     public ResultResponse uploadFile(MultipartFile file) {
@@ -42,8 +42,8 @@ public class UploadFileController {
     /**
      * 保存视频
      *
-     * @param file
-     * @return
+     * @param file 文件
+     * @return ResultResponse
      */
     @PostMapping("/video")
     public ResultResponse uploadVideo(MultipartFile file) {

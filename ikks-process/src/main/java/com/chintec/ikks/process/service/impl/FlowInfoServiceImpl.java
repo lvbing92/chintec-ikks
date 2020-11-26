@@ -55,6 +55,12 @@ public class FlowInfoServiceImpl extends ServiceImpl<FlowInfoMapper, FlowInfo> i
         return saveFlowNodes(flowInfoVo.getFlowNodes(), flowInfo.getId());
     }
 
+    /**
+     * 更新流程信息
+     *
+     * @param flowInfoVo 流程信息类
+     * @return ResultResponse
+     */
     @Override
     public ResultResponse updateFlowNode(FlowInfoVo flowInfoVo) {
         AssertsUtil.isTrue(StringUtils.isEmpty(flowInfoVo.getId()), "请选择要修改的内容");
@@ -68,6 +74,12 @@ public class FlowInfoServiceImpl extends ServiceImpl<FlowInfoMapper, FlowInfo> i
         return updateFlowNodes(flowInfoVo.getFlowNodes());
     }
 
+    /**
+     *
+     * @param currentPage 当前页
+     * @param pageSize    数据个数
+     * @return
+     */
     @Override
     public ResultResponse listFlow(Integer currentPage, Integer pageSize) {
         IPage<FlowInfo> page = this.page(new Page<>(currentPage, pageSize));
@@ -102,6 +114,13 @@ public class FlowInfoServiceImpl extends ServiceImpl<FlowInfoMapper, FlowInfo> i
         return ResultResponse.successResponse("删除成功");
     }
 
+    /**
+     * 保存流程节点信息
+     *
+     * @param flowNodeVos 流程节点信息
+     * @param flowId      流程Id
+     * @return ResultResponse
+     */
     private ResultResponse saveFlowNodes(List<FlowNodeVo> flowNodeVos, Integer flowId) {
         AssertsUtil.isTrue(!iFlowNodeService.saveBatch(flowNodeVos.stream().map(flowNodeVo -> {
             FlowNode flowNode = new FlowNode();
@@ -118,7 +137,12 @@ public class FlowInfoServiceImpl extends ServiceImpl<FlowInfoMapper, FlowInfo> i
         return ResultResponse.successResponse("创建流程信息成功");
     }
 
-
+    /**
+     * 更新流程节点信息
+     *
+     * @param flowNodeVos 流程节点信息
+     * @return ResultResponse
+     */
     private ResultResponse updateFlowNodes(List<FlowNodeVo> flowNodeVos) {
         AssertsUtil.isTrue(!iFlowNodeService.saveOrUpdateBatch(flowNodeVos.stream().map(s -> {
             AssertsUtil.isTrue(StringUtils.isEmpty(s.getId()), "节点未选择");
