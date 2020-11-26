@@ -79,6 +79,7 @@ public class ResourcesServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/v1/userLogin").permitAll()
                 .antMatchers("/v1/login").permitAll()
                 .antMatchers("/v1/logout").permitAll()
+                .antMatchers("/v1/userRegister").permitAll()
                 .antMatchers("/v1/**").authenticated();
     }
 }

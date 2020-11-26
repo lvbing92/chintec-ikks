@@ -15,13 +15,13 @@ public class MenuRequest {
     /**
      * id
      */
-    @ApiModelProperty(value = "id", hidden = true)
+    @ApiModelProperty(value = "id")
     private Integer id;
 
     /**
      * 角色Id
      */
-    @ApiModelProperty(value = "角色Id", hidden = true)
+    @ApiModelProperty(value = "角色Id")
     private Integer roleId;
     /**
      * 菜单名称
@@ -32,13 +32,13 @@ public class MenuRequest {
     /**
      * 父Id
      */
-    @ApiModelProperty(value = "菜单地址", hidden = true)
+    @ApiModelProperty(value = "父Id")
     private Integer parentId;
 
     /**
      * 图片
      */
-    @ApiModelProperty(value = "菜单地址")
+    @ApiModelProperty(value = "图片")
     private String icon;
 
     /**

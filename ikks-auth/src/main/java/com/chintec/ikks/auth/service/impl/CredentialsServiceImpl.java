@@ -109,7 +109,7 @@ public class CredentialsServiceImpl extends ServiceImpl<CredentialsMapper, Crede
             AssertsUtil.isTrue(!creFlag, "添加用户失败！");
             //添加用户角色关系表信息
             CredentialsAuthorities credentialsAuthorities = new CredentialsAuthorities();
-            credentialsAuthorities.setAuthoritiesId(4);
+            credentialsAuthorities.setAuthoritiesId(5);
             credentialsAuthorities.setCredentialsId(credentials.getId());
             boolean creAuthFlag = iCredentialsAuthoritiesService.save(credentialsAuthorities);
             AssertsUtil.isTrue(!creAuthFlag, "添加用户角色失败！");

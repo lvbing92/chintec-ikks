@@ -60,7 +60,7 @@ public class Menu extends Model<Menu> {
      * 父Id
      */
     @ApiModelProperty(value = "父Id", hidden = true)
-    private String parentId;
+    private Integer parentId;
 
     /**
      * 创建时间

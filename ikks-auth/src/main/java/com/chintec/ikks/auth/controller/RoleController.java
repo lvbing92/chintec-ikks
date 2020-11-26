@@ -24,10 +24,11 @@ public class RoleController {
 
     /**
      * 查询角色列表
+     *
      * @param currentPage 当前页
-     * @param pageSize  页面数据数
+     * @param pageSize    页面数据数
      * @param searchValue 搜索条件
-     * @param sorted 排序
+     * @param sorted      排序
      * @return ResultResponse
      */
     @ApiOperation(value = "查询角色列表")
@@ -41,6 +42,7 @@ public class RoleController {
 
     /**
      * 新增角色
+     *
      * @param authorityRequest 角色信息
      * @return ResultResponse
      */
@@ -55,14 +57,17 @@ public class RoleController {
     /**
      * 新增角色菜单数据
      *
-     * @param menuRequest 角色对象
+     * @param roleId  菜单集合
+     * @param menuIds 菜单Ids
      * @return ResultResponse
      */
     @ApiOperation(value = "新增角色菜单")
-    @PostMapping("/role/addMenu")
-    public ResultResponse addRoleMenu(@RequestBody MenuRequest menuRequest){
-        return iAuthorityService.addRoleMenu(menuRequest);
+    @GetMapping("/role/addMenu")
+    public ResultResponse addRoleMenu(@RequestParam(value = "roleId") Integer roleId,
+                                      @RequestParam(value = "menuIds") String menuIds) {
+        return iAuthorityService.addRoleMenu(roleId, menuIds);
     }
+
     /**
      * 更新角色
      *
@@ -85,9 +90,23 @@ public class RoleController {
      */
     @ApiOperation(value = "编辑角色菜单")
     @PostMapping("/role/updateMenu")
-    public ResultResponse updateRoleMenu(@RequestBody MenuRequest menuRequest){
+    public ResultResponse updateRoleMenu(@RequestBody MenuRequest menuRequest) {
         return iAuthorityService.updateRoleMenu(menuRequest);
     }
+
+    /**
+     * 删除角色菜单
+     *
+     * @param roleId 菜单对象
+     * @param menuId 菜单Id
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "删除角色菜单")
+    @DeleteMapping("/role/deleteMenu")
+    public ResultResponse deleteRoleMenu(@RequestParam Integer roleId,@RequestParam Integer menuId) {
+        return iAuthorityService.deleteRoleMenu(roleId,menuId);
+    }
+
     /**
      * 通过Id查询角色
      *

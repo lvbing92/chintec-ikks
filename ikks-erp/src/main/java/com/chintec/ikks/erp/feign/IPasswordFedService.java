@@ -1,11 +1,10 @@
 package com.chintec.ikks.erp.feign;
 
+import com.chintec.ikks.common.entity.vo.CredentialsRequest;
 import com.chintec.ikks.common.util.ResultResponse;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author rubin
@@ -39,4 +38,13 @@ public interface IPasswordFedService {
     @ApiOperation(value = "客户端登入")
     @GetMapping(value = "/v1/userLogin", produces = "application/json;charset=utf-8")
     ResultResponse companyUserLogin(@RequestParam String email,@RequestParam String passWord);
+    /**
+     * 注册用户
+     *
+     * @param credentialsRequest 用户对象
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "注册用户")
+    @PostMapping(value = "/v1/userRegister")
+    ResultResponse userRegister(@RequestBody CredentialsRequest credentialsRequest);
 }

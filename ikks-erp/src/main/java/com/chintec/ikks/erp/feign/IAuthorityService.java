@@ -3,6 +3,7 @@ package com.chintec.ikks.erp.feign;
 import com.chintec.ikks.common.entity.vo.AuthorityRequest;
 import com.chintec.ikks.common.entity.vo.MenuRequest;
 import com.chintec.ikks.common.util.ResultResponse;
+import com.chintec.ikks.erp.annotation.PermissionAnnotation;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -46,12 +47,14 @@ public interface IAuthorityService {
     /**
      * 新增角色菜单数据
      *
-     * @param menuRequest 角色对象
+     * @param roleId  角色Id
+     * @param menuIds 菜单Ids
      * @return ResultResponse
      */
     @ApiOperation(value = "新增角色菜单")
-    @PostMapping("/role/addMenu")
-    ResultResponse addRoleMenu(@RequestBody MenuRequest menuRequest);
+    @GetMapping("/role/addMenu")
+    ResultResponse addRoleMenu(@RequestParam(value = "roleId") Integer roleId,
+                               @RequestParam(value = "menuIds") String menuIds);
 
     /**
      * 更新角色
@@ -72,6 +75,17 @@ public interface IAuthorityService {
     @ApiOperation(value = "编辑角色菜单")
     @PostMapping("/role/updateMenu")
     ResultResponse updateRoleMenu(@RequestBody MenuRequest menuRequest);
+
+    /**
+     * 删除角色菜单
+     *
+     * @param roleId 菜单对象
+     * @param menuId 菜单Id
+     * @return ResultResponse
+     */
+    @ApiOperation(value = "删除角色菜单")
+    @DeleteMapping("/role/deleteMenu")
+    ResultResponse deleteRoleMenu(@RequestParam Integer roleId,@RequestParam Integer menuId);
 
     /**
      * 通过Id查询角色

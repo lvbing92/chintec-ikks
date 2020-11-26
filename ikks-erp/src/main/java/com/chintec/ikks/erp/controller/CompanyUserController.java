@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping(value = "v1")
-@Api(value = "CompanyUser", tags = "公司管理")
+@Api(value = "CompanyUser", tags = "公司用户管理")
 public class CompanyUserController {
 
     @Autowired

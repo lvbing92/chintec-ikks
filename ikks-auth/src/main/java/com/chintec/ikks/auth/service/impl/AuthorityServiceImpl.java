@@ -7,8 +7,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.chintec.ikks.auth.mapper.AuthorityMapper;
 import com.chintec.ikks.auth.service.IAuthorityMenuService;
 import com.chintec.ikks.auth.service.IAuthorityService;
+import com.chintec.ikks.auth.service.IMenuService;
 import com.chintec.ikks.common.entity.Authority;
 import com.chintec.ikks.common.entity.AuthorityMenu;
+import com.chintec.ikks.common.entity.Menu;
 import com.chintec.ikks.common.entity.response.AuthorityMenuResponse;
 import com.chintec.ikks.common.entity.response.AuthorityResponse;
 import com.chintec.ikks.common.entity.vo.AuthorityRequest;
@@ -45,6 +47,8 @@ public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority
 
     @Autowired
     private IAuthorityMenuService iAuthorityMenuService;
+    @Autowired
+    private IMenuService iMenuService;
 
     //    private static final String SORT_A = "A";
     private static final String SORT_D = "D";
@@ -138,28 +142,51 @@ public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority
     /**
      * 新增角色菜单数据
      *
-     * @param menuRequest 菜单信息
+     * @param roleId  角色Id
+     * @param menuIds 菜单Ids
      * @return ResultResponse
      */
     @Override
-    public ResultResponse addRoleMenu(MenuRequest menuRequest) {
-        //校验数据是否存在
-        AuthorityMenu isExist = iAuthorityMenuService.getOne(new QueryWrapper<AuthorityMenu>().lambda()
-                .eq(AuthorityMenu::getAuthorityId, menuRequest.getRoleId()).eq(AuthorityMenu::getMenuId, menuRequest.getId()));
-        if (!ObjectUtils.isEmpty(isExist)) {
-            return ResultResponse.successResponse("当前菜单已存在!");
+    @Transactional
+    public ResultResponse addRoleMenu(Integer roleId, String menuIds) {
+        //判断当前menuIds是否多个
+        if (menuIds.contains(",")) {
+            String[] split = menuIds.split(",");
+            for (String menuId : split) {
+                String str = addMenus(menuId, roleId);
+                if(!StringUtils.isEmpty(str)){
+                    return ResultResponse.failResponse(str);
+                }
+            }
+        } else {
+            addMenus(menuIds,roleId);
         }
-        AuthorityMenu addAuthMenu = new AuthorityMenu();
-        addAuthMenu.setMenuId(menuRequest.getId());
-        addAuthMenu.setAuthorityId(menuRequest.getRoleId());
-        addAuthMenu.setMenuName(menuRequest.getMenuName());
-        addAuthMenu.setMenuIcon(menuRequest.getIcon());
-        addAuthMenu.setParentId(menuRequest.getParentId());
-        addAuthMenu.setUrl(menuRequest.getUrl());
-        boolean flag = iAuthorityMenuService.save(addAuthMenu);
-        AssertsUtil.isTrue(!flag, "添加角菜单关系失败!");
-
         return ResultResponse.successResponse("编辑角色菜单成功！");
+    }
+
+    //添加菜单
+    private String addMenus(String menuId, Integer roleId) {
+        //根据当前菜单Id查询一级菜单
+        List<Menu> menuList = iMenuService.list(new QueryWrapper<Menu>().lambda().eq(Menu::getId, menuId).or().eq(Menu::getParentId, menuId));
+        for (Menu menu : menuList) {
+            //校验数据是否存在
+            AuthorityMenu isExist = iAuthorityMenuService.getOne(new QueryWrapper<AuthorityMenu>().lambda()
+                    .eq(AuthorityMenu::getAuthorityId, roleId)
+                    .eq(AuthorityMenu::getMenuId, menu.getId()));
+            if (!ObjectUtils.isEmpty(isExist)) {
+                return "当前菜单["+menu.getMenuName()+"]已存在!";
+            }
+            AuthorityMenu addAuthMenu = new AuthorityMenu();
+            addAuthMenu.setMenuId(menu.getId());
+            addAuthMenu.setAuthorityId(roleId);
+            addAuthMenu.setMenuName(menu.getMenuName());
+            addAuthMenu.setMenuIcon(menu.getIcon());
+            addAuthMenu.setParentId(menu.getParentId());
+            addAuthMenu.setUrl(menu.getUrl());
+            boolean flag = iAuthorityMenuService.save(addAuthMenu);
+            AssertsUtil.isTrue(!flag, "添加角菜单关系失败!");
+        }
+        return null;
     }
 
     /**
@@ -203,6 +230,12 @@ public class AuthorityServiceImpl extends ServiceImpl<AuthorityMapper, Authority
             return ResultResponse.failResponse("查无当前菜单!");
         }
         return ResultResponse.successResponse("编辑角色菜单成功!");
+    }
+
+    @Override
+    public ResultResponse deleteRoleMenu(Integer roleId, Integer menuId) {
+        iAuthorityMenuService.deleteByRoleIdAndMenuId(roleId,menuId);
+        return ResultResponse.successResponse("删除成功!");
     }
 
     /**

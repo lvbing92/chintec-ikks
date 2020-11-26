@@ -80,9 +80,9 @@ public class UserLoginController {
      * @param credentialsRequest 客户信息
      * @return ResultResponse
      */
-    @ApiOperation(value = "新增用户")
+    @ApiOperation(value = "注册用户")
     @PostMapping("/userRegister")
-    public ResultResponse addUser(@RequestBody CredentialsRequest credentialsRequest) {
+    public ResultResponse userRegister(@RequestBody CredentialsRequest credentialsRequest) {
 
         return iCredentialsService.addUser(credentialsRequest);
     }

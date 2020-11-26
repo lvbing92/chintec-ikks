@@ -6,6 +6,7 @@ import com.chintec.ikks.auth.mapper.AuthorityMenuMapper;
 import com.chintec.ikks.auth.service.IAuthorityMenuService;
 import com.chintec.ikks.common.entity.AuthorityMenu;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,5 +51,13 @@ public class AuthorityMenuServiceImpl extends ServiceImpl<AuthorityMenuMapper, A
     public boolean saveBatchAuthMenu(List<AuthorityMenu> authorityMenuList) {
         boolean flag = this.saveBatch(authorityMenuList);
         return flag;
+    }
+
+    @Override
+    public void deleteByRoleIdAndMenuId(Integer roleId, Integer menuId) {
+        this.baseMapper.delete(new QueryWrapper<AuthorityMenu>().lambda().eq(AuthorityMenu::getAuthorityId, roleId)
+                .and(!StringUtils.isEmpty(menuId),
+                s -> s.eq(AuthorityMenu::getMenuId, menuId).
+                        or().eq(AuthorityMenu::getParentId, menuId)));
     }
 }

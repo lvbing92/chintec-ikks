@@ -80,7 +80,7 @@ public class UserLoginController {
      */
     @ApiOperation(value = "注册")
     @PostMapping("/userRegister")
-    public ResultResponse addUser(CredentialsRequest credentialsRequest) {
-        return iCredentialsService.addUser(credentialsRequest);
+    public ResultResponse userRegister(CredentialsRequest credentialsRequest) {
+        return iPasswordFedService.userRegister(credentialsRequest);
     }
 }

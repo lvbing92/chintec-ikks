@@ -32,4 +32,10 @@ public interface IAuthorityMenuService extends IService<AuthorityMenu> {
      * @param authorityMenuList 角色菜单信息
      */
     boolean saveBatchAuthMenu(List<AuthorityMenu> authorityMenuList);
+    /**
+     * 删除
+     *
+     * @param roleId 角色Id
+     */
+    void deleteByRoleIdAndMenuId(Integer roleId,Integer menuId);
 }

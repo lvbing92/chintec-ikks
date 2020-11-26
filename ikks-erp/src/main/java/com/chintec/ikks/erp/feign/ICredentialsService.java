@@ -44,7 +44,7 @@ public interface ICredentialsService {
      * @return ResultResponse
      */
     @ApiOperation(value = "用户新增")
-    @GetMapping(value = "/user/add")
+    @PostMapping(value = "/user/add")
     ResultResponse addUser(@RequestBody CredentialsRequest credentialsRequest);
 
     /**

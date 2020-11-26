@@ -35,6 +35,7 @@ public interface IAuthorityService extends IService<Authority> {
      * @return ResultResponse
      */
     List<Authority> getAllRoleList();
+
     /**
      * 新增角色
      *
@@ -46,10 +47,11 @@ public interface IAuthorityService extends IService<Authority> {
     /**
      * 新增角色菜单数据
      *
-     * @param menuRequest 角色对象
+     * @param roleId  角色Id
+     * @param menuIds 菜单Ids
      * @return ResultResponse
      */
-    ResultResponse addRoleMenu(MenuRequest menuRequest);
+    ResultResponse addRoleMenu(Integer roleId, String menuIds);
 
     /**
      * 更新角色
@@ -66,6 +68,15 @@ public interface IAuthorityService extends IService<Authority> {
      * @return ResultResponse
      */
     ResultResponse updateRoleMenu(MenuRequest menuRequest);
+
+    /**
+     * 删除角色菜单
+     *
+     * @param roleId 角色Id
+     * @param menuId 菜单Id
+     * @return ResultResponse
+     */
+    ResultResponse deleteRoleMenu(Integer roleId, Integer menuId);
 
     /**
      * 通过Id查询角色详情
